@@ -68,23 +68,33 @@
           <span class="text-sm text-gray-500 ml-1">{{ course.currency }}</span>
         </div>
         
-        <router-link
-          :to="{ name: 'CourseDetail', params: { slug: course.slug } }"
+        <button
+          @click="showCourseDetail"
           class="btn-primary"
         >
           Zistiť viac
-        </router-link>
+        </button>
       </div>
     </div>
+
+    <!-- Course Detail Modal -->
+    <CourseDetailModal
+      :show="showModal"
+      :course="course"
+      @close="showModal = false"
+      @purchase="handlePurchase"
+    />
   </div>
 </template>
 
 <script setup>
+import { ref } from 'vue'
 import {
   StarIcon,
   ClockIcon,
   AcademicCapIcon,
 } from '@heroicons/vue/24/outline'
+import CourseDetailModal from './CourseDetailModal.vue'
 
 defineProps({
   course: {
@@ -92,6 +102,18 @@ defineProps({
     required: true,
   },
 })
+
+const emit = defineEmits(['purchase'])
+
+const showModal = ref(false)
+
+const showCourseDetail = () => {
+  showModal.value = true
+}
+
+const handlePurchase = (course) => {
+  emit('purchase', course)
+}
 
 const formatPrice = (price) => {
   if (!price) return '$0.00'

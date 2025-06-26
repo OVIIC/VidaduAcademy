@@ -21,7 +21,6 @@ class Course extends Model
         'currency',
         'thumbnail',
         'status',
-        'category_id',
         'instructor_id',
         'duration_minutes',
         'difficulty_level',
@@ -38,11 +37,6 @@ class Course extends Model
         'what_you_will_learn' => 'array',
         'requirements' => 'array',
     ];
-
-    public function category(): BelongsTo
-    {
-        return $this->belongsTo(Category::class);
-    }
 
     public function instructor(): BelongsTo
     {

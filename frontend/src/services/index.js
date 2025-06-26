@@ -38,11 +38,6 @@ export const courseService = {
     return response.data
   },
 
-  async getCategories() {
-    const response = await api.get('/courses/categories')
-    return response.data
-  },
-
   async getCoursesByInstructor(instructorId) {
     const response = await api.get(`/courses/instructor/${instructorId}`)
     return response.data

@@ -8,7 +8,6 @@ export const useCourseStore = defineStore('course', {
   state: () => ({
     courses: [],
     featuredCourses: [],
-    categories: [],
     currentCourse: null,
     loading: false,
     pagination: {
@@ -19,7 +18,6 @@ export const useCourseStore = defineStore('course', {
     },
     filters: {
       search: '',
-      category: '',
       difficulty: '',
       min_price: null,
       max_price: null,
@@ -48,20 +46,24 @@ export const useCourseStore = defineStore('course', {
 
   actions: {
     async fetchCourses(params = {}) {
+      console.log('fetchCourses called with params:', params)
       this.loading = true
       try {
+        console.log('Making API call...')
         const response = await courseService.getAllCourses({
           ...this.filters,
           ...params,
         })
+        console.log('API response:', response)
         
         if (params.page && params.page > 1) {
-          // Append for pagination
-          this.courses.push(...response.data)
+          // Append for pagination - response už je paginated objekt
+          this.courses.push(...(response.data || []))
         } else {
-          // Replace for new search/filter
-          this.courses = response.data
+          // Replace for new search/filter - response už je paginated objekt
+          this.courses = response.data || []
         }
+        console.log('Courses after setting:', this.courses)
         
         this.pagination = {
           current_page: response.current_page,
@@ -74,6 +76,7 @@ export const useCourseStore = defineStore('course', {
         toast.error('Failed to load courses')
       } finally {
         this.loading = false
+        console.log('Loading set to false')
       }
     },
 
@@ -82,14 +85,6 @@ export const useCourseStore = defineStore('course', {
         this.featuredCourses = await courseService.getFeaturedCourses()
       } catch (error) {
         console.error('Failed to fetch featured courses:', error)
-      }
-    },
-
-    async fetchCategories() {
-      try {
-        this.categories = await courseService.getCategories()
-      } catch (error) {
-        console.error('Failed to fetch categories:', error)
       }
     },
 
@@ -115,7 +110,6 @@ export const useCourseStore = defineStore('course', {
     clearFilters() {
       this.filters = {
         search: '',
-        category: '',
         difficulty: '',
         min_price: null,
         max_price: null,

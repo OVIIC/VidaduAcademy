@@ -25,7 +25,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::prefix('courses')->group(function () {
     Route::get('/', [CourseController::class, 'index']);
     Route::get('/featured', [CourseController::class, 'featured']);
-    Route::get('/categories', [CourseController::class, 'categories']);
     Route::get('/instructor/{instructor}', [CourseController::class, 'byInstructor']);
     Route::get('/{slug}', [CourseController::class, 'show']);
 });

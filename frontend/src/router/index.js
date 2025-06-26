@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
+import HomeView from '@/views/HomeView.vue'
 
 const router = createRouter({
   history: createWebHistory(),
@@ -7,7 +8,7 @@ const router = createRouter({
     {
       path: '/',
       name: 'Home',
-      component: () => import('@/views/HomeView.vue'),
+      component: HomeView,
     },
     {
       path: '/courses',
@@ -96,6 +97,11 @@ router.beforeEach((to, from, next) => {
   } else {
     next()
   }
+})
+
+// Error handling
+router.onError((error) => {
+  console.error('Router error:', error)
 })
 
 export default router

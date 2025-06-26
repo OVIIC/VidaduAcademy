@@ -6,14 +6,6 @@
         :alt="course.title"
         class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
       />
-      <div class="absolute top-3 left-3">
-        <span
-          class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium text-white"
-          :style="{ backgroundColor: course.category?.color || '#3B82F6' }"
-        >
-          {{ course.category?.name }}
-        </span>
-      </div>
       <div v-if="course.featured" class="absolute top-3 right-3">
         <StarIcon class="h-5 w-5 text-yellow-400 fill-current" />
       </div>
@@ -21,7 +13,7 @@
 
     <div class="p-6">
       <!-- Instructor -->
-      <div class="flex items-center mb-3">
+      <div v-if="course.instructor" class="flex items-center mb-3">
         <div class="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center mr-3">
           <span class="text-xs font-medium text-gray-600">
             {{ getInstructorInitials(course.instructor?.name) }}
@@ -29,7 +21,7 @@
         </div>
         <div>
           <p class="text-sm font-medium text-gray-900">{{ course.instructor?.name }}</p>
-          <p class="text-xs text-gray-500">
+          <p v-if="course.instructor?.subscribers_count" class="text-xs text-gray-500">
             {{ formatSubscribers(course.instructor?.subscribers_count) }} odberateľov
           </p>
         </div>
@@ -54,7 +46,7 @@
           </div>
           <div class="flex items-center">
             <AcademicCapIcon class="h-4 w-4 mr-1" />
-            {{ course.total_lessons }} lekcií
+            Kurz
           </div>
         </div>
         <div class="flex items-center">
@@ -71,7 +63,7 @@
       <div class="flex items-center justify-between">
         <div>
           <span class="text-2xl font-bold text-gray-900">
-            ${{ course.formatted_price }}
+            {{ formatPrice(course.price) }}
           </span>
           <span class="text-sm text-gray-500 ml-1">{{ course.currency }}</span>
         </div>
@@ -83,14 +75,6 @@
           Zistiť viac
         </router-link>
       </div>
-
-      <!-- Enrollment Count (if available) -->
-      <div v-if="course.enrollments_count" class="mt-3 pt-3 border-t border-gray-100">
-        <div class="flex items-center text-sm text-gray-500">
-          <UsersIcon class="h-4 w-4 mr-1" />
-          {{ course.enrollments_count }} zapísaných študentov
-        </div>
-      </div>
     </div>
   </div>
 </template>
@@ -100,7 +84,6 @@ import {
   StarIcon,
   ClockIcon,
   AcademicCapIcon,
-  UsersIcon,
 } from '@heroicons/vue/24/outline'
 
 defineProps({
@@ -110,8 +93,14 @@ defineProps({
   },
 })
 
+const formatPrice = (price) => {
+  if (!price) return '$0.00'
+  const numPrice = parseFloat(price)
+  return isNaN(numPrice) ? '$0.00' : `$${numPrice.toFixed(2)}`
+}
+
 const getInstructorInitials = (name) => {
-  if (!name) return ''
+  if (!name) return 'NN'
   return name
     .split(' ')
     .map(word => word[0])
@@ -121,15 +110,17 @@ const getInstructorInitials = (name) => {
 }
 
 const formatSubscribers = (count) => {
+  if (!count || count === 0) return '0'
   if (count >= 1000000) {
     return `${(count / 1000000).toFixed(1)}M`
   } else if (count >= 1000) {
     return `${(count / 1000).toFixed(1)}K`
   }
-  return count?.toString() || '0'
+  return count.toString()
 }
 
 const formatDuration = (minutes) => {
+  if (!minutes || minutes === 0) return '0m'
   if (minutes < 60) {
     return `${minutes}m`
   }
@@ -161,6 +152,7 @@ const translateDifficulty = (level) => {
 .line-clamp-2 {
   display: -webkit-box;
   -webkit-line-clamp: 2;
+  line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }

@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\Course;
-use App\Models\Category;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 
@@ -11,7 +10,6 @@ class CourseSeeder extends Seeder
 {
     public function run(): void
     {
-        $categories = Category::all();
         $instructors = User::where('is_instructor', true)->get();
 
         $courses = [
@@ -113,7 +111,6 @@ class CourseSeeder extends Seeder
             $course = Course::create([
                 ...$courseData,
                 'instructor_id' => $instructors[$index % $instructors->count()]->id,
-                'category_id' => $categories->random()->id,
             ]);
         }
     }

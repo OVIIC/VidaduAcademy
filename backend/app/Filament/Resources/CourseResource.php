@@ -45,22 +45,45 @@ class CourseResource extends Resource
                         'published' => 'Published',
                         'archived' => 'Archived',
                     ])
+                    ->default('draft')
                     ->required(),
                 Forms\Components\Select::make('instructor_id')
                     ->relationship('instructor', 'name')
                     ->required(),
                 Forms\Components\TextInput::make('duration_minutes')
+                    ->required()
                     ->numeric()
+                    ->default(0)
                     ->suffix('minutes'),
                 Forms\Components\Select::make('difficulty_level')
                     ->options([
                         'beginner' => 'Beginner',
                         'intermediate' => 'Intermediate',
                         'advanced' => 'Advanced',
-                    ]),
+                    ])
+                    ->default('beginner'),
                 Forms\Components\Toggle::make('featured')
-                    ->required(),
+                    ->default(false),
                 Forms\Components\DateTimePicker::make('published_at'),
+                Forms\Components\TextInput::make('thumbnail')
+                    ->url()
+                    ->maxLength(255),
+                Forms\Components\Repeater::make('what_you_will_learn')
+                    ->schema([
+                        Forms\Components\TextInput::make('item')
+                            ->required()
+                            ->maxLength(255),
+                    ])
+                    ->columns(1)
+                    ->columnSpanFull(),
+                Forms\Components\Repeater::make('requirements')
+                    ->schema([
+                        Forms\Components\TextInput::make('item')
+                            ->required()
+                            ->maxLength(255),
+                    ])
+                    ->columns(1)
+                    ->columnSpanFull(),
             ]);
     }
 

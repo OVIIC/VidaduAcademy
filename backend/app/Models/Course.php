@@ -72,4 +72,45 @@ class Course extends Model
     {
         return $this->lessons()->count();
     }
+
+    // Mutators for Filament repeater fields
+    public function setWhatYouWillLearnAttribute($value)
+    {
+        if (is_array($value) && isset($value[0]['item'])) {
+            // Convert from Filament repeater format to simple array
+            $this->attributes['what_you_will_learn'] = json_encode(array_column($value, 'item'));
+        } else {
+            $this->attributes['what_you_will_learn'] = json_encode($value ?: []);
+        }
+    }
+
+    public function getWhatYouWillLearnAttribute($value)
+    {
+        $decoded = json_decode($value, true) ?: [];
+        // Convert to Filament repeater format if accessing from form
+        if (request()->is('admin/*') && !empty($decoded) && !isset($decoded[0]['item'])) {
+            return array_map(fn($item) => ['item' => $item], $decoded);
+        }
+        return $decoded;
+    }
+
+    public function setRequirementsAttribute($value)
+    {
+        if (is_array($value) && isset($value[0]['item'])) {
+            // Convert from Filament repeater format to simple array
+            $this->attributes['requirements'] = json_encode(array_column($value, 'item'));
+        } else {
+            $this->attributes['requirements'] = json_encode($value ?: []);
+        }
+    }
+
+    public function getRequirementsAttribute($value)
+    {
+        $decoded = json_decode($value, true) ?: [];
+        // Convert to Filament repeater format if accessing from form
+        if (request()->is('admin/*') && !empty($decoded) && !isset($decoded[0]['item'])) {
+            return array_map(fn($item) => ['item' => $item], $decoded);
+        }
+        return $decoded;
+    }
 }

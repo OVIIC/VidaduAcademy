@@ -84,3 +84,32 @@ export const learningService = {
     return response.data
   },
 }
+
+export const enrollmentService = {
+  async getMyCourses() {
+    const response = await api.get('/my-courses')
+    return response.data
+  },
+
+  async enrollInCourse(courseId) {
+    const response = await api.post('/enrollments/enroll', {
+      course_id: courseId,
+    })
+    return response.data
+  },
+
+  async unenrollFromCourse(courseId) {
+    const response = await api.delete('/enrollments/unenroll', {
+      data: { course_id: courseId },
+    })
+    return response.data
+  },
+
+  async updateProgress(enrollmentId, progressData) {
+    const response = await api.put(
+      `/enrollments/${enrollmentId}/progress`,
+      progressData
+    )
+    return response.data
+  },
+}

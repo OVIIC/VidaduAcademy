@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\CourseController;
 use App\Http\Controllers\Api\PaymentController;
 use App\Http\Controllers\Api\LearningController;
+use App\Http\Controllers\Api\EnrollmentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -47,6 +48,9 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/course/{courseSlug}/lesson/{lessonSlug}', [LearningController::class, 'watchLesson']);
         Route::post('/course/{courseSlug}/lesson/{lessonSlug}/progress', [LearningController::class, 'updateProgress']);
     });
+
+    // My enrolled courses
+    Route::get('/my-courses', [EnrollmentController::class, 'getMyEnrolledCourses']);
 });
 
 // Authentication routes will be handled by Laravel Sanctum
@@ -57,6 +61,15 @@ Route::middleware('guest')->group(function () {
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [App\Http\Controllers\Auth\LoginController::class, 'logout']);
+});
+
+// Enrollment routes (admin/instructor only)
+Route::middleware(['auth:sanctum'])->prefix('enrollments')->group(function () {
+    Route::get('/user/{user}/courses', [EnrollmentController::class, 'getUserCourses']);
+    Route::post('/enroll', [EnrollmentController::class, 'enrollUser']);
+    Route::delete('/unenroll', [EnrollmentController::class, 'unenrollUser']);
+    Route::put('/{enrollment}/progress', [EnrollmentController::class, 'updateProgress']);
+    Route::get('/course/{course}/students', [EnrollmentController::class, 'getCourseEnrollments']);
 });
 
 // Health check route

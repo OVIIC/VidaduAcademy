@@ -12,7 +12,10 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('courses', function (Blueprint $table) {
-            $table->dropForeign(['category_id']);
+            // Skip foreign key dropping for SQLite
+            if (config('database.default') !== 'sqlite') {
+                $table->dropForeign(['category_id']);
+            }
             $table->dropColumn('category_id');
         });
     }

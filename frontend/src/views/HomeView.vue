@@ -1,24 +1,24 @@
 <template>
   <div class="bg-white">
     <!-- Hero Section -->
-    <section class="relative bg-gradient-to-br from-primary-900 via-primary-800 to-purple-900 text-white">
+    <section class="relative bg-gradient-to-br from-secondary-900 via-secondary-800 to-primary-900 text-white">
       <div class="absolute inset-0 bg-black opacity-20"></div>
       <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-32">
         <div class="text-center">
           <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight mb-6">
-            Master YouTube Growth
-            <span class="text-youtube-red block">Build Your Channel</span>
+            Ovládnite rast YouTube
+            <span class="text-youtube-red block">Vybudujte svoj kanál</span>
           </h1>
           <p class="text-xl lg:text-2xl text-gray-200 mb-8 max-w-3xl mx-auto">
-            Learn from successful YouTube creators and transform your channel into a thriving business. 
-            Join thousands of students already growing their audiences.
+            Učte sa od úspešných YouTube tvorcov a premeňte svoj kanál na prosperujúci biznis. 
+            Pridajte sa k tisíckam študentov, ktorí už rozširujú svoje publikum.
           </p>
           <div class="flex flex-col sm:flex-row gap-4 justify-center">
             <router-link to="/courses" class="btn-primary text-lg px-8 py-4">
-              Explore Courses
+              Preskúmajte kurzy
             </router-link>
             <router-link to="/register" class="btn-outline border-white text-white hover:bg-white hover:text-primary-900 text-lg px-8 py-4">
-              Start Free Trial
+              Zaregistrovať sa
             </router-link>
           </div>
         </div>
@@ -26,14 +26,14 @@
     </section>
 
     <!-- Featured Courses -->
-    <section class="py-16 bg-gray-50">
+    <section class="py-16 bg-secondary-50">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-12">
           <h2 class="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
-            Featured Courses
+            Odporúčané kurzy
           </h2>
           <p class="text-xl text-gray-600 max-w-2xl mx-auto">
-            Handpicked courses from our top instructors to accelerate your YouTube journey
+            Starostlivo vybrané kurzy od našich najlepších inštruktorov na urýchlenie vašej YouTube cesty
           </p>
         </div>
 
@@ -59,7 +59,7 @@
 
         <div class="text-center mt-12">
           <router-link to="/courses" class="btn-primary text-lg px-8 py-3">
-            View All Courses
+            Zobraziť všetky kurzy
           </router-link>
         </div>
       </div>
@@ -71,33 +71,33 @@
         <div class="grid grid-cols-2 lg:grid-cols-4 gap-8 text-center">
           <div class="animate-fade-in">
             <div class="text-4xl lg:text-5xl font-bold text-primary-600 mb-2">10K+</div>
-            <div class="text-gray-600 font-medium">Students Enrolled</div>
+            <div class="text-gray-600 font-medium">Zapísaných študentov</div>
           </div>
           <div class="animate-fade-in">
             <div class="text-4xl lg:text-5xl font-bold text-primary-600 mb-2">50+</div>
-            <div class="text-gray-600 font-medium">Expert Courses</div>
+            <div class="text-gray-600 font-medium">Expertných kurzov</div>
           </div>
           <div class="animate-fade-in">
             <div class="text-4xl lg:text-5xl font-bold text-primary-600 mb-2">95%</div>
-            <div class="text-gray-600 font-medium">Success Rate</div>
+            <div class="text-gray-600 font-medium">Úspešnosť</div>
           </div>
           <div class="animate-fade-in">
             <div class="text-4xl lg:text-5xl font-bold text-primary-600 mb-2">24/7</div>
-            <div class="text-gray-600 font-medium">Support Available</div>
+            <div class="text-gray-600 font-medium">Dostupná podpora</div>
           </div>
         </div>
       </div>
     </section>
 
     <!-- Features Section -->
-    <section class="py-16 bg-gray-50">
+    <section class="py-16 bg-secondary-50">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-16">
           <h2 class="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
-            Why Choose VidaduAcademy?
+            Prečo si vybrať VidaduAcademy?
           </h2>
           <p class="text-xl text-gray-600 max-w-2xl mx-auto">
-            Everything you need to build a successful YouTube channel in one place
+            Všetko, co potrebujete na vybudovanie úspešného YouTube kanála na jednom mieste
           </p>
         </div>
 
@@ -106,9 +106,9 @@
             <div class="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-6">
               <AcademicCapIcon class="h-8 w-8 text-primary-600" />
             </div>
-            <h3 class="text-xl font-semibold mb-4">Expert Instructors</h3>
+            <h3 class="text-xl font-semibold mb-4">Experti inštruktori</h3>
             <p class="text-gray-600">
-              Learn from YouTube creators with millions of subscribers and proven track records of success.
+              Učte sa od YouTube tvorcov s miliónmi odberateľov a overenou históriou úspechov.
             </p>
           </div>
 
@@ -116,9 +116,9 @@
             <div class="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-6">
               <PlayIcon class="h-8 w-8 text-primary-600" />
             </div>
-            <h3 class="text-xl font-semibold mb-4">Practical Content</h3>
+            <h3 class="text-xl font-semibold mb-4">Praktický obsah</h3>
             <p class="text-gray-600">
-              Step-by-step tutorials and real-world examples that you can implement immediately.
+              Návody krok za krokom a príklady z reálneho sveta, ktoré môžete okamžite implementovať.
             </p>
           </div>
 
@@ -126,9 +126,9 @@
             <div class="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-6">
               <ChartBarIcon class="h-8 w-8 text-primary-600" />
             </div>
-            <h3 class="text-xl font-semibold mb-4">Track Progress</h3>
+            <h3 class="text-xl font-semibold mb-4">Sledovanie pokroku</h3>
             <p class="text-gray-600">
-              Monitor your learning journey with detailed progress tracking and completion certificates.
+              Monitorujte svoju vzdelávaciu cestu s podrobným sledovaním pokroku a certifikátmi o dokončení.
             </p>
           </div>
 
@@ -136,9 +136,9 @@
             <div class="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-6">
               <UsersIcon class="h-8 w-8 text-primary-600" />
             </div>
-            <h3 class="text-xl font-semibold mb-4">Community Support</h3>
+            <h3 class="text-xl font-semibold mb-4">Komunitná podpora</h3>
             <p class="text-gray-600">
-              Connect with fellow creators and get support from our active community of learners.
+              Spojte sa s ostatnými tvorcami a získajte podporu od našej aktívnej komunity študentov.
             </p>
           </div>
 
@@ -146,9 +146,9 @@
             <div class="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-6">
               <DevicePhoneMobileIcon class="h-8 w-8 text-primary-600" />
             </div>
-            <h3 class="text-xl font-semibold mb-4">Learn Anywhere</h3>
+            <h3 class="text-xl font-semibold mb-4">Učte sa kdekoľvek</h3>
             <p class="text-gray-600">
-              Access your courses on any device, anytime. Download lessons for offline viewing.
+              Pristupujte k svojim kurzom na akomkoľvek zariadení, kedykoľvek. Stiahnite si lekcie na offline sledovanie.
             </p>
           </div>
 
@@ -156,9 +156,9 @@
             <div class="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-6">
               <StarIcon class="h-8 w-8 text-primary-600" />
             </div>
-            <h3 class="text-xl font-semibold mb-4">Quality Guaranteed</h3>
+            <h3 class="text-xl font-semibold mb-4">Garantovaná kvalita</h3>
             <p class="text-gray-600">
-              All courses are carefully curated and regularly updated to ensure the highest quality.
+              Všetky kurzy sú starostlivo vyberané a pravidelne aktualizované pre zaručenie najvyššej kvality.
             </p>
           </div>
         </div>
@@ -170,10 +170,10 @@
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-16">
           <h2 class="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
-            Success Stories
+            Príbehy úspechov
           </h2>
           <p class="text-xl text-gray-600">
-            Hear from students who transformed their YouTube channels
+            Počujte od študentov, ktorí transformovali svoje YouTube kanály
           </p>
         </div>
 
@@ -183,7 +183,7 @@
               <StarIcon v-for="i in 5" :key="i" class="h-5 w-5 text-yellow-400 fill-current" />
             </div>
             <p class="text-gray-600 mb-6">
-              "VidaduAcademy helped me grow from 1K to 100K subscribers in just 6 months. The strategies actually work!"
+              "VidaduAcademy mi pomohla narásť z 1 tisíc na 100 tisíc odberateľov za pouhých 6 mesiacov. Stratégie skutočne fungujú!"
             </p>
             <div class="font-semibold text-gray-900">Sarah M.</div>
             <div class="text-sm text-gray-500">Gaming Creator</div>
@@ -194,7 +194,7 @@
               <StarIcon v-for="i in 5" :key="i" class="h-5 w-5 text-yellow-400 fill-current" />
             </div>
             <p class="text-gray-600 mb-6">
-              "The monetization course changed everything. I'm now making $5K+ per month from my channel."
+              "Kurz o monetizácii zmenil všetko. Teraz zarábam viac ako 5 tisíc dolárov mesačne zo svojho kanála."
             </p>
             <div class="font-semibold text-gray-900">Michael R.</div>
             <div class="text-sm text-gray-500">Tech Reviewer</div>
@@ -205,7 +205,7 @@
               <StarIcon v-for="i in 5" :key="i" class="h-5 w-5 text-yellow-400 fill-current" />
             </div>
             <p class="text-gray-600 mb-6">
-              "Clear, actionable advice from real experts. Best investment I've made for my YouTube journey."
+              "Jasné, realizovateľné rady od skutočných expertov. Najlepšia investícia, ktorú som urobila pre svoju YouTube cestu."
             </p>
             <div class="font-semibold text-gray-900">Emma L.</div>
             <div class="text-sm text-gray-500">Lifestyle Vlogger</div>
@@ -215,20 +215,20 @@
     </section>
 
     <!-- CTA Section -->
-    <section class="py-16 bg-gradient-to-r from-primary-600 to-purple-600 text-white">
+    <section class="py-16 bg-gradient-to-r from-primary-600 to-secondary-600 text-white">
       <div class="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
         <h2 class="text-3xl lg:text-4xl font-bold mb-6">
-          Ready to Transform Your YouTube Channel?
+          Pripravení transformovať svoj YouTube kanál?
         </h2>
         <p class="text-xl mb-8 opacity-90">
-          Join thousands of successful creators who started their journey with VidaduAcademy
+          Pridajte sa k tisíckam úspešných tvorcov, ktorí začali svoju cestu s VidaduAcademy
         </p>
         <div class="flex flex-col sm:flex-row gap-4 justify-center">
           <router-link to="/register" class="btn-outline border-white text-white hover:bg-white hover:text-primary-600 text-lg px-8 py-4">
-            Start Learning Today
+            Zaregistrovať sa
           </router-link>
           <router-link to="/courses" class="bg-white text-primary-600 hover:bg-gray-100 font-medium py-4 px-8 rounded-lg transition-colors text-lg">
-            Browse Courses
+            Prehliadnuť kurzy
           </router-link>
         </div>
       </div>

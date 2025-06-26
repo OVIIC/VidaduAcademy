@@ -1,32 +1,32 @@
 <template>
-  <div class="min-h-screen bg-gray-50 py-8">
+  <div class="min-h-screen bg-white py-8">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <!-- Header -->
       <div class="mb-8">
-        <h1 class="text-3xl font-bold text-gray-900">All Courses</h1>
-        <p class="mt-2 text-gray-600">Discover courses to grow your YouTube channel</p>
+        <h1 class="text-3xl font-bold text-gray-900">Všetky kurzy</h1>
+        <p class="mt-2 text-gray-600">Objavte kurzy na rast vašeho YouTube kanála</p>
       </div>
 
       <!-- Filters -->
       <div class="mb-8 flex flex-wrap gap-4">
-        <select v-model="selectedCategory" class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-          <option value="">All Categories</option>
+        <select v-model="selectedCategory" class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent">
+          <option value="">Všetky kategórie</option>
           <option v-for="category in categories" :key="category.id" :value="category.id">
             {{ category.name }}
           </option>
         </select>
         
-        <select v-model="sortBy" class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-          <option value="created_at">Newest</option>
-          <option value="price">Price: Low to High</option>
-          <option value="-price">Price: High to Low</option>
-          <option value="title">Title: A-Z</option>
+        <select v-model="sortBy" class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent">
+          <option value="created_at">Najnovšie</option>
+          <option value="price">Cena: Od najnižšej</option>
+          <option value="-price">Cena: Od najvyššej</option>
+          <option value="title">Názov: A-Z</option>
         </select>
       </div>
 
       <!-- Loading -->
       <div v-if="loading" class="flex justify-center py-12">
-        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600"></div>
       </div>
 
       <!-- Courses Grid -->
@@ -40,8 +40,8 @@
 
       <!-- No courses found -->
       <div v-else class="text-center py-12">
-        <div class="text-gray-400 text-lg">No courses found</div>
-        <p class="text-gray-500 mt-2">Try adjusting your filters or check back later for new courses.</p>
+        <div class="text-gray-400 text-lg">Žiadne kurzy sa nenašli</div>
+        <p class="text-gray-500 mt-2">Skúste upraviť filtre alebo sa neskôr vráťte pre nové kurzy.</p>
       </div>
     </div>
   </div>

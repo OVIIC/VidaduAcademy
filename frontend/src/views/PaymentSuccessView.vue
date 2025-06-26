@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+  <div class="min-h-screen bg-gradient-to-br from-green-50 to-gray-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
     <div class="max-w-md w-full space-y-8">
       <!-- Success Icon -->
       <div class="text-center">
@@ -18,7 +18,7 @@
       <div v-if="course" class="bg-white rounded-lg shadow-md p-6">
         <h3 class="text-lg font-medium text-gray-900 mb-4">Course Enrolled</h3>
         <div class="flex items-start space-x-4">
-          <div class="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center flex-shrink-0">
+          <div class="w-16 h-16 bg-gradient-to-r from-primary-500 to-secondary-600 rounded-lg flex items-center justify-center flex-shrink-0">
             <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
               <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
             </svg>
@@ -46,8 +46,8 @@
         <h3 class="text-lg font-medium text-gray-900 mb-4">What's Next?</h3>
         <div class="space-y-4">
           <div class="flex items-start">
-            <div class="flex-shrink-0 w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center mt-0.5">
-              <span class="text-xs font-medium text-blue-600">1</span>
+            <div class="flex-shrink-0 w-6 h-6 bg-primary-100 rounded-full flex items-center justify-center mt-0.5">
+              <span class="text-xs font-medium text-primary-600">1</span>
             </div>
             <div class="ml-3">
               <p class="text-sm font-medium text-gray-900">Access Your Course</p>
@@ -55,8 +55,8 @@
             </div>
           </div>
           <div class="flex items-start">
-            <div class="flex-shrink-0 w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center mt-0.5">
-              <span class="text-xs font-medium text-blue-600">2</span>
+            <div class="flex-shrink-0 w-6 h-6 bg-primary-100 rounded-full flex items-center justify-center mt-0.5">
+              <span class="text-xs font-medium text-primary-600">2</span>
             </div>
             <div class="ml-3">
               <p class="text-sm font-medium text-gray-900">Track Your Progress</p>
@@ -64,8 +64,8 @@
             </div>
           </div>
           <div class="flex items-start">
-            <div class="flex-shrink-0 w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center mt-0.5">
-              <span class="text-xs font-medium text-blue-600">3</span>
+            <div class="flex-shrink-0 w-6 h-6 bg-primary-100 rounded-full flex items-center justify-center mt-0.5">
+              <span class="text-xs font-medium text-primary-600">3</span>
             </div>
             <div class="ml-3">
               <p class="text-sm font-medium text-gray-900">Earn Your Certificate</p>
@@ -80,21 +80,21 @@
         <router-link
           v-if="course"
           :to="{ name: 'learn', params: { courseId: course.id } }"
-          class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-200"
+          class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition duration-200"
         >
           Start Learning Now
         </router-link>
         
         <router-link
           to="/my-courses"
-          class="w-full flex justify-center py-3 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-200"
+          class="w-full flex justify-center py-3 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition duration-200"
         >
           View All My Courses
         </router-link>
         
         <router-link
           to="/dashboard"
-          class="w-full flex justify-center py-3 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-200"
+          class="w-full flex justify-center py-3 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition duration-200"
         >
           Go to Dashboard
         </router-link>

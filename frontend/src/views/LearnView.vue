@@ -13,7 +13,7 @@
         <div class="p-6 border-b border-gray-700">
           <router-link
             :to="{ name: 'course-detail', params: { id: course.id } }"
-            class="text-blue-400 hover:text-blue-300 text-sm mb-2 inline-block"
+            class="text-primary-400 hover:text-primary-300 text-sm mb-2 inline-block"
           >
             ← Back to Course
           </router-link>
@@ -25,7 +25,7 @@
             </div>
             <div class="w-full bg-gray-700 rounded-full h-2">
               <div
-                class="bg-blue-600 h-2 rounded-full transition-all duration-300"
+                class="bg-primary-600 h-2 rounded-full transition-all duration-300"
                 :style="{ width: `${courseProgress}%` }"
               ></div>
             </div>
@@ -46,7 +46,7 @@
                 :class="[
                   'p-3 rounded-lg cursor-pointer transition duration-200',
                   currentLesson?.id === lesson.id
-                    ? 'bg-blue-600 text-white'
+                    ? 'bg-primary-600 text-white'
                     : 'bg-gray-700 hover:bg-gray-600 text-gray-300'
                 ]"
               >
@@ -58,7 +58,7 @@
                         getLessonStatus(lesson.id) === 'completed'
                           ? 'bg-green-500 text-white'
                           : getLessonStatus(lesson.id) === 'current'
-                          ? 'bg-blue-500 text-white'
+                          ? 'bg-primary-500 text-white'
                           : 'bg-gray-600 text-gray-400'
                       ]"
                     >
@@ -72,7 +72,7 @@
                       <p class="text-xs opacity-75">{{ formatDuration(lesson.duration) }}</p>
                     </div>
                   </div>
-                  <div v-if="currentLesson?.id === lesson.id" class="text-blue-300">
+                  <div v-if="currentLesson?.id === lesson.id" class="text-primary-300">
                     <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                       <path d="M8 12.5l5-3-5-3v6z"/>
                     </svg>
@@ -96,7 +96,7 @@
             <button
               @click="nextLesson"
               :disabled="!canGoNext"
-              class="flex-1 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed text-white px-4 py-2 rounded-lg text-sm font-medium transition duration-200"
+              class="flex-1 bg-primary-600 hover:bg-primary-700 disabled:opacity-50 disabled:cursor-not-allowed text-white px-4 py-2 rounded-lg text-sm font-medium transition duration-200"
             >
               Next
             </button>
@@ -188,13 +188,13 @@
               <div class="bg-gray-800 rounded-lg p-6">
                 <h3 class="text-lg font-semibold text-white mb-4">Additional Resources</h3>
                 <div class="space-y-3">
-                  <a href="#" class="block text-blue-400 hover:text-blue-300 transition duration-200">
+                  <a href="#" class="block text-primary-400 hover:text-primary-300 transition duration-200">
                     📄 Lesson Notes & Summary
                   </a>
-                  <a href="#" class="block text-blue-400 hover:text-blue-300 transition duration-200">
+                  <a href="#" class="block text-primary-400 hover:text-primary-300 transition duration-200">
                     💾 Downloadable Resources
                   </a>
-                  <a href="#" class="block text-blue-400 hover:text-blue-300 transition duration-200">
+                  <a href="#" class="block text-primary-400 hover:text-primary-300 transition duration-200">
                     🔗 External References
                   </a>
                 </div>
@@ -210,7 +210,7 @@
       <div class="text-center">
         <h1 class="text-2xl font-bold text-white mb-2">Course Not Found</h1>
         <p class="text-gray-400 mb-4">The course you're looking for doesn't exist or you don't have access.</p>
-        <router-link to="/my-courses" class="text-blue-400 hover:text-blue-300">
+        <router-link to="/my-courses" class="text-primary-400 hover:text-primary-300">
           Back to My Courses
         </router-link>
       </div>

@@ -1,19 +1,19 @@
 <template>
-  <div class="min-h-screen bg-gray-50">
+  <div class="min-h-screen bg-white">
     <!-- Loading -->
     <div v-if="loading" class="flex justify-center items-center min-h-screen">
-      <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+      <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600"></div>
     </div>
 
     <!-- Course Details -->
     <div v-else-if="course" class="max-w-7xl mx-auto">
       <!-- Hero Section -->
-      <div class="bg-gradient-to-r from-blue-600 to-purple-600 text-white">
+      <div class="bg-gradient-to-r from-primary-600 to-secondary-600 text-white">
         <div class="px-4 sm:px-6 lg:px-8 py-16">
           <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
             <div>
               <h1 class="text-4xl font-bold mb-4">{{ course.title }}</h1>
-              <p class="text-xl text-blue-100 mb-6">{{ course.description }}</p>
+              <p class="text-xl text-white mb-6">{{ course.description }}</p>
               
               <div class="flex items-center space-x-6 mb-6">
                 <div class="flex items-center">
@@ -60,7 +60,7 @@
                   </svg>
                 </div>
                 <h3 class="text-lg font-semibold mb-2">Course Preview</h3>
-                <p class="text-sm text-blue-100">Get a taste of what you'll learn</p>
+                <p class="text-sm text-white">Get a taste of what you'll learn</p>
               </div>
             </div>
           </div>
@@ -96,7 +96,7 @@
                 >
                   <div class="flex items-center justify-between">
                     <div class="flex items-center">
-                      <span class="bg-blue-100 text-blue-800 text-sm font-medium px-2.5 py-0.5 rounded mr-3">
+                      <span class="bg-primary-100 text-primary-800 text-sm font-medium px-2.5 py-0.5 rounded mr-3">
                         {{ index + 1 }}
                       </span>
                       <div>
@@ -142,7 +142,7 @@
             <div class="bg-white rounded-lg shadow-sm p-6">
               <h3 class="text-lg font-semibold mb-4">Your Instructor</h3>
               <div class="flex items-center mb-4">
-                <div class="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center text-white font-bold">
+                <div class="w-12 h-12 bg-gradient-to-r from-primary-500 to-secondary-500 rounded-full flex items-center justify-center text-white font-bold">
                   VA
                 </div>
                 <div class="ml-3">
@@ -164,7 +164,7 @@
       <div class="text-center">
         <h1 class="text-2xl font-bold text-gray-900 mb-2">Course Not Found</h1>
         <p class="text-gray-600 mb-4">The course you're looking for doesn't exist.</p>
-        <router-link to="/courses" class="text-blue-600 hover:text-blue-800">
+        <router-link to="/courses" class="text-primary-600 hover:text-primary-800">
           Browse All Courses
         </router-link>
       </div>

@@ -1,18 +1,18 @@
 <template>
-  <div class="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+  <div class="min-h-screen bg-white flex flex-col justify-center py-12 sm:px-6 lg:px-8">
     <div class="sm:mx-auto sm:w-full sm:max-w-md">
       <div class="flex justify-center">
-        <div class="w-12 h-12 bg-gradient-to-r from-primary-600 to-purple-600 rounded-lg flex items-center justify-center">
+        <div class="w-12 h-12 bg-gradient-to-r from-primary-600 to-secondary-600 rounded-lg flex items-center justify-center">
           <span class="text-white font-bold text-lg">V</span>
         </div>
       </div>
       <h2 class="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">
-        Create your account
+        Vytvorte si účet
       </h2>
       <p class="mt-2 text-center text-sm text-gray-600">
-        Or
+        Alebo
         <router-link to="/login" class="font-medium text-primary-600 hover:text-primary-500">
-          sign in to your existing account
+          sa prihláste do existujúceho účtu
         </router-link>
       </p>
     </div>
@@ -22,7 +22,7 @@
         <form class="space-y-6" @submit.prevent="handleSubmit">
           <div>
             <label for="name" class="block text-sm font-medium text-gray-700">
-              Full name
+              Celé meno
             </label>
             <div class="mt-1">
               <input
@@ -39,7 +39,7 @@
 
           <div>
             <label for="email" class="block text-sm font-medium text-gray-700">
-              Email address
+              Emailová adresa
             </label>
             <div class="mt-1">
               <input
@@ -56,7 +56,7 @@
 
           <div>
             <label for="youtube_channel" class="block text-sm font-medium text-gray-700">
-              YouTube Channel URL (optional)
+              URL YouTube kanála (voliteľné)
             </label>
             <div class="mt-1">
               <input
@@ -64,7 +64,7 @@
                 v-model="form.youtube_channel"
                 name="youtube_channel"
                 type="url"
-                placeholder="https://youtube.com/@yourchannel"
+                placeholder="https://youtube.com/@vaškanál"
                 class="input-field"
               />
             </div>
@@ -72,7 +72,7 @@
 
           <div>
             <label for="subscribers_count" class="block text-sm font-medium text-gray-700">
-              Current Subscriber Count (optional)
+              Súčasný počet odberateľov (voliteľné)
             </label>
             <div class="mt-1">
               <input
@@ -89,7 +89,7 @@
 
           <div>
             <label for="password" class="block text-sm font-medium text-gray-700">
-              Password
+              Heslo
             </label>
             <div class="mt-1">
               <input
@@ -106,7 +106,7 @@
 
           <div>
             <label for="password_confirmation" class="block text-sm font-medium text-gray-700">
-              Confirm password
+              Potvrdiť heslo
             </label>
             <div class="mt-1">
               <input
@@ -131,10 +131,10 @@
               class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
             />
             <label for="agree-terms" class="ml-2 block text-sm text-gray-900">
-              I agree to the
-              <a href="#" class="text-primary-600 hover:text-primary-500">Terms of Service</a>
-              and
-              <a href="#" class="text-primary-600 hover:text-primary-500">Privacy Policy</a>
+              Súhlasím s
+              <a href="#" class="text-primary-600 hover:text-primary-500">Podmienkami služby</a>
+              a
+              <a href="#" class="text-primary-600 hover:text-primary-500">Zásadami ochrany súkromia</a>
             </label>
           </div>
 
@@ -149,9 +149,9 @@
                   <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                   <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                 </svg>
-                Creating account...
+                Vytváram účet...
               </span>
-              <span v-else>Create account</span>
+              <span v-else>Vytvoriť účet</span>
             </button>
           </div>
         </form>
@@ -180,7 +180,7 @@ const form = reactive({
 
 const handleSubmit = async () => {
   if (form.password !== form.password_confirmation) {
-    alert('Passwords do not match')
+    alert('Heslá sa nezhodujú')
     return
   }
 

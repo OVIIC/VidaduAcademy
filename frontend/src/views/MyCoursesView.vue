@@ -1,10 +1,10 @@
 <template>
-  <div class="min-h-screen bg-gray-50 py-8">
+  <div class="min-h-screen bg-white py-8">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <!-- Header -->
       <div class="mb-8">
-        <h1 class="text-3xl font-bold text-gray-900">My Courses</h1>
-        <p class="mt-2 text-gray-600">Track your progress and continue learning</p>
+        <h1 class="text-3xl font-bold text-gray-900">Moje kurzy</h1>
+        <p class="mt-2 text-gray-600">Sledujte svoj pokrok a pokračujte v učení</p>
       </div>
 
       <!-- Filter Tabs -->
@@ -17,7 +17,7 @@
             :class="[
               'py-2 px-1 border-b-2 font-medium text-sm transition duration-200',
               activeTab === tab.key
-                ? 'border-blue-500 text-blue-600'
+                ? 'border-primary-500 text-primary-600'
                 : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
             ]"
           >
@@ -26,7 +26,7 @@
               :class="[
                 'ml-2 py-0.5 px-2 rounded-full text-xs',
                 activeTab === tab.key
-                  ? 'bg-blue-100 text-blue-600'
+                  ? 'bg-primary-100 text-primary-600'
                   : 'bg-gray-100 text-gray-600'
               ]"
             >
@@ -38,7 +38,7 @@
 
       <!-- Loading -->
       <div v-if="loading" class="flex justify-center py-12">
-        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600"></div>
       </div>
 
       <!-- Courses Grid -->
@@ -49,7 +49,7 @@
           class="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition duration-200"
         >
           <!-- Course Thumbnail -->
-          <div class="aspect-video bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center">
+          <div class="aspect-video bg-gradient-to-r from-primary-500 to-secondary-600 flex items-center justify-center">
             <svg class="w-12 h-12 text-white/70" fill="currentColor" viewBox="0 0 20 20">
               <path d="M8 12.5l5-3-5-3v6z"/>
               <path d="M10 18a8 8 0 100-16 8 8 0 000 16z"/>
@@ -66,12 +66,12 @@
             <!-- Progress Bar -->
             <div class="mb-4">
               <div class="flex justify-between items-center mb-2">
-                <span class="text-sm font-medium text-gray-700">Progress</span>
+                <span class="text-sm font-medium text-gray-700">Pokrok</span>
                 <span class="text-sm text-gray-600">{{ enrollment.progress }}%</span>
               </div>
               <div class="w-full bg-gray-200 rounded-full h-2">
                 <div
-                  class="bg-blue-600 h-2 rounded-full transition-all duration-300"
+                  class="bg-primary-600 h-2 rounded-full transition-all duration-300"
                   :style="{ width: `${enrollment.progress}%` }"
                 ></div>
               </div>
@@ -79,7 +79,7 @@
 
             <!-- Course Stats -->
             <div class="flex items-center justify-between text-sm text-gray-500 mb-4">
-              <span>{{ enrollment.course.lessons?.length || 0 }} lessons</span>
+              <span>{{ enrollment.course.lessons?.length || 0 }} lekcií</span>
               <span>{{ formatDuration(enrollment.course.duration) }}</span>
             </div>
 
@@ -102,10 +102,10 @@
                 :class="[
                   'flex-1 text-center px-4 py-2 rounded-lg text-sm font-medium transition duration-200',
                   enrollment.progress === 0
-                    ? 'bg-blue-600 hover:bg-blue-700 text-white'
+                    ? 'bg-primary-600 hover:bg-primary-700 text-white'
                     : enrollment.progress === 100
                     ? 'bg-green-600 hover:bg-green-700 text-white'
-                    : 'bg-blue-600 hover:bg-blue-700 text-white'
+                    : 'bg-primary-600 hover:bg-primary-700 text-white'
                 ]"
               >
                 {{ getActionText(enrollment.progress) }}
@@ -116,7 +116,7 @@
                 v-if="enrollment.progress === 100"
                 class="px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 transition duration-200"
               >
-                Certificate
+                Certifikát
               </button>
             </div>
           </div>
@@ -133,9 +133,9 @@
         <div class="mt-6">
           <router-link
             to="/courses"
-            class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
+            class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700"
           >
-            Browse Courses
+            Prehliadať kurzy
           </router-link>
         </div>
       </div>
@@ -155,10 +155,10 @@ export default {
     const activeTab = ref('all')
 
     const tabs = [
-      { key: 'all', label: 'All Courses' },
-      { key: 'in-progress', label: 'In Progress' },
-      { key: 'completed', label: 'Completed' },
-      { key: 'not-started', label: 'Not Started' }
+      { key: 'all', label: 'Všetky kurzy' },
+      { key: 'in-progress', label: 'Prebiehajúce' },
+      { key: 'completed', label: 'Dokončené' },
+      { key: 'not-started', label: 'Nezačaté' }
     ]
 
     const enrollments = computed(() => authStore.user?.enrollments || [])
@@ -190,46 +190,46 @@ export default {
     }
 
     const getStatusText = (progress) => {
-      if (progress === 0) return 'Not Started'
-      if (progress === 100) return 'Completed'
-      return 'In Progress'
+      if (progress === 0) return 'Nezačaté'
+      if (progress === 100) return 'Dokončené'
+      return 'Prebiehajúce'
     }
 
     const getStatusBadgeClass = (progress) => {
       if (progress === 0) return 'bg-gray-100 text-gray-800'
       if (progress === 100) return 'bg-green-100 text-green-800'
-      return 'bg-blue-100 text-blue-800'
+      return 'bg-primary-100 text-primary-800'
     }
 
     const getActionText = (progress) => {
-      if (progress === 0) return 'Start Course'
-      if (progress === 100) return 'Review Course'
-      return 'Continue'
+      if (progress === 0) return 'Začať kurz'
+      if (progress === 100) return 'Zopakovať kurz'
+      return 'Pokračovať'
     }
 
     const getEmptyStateTitle = () => {
       switch (activeTab.value) {
         case 'in-progress':
-          return 'No courses in progress'
+          return 'Žiadne prebiehajúce kurzy'
         case 'completed':
-          return 'No completed courses'
+          return 'Žiadne dokončené kurzy'
         case 'not-started':
-          return 'No courses to start'
+          return 'Žiadne kurzy na začatie'
         default:
-          return 'No enrolled courses'
+          return 'Žiadne zapísané kurzy'
       }
     }
 
     const getEmptyStateDescription = () => {
       switch (activeTab.value) {
         case 'in-progress':
-          return 'Start learning to see your progress here.'
+          return 'Začnite sa učiť, aby ste tu videli svoj pokrok.'
         case 'completed':
-          return 'Complete a course to earn your first certificate.'
+          return 'Dokončite kurz, aby ste získali svoj prvý certifikát.'
         case 'not-started':
-          return 'All your enrolled courses are either in progress or completed.'
+          return 'Všetky vaše zapísané kurzy sú buď prebiehajúce alebo dokončené.'
         default:
-          return 'Enroll in your first course to start learning.'
+          return 'Zapíšte sa do svojho prvého kurzu a začnite sa učiť.'
       }
     }
 
@@ -242,7 +242,7 @@ export default {
 
     const viewCertificate = (enrollment) => {
       // Mock certificate viewing
-      alert(`Certificate for "${enrollment.course.title}" - Feature coming soon!`)
+      alert(`Certifikát pre "${enrollment.course.title}" - Funkcia už čoskoro!`)
     }
 
     const loadData = async () => {

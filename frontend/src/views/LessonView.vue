@@ -13,7 +13,7 @@
         <div class="p-6 border-b border-gray-700">
           <router-link
             :to="{ name: 'course-detail', params: { id: lesson.course.id } }"
-            class="text-blue-400 hover:text-blue-300 text-sm mb-2 inline-block"
+            class="text-primary-400 hover:text-primary-300 text-sm mb-2 inline-block"
           >
             ← Back to Course
           </router-link>
@@ -42,7 +42,7 @@
             <button
               @click="nextLesson"
               :disabled="!canGoNext"
-              class="w-full bg-blue-600 hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed text-white px-4 py-2 rounded-lg text-sm font-medium transition duration-200"
+              class="w-full bg-primary-600 hover:bg-primary-700 disabled:opacity-50 disabled:cursor-not-allowed text-white px-4 py-2 rounded-lg text-sm font-medium transition duration-200"
             >
               Next Lesson →
             </button>
@@ -57,7 +57,7 @@
           <div class="flex items-center justify-between">
             <router-link
               :to="{ name: 'learn', params: { courseId: lesson.course.id } }"
-              class="text-blue-400 hover:text-blue-300"
+              class="text-primary-400 hover:text-primary-300"
             >
               ← Back
             </router-link>
@@ -112,7 +112,7 @@
                 </svg>
                 <p class="text-gray-400">Video Player</p>
                 <p class="text-sm text-gray-500 mt-1">{{ lesson.title }}</p>
-                <button class="mt-4 bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg transition duration-200">
+                <button class="mt-4 bg-primary-600 hover:bg-primary-700 text-white px-6 py-2 rounded-lg transition duration-200">
                   Play Video
                 </button>
               </div>
@@ -133,25 +133,25 @@
                 <h3 class="text-lg font-semibold text-white mb-4">Learning Objectives</h3>
                 <ul class="space-y-3 text-gray-300">
                   <li class="flex items-start">
-                    <svg class="w-5 h-5 text-blue-500 mt-0.5 mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                    <svg class="w-5 h-5 text-primary-500 mt-0.5 mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
                       <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
                     </svg>
                     Understand the key concepts presented in this lesson
                   </li>
                   <li class="flex items-start">
-                    <svg class="w-5 h-5 text-blue-500 mt-0.5 mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                    <svg class="w-5 h-5 text-primary-500 mt-0.5 mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
                       <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
                     </svg>
                     Apply practical techniques to your YouTube channel
                   </li>
                   <li class="flex items-start">
-                    <svg class="w-5 h-5 text-blue-500 mt-0.5 mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                    <svg class="w-5 h-5 text-primary-500 mt-0.5 mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
                       <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
                     </svg>
                     Implement strategies for improved channel performance
                   </li>
                   <li class="flex items-start">
-                    <svg class="w-5 h-5 text-blue-500 mt-0.5 mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                    <svg class="w-5 h-5 text-primary-500 mt-0.5 mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
                       <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
                     </svg>
                     Measure and analyze your progress effectively
@@ -241,7 +241,7 @@
             <button
               @click="nextLesson"
               :disabled="!canGoNext"
-              class="flex-1 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed text-white px-4 py-2 rounded-lg text-sm font-medium transition duration-200"
+              class="flex-1 bg-primary-600 hover:bg-primary-700 disabled:opacity-50 disabled:cursor-not-allowed text-white px-4 py-2 rounded-lg text-sm font-medium transition duration-200"
             >
               Next →
             </button>
@@ -255,7 +255,7 @@
       <div class="text-center">
         <h1 class="text-2xl font-bold text-white mb-2">Lesson Not Found</h1>
         <p class="text-gray-400 mb-4">The lesson you're looking for doesn't exist or you don't have access.</p>
-        <router-link to="/my-courses" class="text-blue-400 hover:text-blue-300">
+        <router-link to="/my-courses" class="text-primary-400 hover:text-primary-300">
           Back to My Courses
         </router-link>
       </div>

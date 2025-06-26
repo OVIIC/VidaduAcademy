@@ -5,14 +5,14 @@
         <!-- Company Info -->
         <div class="col-span-1 md:col-span-2">
           <div class="flex items-center space-x-2 mb-4">
-            <div class="w-8 h-8 bg-gradient-to-r from-primary-600 to-purple-600 rounded-lg flex items-center justify-center">
+            <div class="w-8 h-8 bg-gradient-to-r from-primary-600 to-secondary-600 rounded-lg flex items-center justify-center">
               <span class="text-white font-bold text-sm">V</span>
             </div>
             <span class="text-xl font-bold">VidaduAcademy</span>
           </div>
           <p class="text-gray-400 mb-6 max-w-md">
-            Empowering creators to build successful YouTube channels through expert-led courses 
-            and practical strategies. Join thousands of students growing their audiences.
+            Posilňujeme tvorcov pri budovaní úspešných YouTube kanálov prostredníctvom kurzov vedených expertmi 
+            a praktických stratégií. Pridajte sa k tisíckam študentov, ktorí rozširujú svoje publikum.
           </p>
           <div class="flex space-x-4">
             <a href="#" class="text-gray-400 hover:text-white transition-colors">
@@ -32,31 +32,31 @@
 
         <!-- Quick Links -->
         <div>
-          <h3 class="text-lg font-semibold mb-4">Quick Links</h3>
+          <h3 class="text-lg font-semibold mb-4">Rýchle odkazy</h3>
           <ul class="space-y-2">
             <li>
               <router-link to="/courses" class="text-gray-400 hover:text-white transition-colors">
-                All Courses
+                Všetky kurzy
               </router-link>
             </li>
             <li>
               <router-link to="/courses?category=youtube-growth" class="text-gray-400 hover:text-white transition-colors">
-                YouTube Growth
+                Rast YouTube
               </router-link>
             </li>
             <li>
               <router-link to="/courses?category=content-creation" class="text-gray-400 hover:text-white transition-colors">
-                Content Creation
+                Tvorba obsahu
               </router-link>
             </li>
             <li>
               <router-link to="/courses?category=monetization" class="text-gray-400 hover:text-white transition-colors">
-                Monetization
+                Monetizácia
               </router-link>
             </li>
             <li>
               <a href="#" class="text-gray-400 hover:text-white transition-colors">
-                Success Stories
+                Príbehy úspechov
               </a>
             </li>
           </ul>
@@ -64,31 +64,31 @@
 
         <!-- Support -->
         <div>
-          <h3 class="text-lg font-semibold mb-4">Support</h3>
+          <h3 class="text-lg font-semibold mb-4">Podpora</h3>
           <ul class="space-y-2">
             <li>
               <a href="#" class="text-gray-400 hover:text-white transition-colors">
-                Help Center
+                Centrum pomoci
               </a>
             </li>
             <li>
               <a href="#" class="text-gray-400 hover:text-white transition-colors">
-                Contact Us
+                Kontaktujte nás
               </a>
             </li>
             <li>
               <a href="#" class="text-gray-400 hover:text-white transition-colors">
-                Community
+                Komunita
               </a>
             </li>
             <li>
               <a href="#" class="text-gray-400 hover:text-white transition-colors">
-                Privacy Policy
+                Zásady ochrany súkromia
               </a>
             </li>
             <li>
               <a href="#" class="text-gray-400 hover:text-white transition-colors">
-                Terms of Service
+                Podmienky služby
               </a>
             </li>
           </ul>
@@ -98,19 +98,19 @@
       <!-- Newsletter Signup -->
       <div class="border-t border-gray-800 mt-8 pt-8">
         <div class="max-w-md mx-auto text-center">
-          <h3 class="text-lg font-semibold mb-2">Stay Updated</h3>
-          <p class="text-gray-400 mb-4">Get the latest YouTube growth tips and course updates</p>
+          <h3 class="text-lg font-semibold mb-2">Zostaňte informovaní</h3>
+          <p class="text-gray-400 mb-4">Získajte najnovšie tipy na rast YouTube a aktualizácie kurzov</p>
           <form class="flex">
             <input
               type="email"
-              placeholder="Enter your email"
+              placeholder="Zadajte váš email"
               class="flex-1 bg-gray-800 border border-gray-700 rounded-l-lg px-4 py-2 text-white placeholder-gray-400 focus:outline-none focus:border-primary-500"
             >
             <button
               type="submit"
               class="bg-primary-600 hover:bg-primary-700 px-6 py-2 rounded-r-lg font-medium transition-colors"
             >
-              Subscribe
+              Odoberať
             </button>
           </form>
         </div>
@@ -119,17 +119,17 @@
       <!-- Bottom Bar -->
       <div class="border-t border-gray-800 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
         <p class="text-gray-400 text-sm">
-          © {{ currentYear }} VidaduAcademy. All rights reserved.
+          © {{ currentYear }} VidaduAcademy. Všetky práva vyhradené.
         </p>
         <div class="flex space-x-6 mt-4 md:mt-0">
           <a href="#" class="text-gray-400 hover:text-white text-sm transition-colors">
-            Privacy Policy
+            Zásady ochrany súkromia
           </a>
           <a href="#" class="text-gray-400 hover:text-white text-sm transition-colors">
-            Terms of Service
+            Podmienky služby
           </a>
           <a href="#" class="text-gray-400 hover:text-white text-sm transition-colors">
-            Cookie Policy
+            Zásady cookies
           </a>
         </div>
       </div>

@@ -1,10 +1,10 @@
 <template>
-  <div class="min-h-screen bg-gray-50 py-8">
+  <div class="min-h-screen bg-white py-8">
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
       <!-- Header -->
       <div class="mb-8">
-        <h1 class="text-3xl font-bold text-gray-900">Profile Settings</h1>
-        <p class="mt-2 text-gray-600">Manage your account information and preferences</p>
+        <h1 class="text-3xl font-bold text-gray-900">Nastavenia profilu</h1>
+        <p class="mt-2 text-gray-600">Spravujte informácie o svojom účte a preferencie</p>
       </div>
 
       <!-- Profile Form -->
@@ -12,150 +12,150 @@
         <form @submit.prevent="updateProfile" class="space-y-6 p-6">
           <!-- Profile Picture -->
           <div class="flex items-center space-x-6">
-            <div class="w-20 h-20 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center text-white text-2xl font-bold">
+            <div class="w-20 h-20 bg-gradient-to-r from-primary-500 to-secondary-500 rounded-full flex items-center justify-center text-white text-2xl font-bold">
               {{ getInitials(form.name) }}
             </div>
             <div>
-              <h3 class="text-lg font-medium text-gray-900">Profile Picture</h3>
-              <p class="text-sm text-gray-600">Update your profile picture to personalize your account</p>
+              <h3 class="text-lg font-medium text-gray-900">Profilová fotka</h3>
+              <p class="text-sm text-gray-600">Aktualizujte svoju profilovú fotku na personalizáciu účtu</p>
               <button
                 type="button"
-                class="mt-2 text-sm text-blue-600 hover:text-blue-800 font-medium"
+                class="mt-2 text-sm text-primary-600 hover:text-primary-800 font-medium"
               >
-                Change Picture
+                Zmeniť fotku
               </button>
             </div>
           </div>
 
           <!-- Personal Information -->
           <div class="border-t border-gray-200 pt-6">
-            <h3 class="text-lg font-medium text-gray-900 mb-4">Personal Information</h3>
+            <h3 class="text-lg font-medium text-gray-900 mb-4">Osobné informácie</h3>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <label for="name" class="block text-sm font-medium text-gray-700 mb-2">
-                  Full Name
+                  Celé meno
                 </label>
                 <input
                   id="name"
                   v-model="form.name"
                   type="text"
                   required
-                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  placeholder="Enter your full name"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                  placeholder="Zadajte svoje celé meno"
                 />
               </div>
 
               <div>
                 <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
-                  Email Address
+                  Emailová adresa
                 </label>
                 <input
                   id="email"
                   v-model="form.email"
                   type="email"
                   required
-                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  placeholder="Enter your email address"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                  placeholder="Zadajte svoju emailovú adresu"
                 />
               </div>
 
               <div>
                 <label for="phone" class="block text-sm font-medium text-gray-700 mb-2">
-                  Phone Number
+                  Telefónne číslo
                 </label>
                 <input
                   id="phone"
                   v-model="form.phone"
                   type="tel"
-                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  placeholder="Enter your phone number"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                  placeholder="Zadajte svoje telefónne číslo"
                 />
               </div>
 
               <div>
                 <label for="location" class="block text-sm font-medium text-gray-700 mb-2">
-                  Location
+                  Lokalita
                 </label>
                 <input
                   id="location"
                   v-model="form.location"
                   type="text"
-                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  placeholder="City, Country"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                  placeholder="Mesto, krajina"
                 />
               </div>
             </div>
 
             <div class="mt-6">
               <label for="bio" class="block text-sm font-medium text-gray-700 mb-2">
-                Bio
+                O mne
               </label>
               <textarea
                 id="bio"
                 v-model="form.bio"
                 rows="4"
-                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                placeholder="Tell us about yourself and your YouTube goals..."
+                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                placeholder="Povedzte nám o sebe a svojich YouTube cieľoch..."
               ></textarea>
             </div>
           </div>
 
           <!-- YouTube Information -->
           <div class="border-t border-gray-200 pt-6">
-            <h3 class="text-lg font-medium text-gray-900 mb-4">YouTube Channel Information</h3>
+            <h3 class="text-lg font-medium text-gray-900 mb-4">Informácie o YouTube kanáli</h3>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <label for="youtube_channel" class="block text-sm font-medium text-gray-700 mb-2">
-                  YouTube Channel URL
+                  URL YouTube kanála
                 </label>
                 <input
                   id="youtube_channel"
                   v-model="form.youtube_channel"
                   type="url"
-                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  placeholder="https://youtube.com/@yourchannel"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                  placeholder="https://youtube.com/@vaškanál"
                 />
               </div>
 
               <div>
                 <label for="subscriber_count" class="block text-sm font-medium text-gray-700 mb-2">
-                  Current Subscriber Count
+                  Súčasný počet odberateľov
                 </label>
                 <select
                   id="subscriber_count"
                   v-model="form.subscriber_count"
-                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                 >
-                  <option value="">Select range</option>
+                  <option value="">Vyberte rozsah</option>
                   <option value="0-100">0 - 100</option>
-                  <option value="100-1000">100 - 1,000</option>
-                  <option value="1000-10000">1,000 - 10,000</option>
-                  <option value="10000-100000">10,000 - 100,000</option>
-                  <option value="100000+">100,000+</option>
+                  <option value="100-1000">100 - 1 000</option>
+                  <option value="1000-10000">1 000 - 10 000</option>
+                  <option value="10000-100000">10 000 - 100 000</option>
+                  <option value="100000+">100 000+</option>
                 </select>
               </div>
 
               <div>
                 <label for="content_niche" class="block text-sm font-medium text-gray-700 mb-2">
-                  Content Niche
+                  Oblasť obsahu
                 </label>
                 <select
                   id="content_niche"
                   v-model="form.content_niche"
-                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                 >
-                  <option value="">Select niche</option>
+                  <option value="">Vyberte oblasť</option>
                   <option value="gaming">Gaming</option>
-                  <option value="education">Education</option>
-                  <option value="entertainment">Entertainment</option>
-                  <option value="lifestyle">Lifestyle</option>
-                  <option value="technology">Technology</option>
-                  <option value="beauty">Beauty & Fashion</option>
-                  <option value="cooking">Cooking & Food</option>
-                  <option value="travel">Travel</option>
-                  <option value="fitness">Fitness & Health</option>
-                  <option value="music">Music</option>
-                  <option value="other">Other</option>
+                  <option value="education">Vzdelávanie</option>
+                  <option value="entertainment">Zábava</option>
+                  <option value="lifestyle">Životný štýl</option>
+                  <option value="technology">Technológie</option>
+                  <option value="beauty">Krása & Móda</option>
+                  <option value="cooking">Varenie & Jedlo</option>
+                  <option value="travel">Cestovanie</option>
+                  <option value="fitness">Fitness & Zdravie</option>
+                  <option value="music">Hudba</option>
+                  <option value="other">Iné</option>
                 </select>
               </div>
 
@@ -166,7 +166,7 @@
                 <select
                   id="goals"
                   v-model="form.goals"
-                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                 >
                   <option value="">Select goal</option>
                   <option value="monetization">Monetization</option>
@@ -189,7 +189,7 @@
                   id="email_notifications"
                   v-model="form.email_notifications"
                   type="checkbox"
-                  class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                  class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
                 />
                 <label for="email_notifications" class="ml-3 text-sm text-gray-700">
                   Email notifications about new courses and updates
@@ -201,7 +201,7 @@
                   id="course_reminders"
                   v-model="form.course_reminders"
                   type="checkbox"
-                  class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                  class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
                 />
                 <label for="course_reminders" class="ml-3 text-sm text-gray-700">
                   Course progress reminders
@@ -213,7 +213,7 @@
                   id="marketing_emails"
                   v-model="form.marketing_emails"
                   type="checkbox"
-                  class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                  class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
                 />
                 <label for="marketing_emails" class="ml-3 text-sm text-gray-700">
                   Marketing emails and special offers
@@ -234,7 +234,7 @@
             <button
               type="submit"
               :disabled="loading"
-              class="px-6 py-2 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white rounded-lg transition duration-200"
+              class="px-6 py-2 bg-primary-600 hover:bg-primary-700 disabled:opacity-50 text-white rounded-lg transition duration-200"
             >
               {{ loading ? 'Saving...' : 'Save Changes' }}
             </button>
@@ -253,7 +253,7 @@
             </div>
             <button
               @click="showPasswordForm = !showPasswordForm"
-              class="text-blue-600 hover:text-blue-800 text-sm font-medium"
+              class="text-primary-600 hover:text-primary-800 text-sm font-medium"
             >
               Change Password
             </button>
@@ -264,7 +264,7 @@
               <h4 class="text-sm font-medium text-gray-900">Download Data</h4>
               <p class="text-sm text-gray-600">Download a copy of your account data</p>
             </div>
-            <button class="text-blue-600 hover:text-blue-800 text-sm font-medium">
+            <button class="text-primary-600 hover:text-primary-800 text-sm font-medium">
               Download
             </button>
           </div>
@@ -294,7 +294,7 @@
               v-model="passwordForm.current_password"
               type="password"
               required
-              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
             />
           </div>
 
@@ -307,7 +307,7 @@
               v-model="passwordForm.new_password"
               type="password"
               required
-              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
             />
           </div>
 
@@ -320,7 +320,7 @@
               v-model="passwordForm.confirm_password"
               type="password"
               required
-              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
             />
           </div>
 
@@ -335,7 +335,7 @@
             <button
               type="submit"
               :disabled="passwordLoading"
-              class="px-6 py-2 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white rounded-lg transition duration-200"
+              class="px-6 py-2 bg-primary-600 hover:bg-primary-700 disabled:opacity-50 text-white rounded-lg transition duration-200"
             >
               {{ passwordLoading ? 'Updating...' : 'Update Password' }}
             </button>

@@ -30,7 +30,7 @@
         <div>
           <p class="text-sm font-medium text-gray-900">{{ course.instructor?.name }}</p>
           <p class="text-xs text-gray-500">
-            {{ formatSubscribers(course.instructor?.subscribers_count) }} subscribers
+            {{ formatSubscribers(course.instructor?.subscribers_count) }} odberateľov
           </p>
         </div>
       </div>
@@ -54,7 +54,7 @@
           </div>
           <div class="flex items-center">
             <AcademicCapIcon class="h-4 w-4 mr-1" />
-            {{ course.total_lessons }} lessons
+            {{ course.total_lessons }} lekcií
           </div>
         </div>
         <div class="flex items-center">
@@ -62,7 +62,7 @@
             class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium"
             :class="getDifficultyBadgeClass(course.difficulty_level)"
           >
-            {{ course.difficulty_level }}
+            {{ translateDifficulty(course.difficulty_level) }}
           </span>
         </div>
       </div>
@@ -80,7 +80,7 @@
           :to="{ name: 'CourseDetail', params: { slug: course.slug } }"
           class="btn-primary"
         >
-          Learn More
+          Zistiť viac
         </router-link>
       </div>
 
@@ -88,7 +88,7 @@
       <div v-if="course.enrollments_count" class="mt-3 pt-3 border-t border-gray-100">
         <div class="flex items-center text-sm text-gray-500">
           <UsersIcon class="h-4 w-4 mr-1" />
-          {{ course.enrollments_count }} students enrolled
+          {{ course.enrollments_count }} zapísaných študentov
         </div>
       </div>
     </div>
@@ -145,6 +145,15 @@ const getDifficultyBadgeClass = (level) => {
     advanced: 'bg-red-100 text-red-800',
   }
   return classes[level] || 'bg-gray-100 text-gray-800'
+}
+
+const translateDifficulty = (level) => {
+  const translations = {
+    beginner: 'Začiatočník',
+    intermediate: 'Stredne pokročilý',
+    advanced: 'Pokročilý',
+  }
+  return translations[level] || level
 }
 </script>
 

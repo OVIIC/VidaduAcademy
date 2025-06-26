@@ -5,7 +5,7 @@
         <!-- Logo -->
         <div class="flex items-center">
           <router-link to="/" class="flex items-center space-x-2">
-            <div class="w-8 h-8 bg-gradient-to-r from-primary-600 to-purple-600 rounded-lg flex items-center justify-center">
+            <div class="w-8 h-8 bg-gradient-to-r from-primary-600 to-secondary-600 rounded-lg flex items-center justify-center">
               <span class="text-white font-bold text-sm">V</span>
             </div>
             <span class="text-xl font-bold text-gray-900">VidaduAcademy</span>
@@ -20,14 +20,14 @@
               class="text-gray-900 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
               :class="{ 'text-primary-600': $route.name === 'Home' }"
             >
-              Home
+              Domov
             </router-link>
             <router-link
               to="/courses"
               class="text-gray-900 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
               :class="{ 'text-primary-600': $route.name === 'Courses' }"
             >
-              Courses
+              Kurzy
             </router-link>
             <router-link
               v-if="authStore.isAuthenticated"
@@ -35,7 +35,7 @@
               class="text-gray-900 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
               :class="{ 'text-primary-600': $route.name === 'MyCourses' }"
             >
-              My Courses
+              Moje kurzy
             </router-link>
           </div>
         </div>
@@ -49,7 +49,7 @@
                 v-model="searchQuery"
                 @keyup.enter="performSearch"
                 type="text"
-                placeholder="Search courses..."
+                placeholder="Hľadať kurzy..."
                 class="input-field w-64 pl-10 pr-4 py-2"
               >
               <MagnifyingGlassIcon class="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
@@ -80,7 +80,7 @@
               >
                 <MenuItems class="absolute right-0 mt-2 w-56 origin-top-right bg-white divide-y divide-gray-100 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                   <div class="px-4 py-3">
-                    <p class="text-sm">Signed in as</p>
+                    <p class="text-sm">Prihlásený ako</p>
                     <p class="text-sm font-medium text-gray-900 truncate">
                       {{ authStore.user?.email }}
                     </p>
@@ -92,7 +92,7 @@
                         to="/dashboard"
                         :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm']"
                       >
-                        Dashboard
+                        Nástenka
                       </router-link>
                     </MenuItem>
                     <MenuItem v-slot="{ active }">
@@ -100,7 +100,7 @@
                         to="/profile"
                         :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm']"
                       >
-                        Profile
+                        Profil
                       </router-link>
                     </MenuItem>
                   </div>
@@ -111,7 +111,7 @@
                         @click="handleLogout"
                         :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block w-full text-left px-4 py-2 text-sm']"
                       >
-                        Sign out
+                        Odhlásiť sa
                       </button>
                     </MenuItem>
                   </div>
@@ -123,10 +123,10 @@
           <!-- Guest Buttons -->
           <div v-else class="flex items-center space-x-2">
             <router-link to="/login" class="btn-secondary">
-              Sign In
+              Prihlásiť sa
             </router-link>
             <router-link to="/register" class="btn-primary">
-              Get Started
+              Zaregistrovať sa
             </router-link>
           </div>
 
@@ -153,7 +153,7 @@
             v-model="searchQuery"
             @keyup.enter="performSearch"
             type="text"
-            placeholder="Search courses..."
+            placeholder="Hľadať kurzy..."
             class="input-field w-full pl-10 pr-4 py-2"
           >
         </div>
@@ -163,14 +163,14 @@
           @click="mobileMenuOpen = false"
           class="text-gray-900 hover:text-primary-600 block px-3 py-2 rounded-md text-base font-medium"
         >
-          Home
+          Domov
         </router-link>
         <router-link
           to="/courses"
           @click="mobileMenuOpen = false"
           class="text-gray-900 hover:text-primary-600 block px-3 py-2 rounded-md text-base font-medium"
         >
-          Courses
+          Kurzy
         </router-link>
         
         <template v-if="authStore.isAuthenticated">
@@ -179,20 +179,20 @@
             @click="mobileMenuOpen = false"
             class="text-gray-900 hover:text-primary-600 block px-3 py-2 rounded-md text-base font-medium"
           >
-            My Courses
+            Moje kurzy
           </router-link>
           <router-link
             to="/dashboard"
             @click="mobileMenuOpen = false"
             class="text-gray-900 hover:text-primary-600 block px-3 py-2 rounded-md text-base font-medium"
           >
-            Dashboard
+            Nástenka
           </router-link>
           <button
             @click="handleLogout"
             class="text-gray-900 hover:text-primary-600 block w-full text-left px-3 py-2 rounded-md text-base font-medium"
           >
-            Sign Out
+            Odhlásiť sa
           </button>
         </template>
         
@@ -202,14 +202,14 @@
             @click="mobileMenuOpen = false"
             class="text-gray-900 hover:text-primary-600 block px-3 py-2 rounded-md text-base font-medium"
           >
-            Sign In
+            Prihlásiť sa
           </router-link>
           <router-link
             to="/register"
             @click="mobileMenuOpen = false"
             class="text-gray-900 hover:text-primary-600 block px-3 py-2 rounded-md text-base font-medium"
           >
-            Get Started
+            Zaregistrovať sa
           </router-link>
         </template>
       </div>

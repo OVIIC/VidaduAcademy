@@ -62,7 +62,7 @@
       <!-- Action buttons -->
       <div class="flex space-x-2">
         <router-link
-          :to="{ name: 'CourseDetail', params: { slug: course.slug } }"
+          :to="{ name: 'CourseStudy', params: { slug: course.slug } }"
           :class="[
             'flex-1 text-center px-4 py-2 rounded-lg text-sm font-medium transition duration-200',
             actionButtonClass

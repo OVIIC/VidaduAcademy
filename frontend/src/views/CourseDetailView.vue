@@ -185,6 +185,7 @@ import { ref, computed, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useCourseStore } from '@/stores/course'
 import { useAuthStore } from '@/stores/auth'
+import { useEnrollmentStore } from '@/stores/enrollment'
 import { api } from '@/services/api'
 import AuthModal from '@/components/auth/AuthModal.vue'
 
@@ -198,6 +199,7 @@ export default {
     const router = useRouter()
     const courseStore = useCourseStore()
     const authStore = useAuthStore()
+    const enrollmentStore = useEnrollmentStore()
     
     const loading = ref(false)
     const purchasing = ref(false)
@@ -205,9 +207,8 @@ export default {
     const showAuthModal = ref(false)
 
     const isEnrolled = computed(() => {
-      return authStore.user?.enrollments?.some(enrollment => 
-        enrollment.course_id === parseInt(route.params.id)
-      )
+      if (!course.value?.id || !authStore.user) return false
+      return enrollmentStore.isEnrolledInCourse(course.value.id)
     })
 
     const learningPoints = ref([
@@ -248,7 +249,7 @@ export default {
       purchasing.value = true
       try {
         // Redirect to our Stripe checkout page with course info
-        const checkoutUrl = `/checkout?courseTitle=${encodeURIComponent(course.value.title)}&coursePrice=${course.value.price}&courseId=${course.value.id}`
+        const checkoutUrl = `/checkout?courseTitle=${encodeURIComponent(course.value.title)}&coursePrice=${course.value.price}&courseId=${course.value.id}&courseSlug=${encodeURIComponent(course.value.slug)}`
         router.push(checkoutUrl)
       } catch (error) {
         console.error('Error navigating to checkout:', error)

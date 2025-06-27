@@ -1,0 +1,135 @@
+import { defineStore } from 'pinia'
+import { enrollmentService } from '@/services'
+
+export const useEnrollmentStore = defineStore('enrollment', {
+  state: () => ({
+    myCourses: [],
+    loading: false,
+    lastUpdated: null,
+  }),
+
+  getters: {
+    inProgressCourses: (state) => {
+      if (!state.myCourses || !Array.isArray(state.myCourses)) {
+        return []
+      }
+      return state.myCourses.filter(course => {
+        const progress = course.enrollment_data?.progress_percentage || 0
+        return progress > 0 && progress < 100
+      })
+    },
+    
+    completedCourses: (state) => {
+      if (!state.myCourses || !Array.isArray(state.myCourses)) {
+        return []
+      }
+      return state.myCourses.filter(course => {
+        const progress = course.enrollment_data?.progress_percentage || 0
+        return progress >= 100
+      })
+    },
+    
+    notStartedCourses: (state) => {
+      if (!state.myCourses || !Array.isArray(state.myCourses)) {
+        return []
+      }
+      return state.myCourses.filter(course => {
+        const progress = course.enrollment_data?.progress_percentage || 0
+        return progress === 0
+      })
+    },
+
+    isEnrolledInCourse: (state) => (courseId) => {
+      if (!state.myCourses || !Array.isArray(state.myCourses)) {
+        return false
+      }
+      return state.myCourses.some(course => course.id === courseId)
+    },
+  },
+
+  actions: {
+    async loadMyCourses(force = false) {
+      // If we have recent data and not forcing refresh, skip loading
+      if (!force && this.myCourses.length > 0 && this.lastUpdated) {
+        const timeDiff = Date.now() - this.lastUpdated
+        if (timeDiff < 60000) { // Less than 1 minute ago
+          return this.myCourses
+        }
+      }
+
+      this.loading = true
+      try {
+        console.log('Loading my courses from store...')
+        const response = await enrollmentService.getMyCourses()
+        console.log('Store - My courses response:', response)
+        
+        // Ensure response.data exists and is an array
+        if (response && response.data && Array.isArray(response.data)) {
+          this.myCourses = response.data
+        } else {
+          console.warn('Invalid response format, using empty array')
+          this.myCourses = []
+        }
+        
+        this.lastUpdated = Date.now()
+        
+        console.log('Store - My courses loaded:', this.myCourses.length)
+        return this.myCourses
+      } catch (error) {
+        console.error('Store - Error loading my courses:', error)
+        // Always use empty array on error to prevent crashes
+        this.myCourses = []
+        // For development, don't throw error
+        if (process.env.NODE_ENV !== 'development') {
+          throw error
+        }
+        return this.myCourses
+      } finally {
+        this.loading = false
+      }
+    },
+
+    async enrollInCourse(courseId) {
+      try {
+        console.log('Enrolling in course:', courseId)
+        const response = await enrollmentService.enrollInCourse(courseId)
+        console.log('Enrollment response:', response)
+        
+        // Refresh my courses after successful enrollment
+        await this.loadMyCourses(true)
+        
+        return response
+      } catch (error) {
+        console.error('Error enrolling in course:', error)
+        
+        // Only throw error in production - for development, we might want to continue with fallback
+        if (process.env.NODE_ENV === 'production') {
+          throw error
+        }
+        
+        // In development, we can still throw to let the component handle fallback
+        throw error
+      }
+    },
+
+    addCourseToMyCourses(course) {
+      // Add course to local state without API call (for development/testing)
+      const existingIndex = this.myCourses.findIndex(c => c.id === course.id)
+      if (existingIndex === -1) {
+        this.myCourses.push({
+          ...course,
+          enrollment_data: {
+            progress_percentage: 0,
+            enrolled_at: new Date().toISOString(),
+          }
+        })
+        console.log('Course added to local state:', course.title)
+      }
+    },
+
+    clearCourses() {
+      this.myCourses = []
+      this.lastUpdated = null
+    },
+  },
+})

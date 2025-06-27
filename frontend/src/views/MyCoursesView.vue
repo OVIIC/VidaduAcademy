@@ -37,12 +37,23 @@
       </div>
 
       <!-- Loading -->
-      <div v-if="loading" class="flex justify-center py-12">
+      <div v-if="!authStore.isAuthenticated" class="text-center py-12">
+        <p class="text-gray-500">Musíte sa prihlásiť, aby ste videli svoje kurzy.</p>
+        <router-link
+          to="/login"
+          class="mt-4 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700"
+        >
+          Prihlásiť sa
+        </router-link>
+      </div>
+
+      <!-- Loading -->
+      <div v-else-if="loading" class="flex justify-center py-12">
         <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600"></div>
       </div>
 
       <!-- My Courses Grid -->
-      <div v-else-if="filteredCourses.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div v-else-if="authStore.isAuthenticated && filteredCourses.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <MyCourseCard
           v-for="course in filteredCourses"
           :key="course.id"
@@ -51,7 +62,7 @@
       </div>
 
       <!-- Empty State -->
-      <div v-else class="text-center py-12">
+      <div v-else-if="authStore.isAuthenticated" class="text-center py-12">
         <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
         </svg>
@@ -71,15 +82,16 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, watch, nextTick } from 'vue'
 import { useAuthStore } from '@/stores/auth'
-import { enrollmentService } from '@/services'
+import { useEnrollmentStore } from '@/stores/enrollment'
+import { useRoute } from 'vue-router'
 import MyCourseCard from '@/components/courses/MyCourseCard.vue'
 
 const authStore = useAuthStore()
-const loading = ref(false)
+const enrollmentStore = useEnrollmentStore()
+const route = useRoute()
 const activeTab = ref('all')
-const myCourses = ref([])
 
 const tabs = [
   { key: 'all', label: 'Všetky kurzy' },
@@ -88,47 +100,39 @@ const tabs = [
   { key: 'not-started', label: 'Nezačaté' }
 ]
 
+// Use store data directly
+const myCourses = computed(() => enrollmentStore.myCourses)
+const loading = computed(() => enrollmentStore.loading)
+
 const filteredCourses = computed(() => {
+  if (!enrollmentStore || !enrollmentStore.myCourses) {
+    return []
+  }
+  
   switch (activeTab.value) {
     case 'in-progress':
-      return myCourses.value.filter(course => {
-        const progress = course.enrollment_data?.progress_percentage || 0
-        return progress > 0 && progress < 100
-      })
+      return enrollmentStore.inProgressCourses || []
     case 'completed':
-      return myCourses.value.filter(course => {
-        const progress = course.enrollment_data?.progress_percentage || 0
-        return progress >= 100
-      })
+      return enrollmentStore.completedCourses || []
     case 'not-started':
-      return myCourses.value.filter(course => {
-        const progress = course.enrollment_data?.progress_percentage || 0
-        return progress === 0
-      })
+      return enrollmentStore.notStartedCourses || []
     default:
-      return myCourses.value
+      return enrollmentStore.myCourses || []
   }
 })
 
 const getTabCount = (tabKey) => {
+  if (!enrollmentStore) return 0
+  
   switch (tabKey) {
     case 'in-progress':
-      return myCourses.value.filter(course => {
-        const progress = course.enrollment_data?.progress_percentage || 0
-        return progress > 0 && progress < 100
-      }).length
+      return (enrollmentStore.inProgressCourses || []).length
     case 'completed':
-      return myCourses.value.filter(course => {
-        const progress = course.enrollment_data?.progress_percentage || 0
-        return progress >= 100
-      }).length
+      return (enrollmentStore.completedCourses || []).length
     case 'not-started':
-      return myCourses.value.filter(course => {
-        const progress = course.enrollment_data?.progress_percentage || 0
-        return progress === 0
-      }).length
+      return (enrollmentStore.notStartedCourses || []).length
     default:
-      return myCourses.value.length
+      return (enrollmentStore.myCourses || []).length
   }
 }
 
@@ -159,26 +163,28 @@ const getEmptyStateDescription = () => {
 }
 
 const loadMyCourses = async () => {
-  if (!authStore.user) {
+  if (!authStore.user || !authStore.isAuthenticated) {
+    console.log('User not authenticated, skipping course loading')
     return
   }
   
-  loading.value = true
   try {
-    console.log('Loading my courses...')
-    const response = await enrollmentService.getMyCourses()
-    console.log('My courses response:', response)
-    myCourses.value = response.data || []
-    console.log('My courses loaded:', myCourses.value.length)
+    await enrollmentStore.loadMyCourses(true) // Force refresh
   } catch (error) {
-    console.error('Error loading my courses:', error)
-    myCourses.value = []
-  } finally {
-    loading.value = false
+    console.error('Error loading my courses in component:', error)
   }
 }
 
 onMounted(() => {
   loadMyCourses()
 })
+
+// Watch for route changes to refresh data when navigating back to this page
+watch(() => route.name, (newRouteName, oldRouteName) => {
+  // Only refresh if we're navigating TO MyCourses from a different route
+  if (newRouteName === 'MyCourses' && oldRouteName && oldRouteName !== 'MyCourses') {
+    console.log('Navigated to MyCourses, refreshing data...')
+    loadMyCourses()
+  }
+}, { immediate: false })
 </script>

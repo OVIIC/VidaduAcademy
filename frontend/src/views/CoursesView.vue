@@ -69,7 +69,7 @@ const handlePurchase = async (course) => {
     console.log('Processing purchase for course:', course.title)
     
     // Redirect to our Stripe checkout page with course info
-    const checkoutUrl = `/checkout?courseTitle=${encodeURIComponent(course.title)}&coursePrice=${course.price}&courseId=${course.id}`
+    const checkoutUrl = `/checkout?courseTitle=${encodeURIComponent(course.title)}&coursePrice=${course.price}&courseId=${course.id}&courseSlug=${encodeURIComponent(course.slug)}`
     router.push(checkoutUrl)
   } catch (error) {
     console.error('Error processing purchase:', error)

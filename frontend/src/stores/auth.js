@@ -30,17 +30,24 @@ export const useAuthStore = defineStore('auth', {
       const token = localStorage.getItem('token')
       const user = localStorage.getItem('user')
       
+      console.log('Initializing auth:', { hasToken: !!token, hasUser: !!user })
+      
       if (token && user) {
         this.token = token
         this.user = JSON.parse(user)
         this.isAuthenticated = true
+        console.log('Auth initialized successfully for user:', this.user?.email)
+      } else {
+        console.log('No valid auth data found in localStorage')
       }
     },
 
     async login(credentials) {
       this.loading = true
       try {
+        console.log('Attempting login for:', credentials.email)
         const data = await authService.login(credentials)
+        console.log('Login successful, received data:', { user: data.user?.email, hasToken: !!data.token })
         
         this.user = data.user
         this.token = data.token
@@ -49,9 +56,11 @@ export const useAuthStore = defineStore('auth', {
         localStorage.setItem('token', data.token)
         localStorage.setItem('user', JSON.stringify(data.user))
         
+        console.log('Auth state updated, localStorage saved')
         toast.success('Welcome back!')
         return data
       } catch (error) {
+        console.error('Login failed:', error)
         const message = error.response?.data?.message || 'Login failed'
         toast.error(message)
         throw error
@@ -86,9 +95,11 @@ export const useAuthStore = defineStore('auth', {
     async logout() {
       try {
         await authService.logout()
+        console.log('Backend logout successful')
       } catch (error) {
         console.error('Logout error:', error)
       } finally {
+        console.log('Clearing auth state and localStorage')
         this.user = null
         this.token = null
         this.isAuthenticated = false

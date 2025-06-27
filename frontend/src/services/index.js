@@ -92,7 +92,7 @@ export const enrollmentService = {
   },
 
   async enrollInCourse(courseId) {
-    const response = await api.post('/enrollments/enroll', {
+    const response = await api.post('/enroll-me', {
       course_id: courseId,
     })
     return response.data

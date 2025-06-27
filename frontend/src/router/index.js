@@ -101,13 +101,19 @@ const router = createRouter({
 
 // Navigation guards
 router.beforeEach((to, from, next) => {
-  const authStore = useAuthStore()
-  
-  if (to.meta.requiresAuth && !authStore.isAuthenticated) {
-    next({ name: 'Login', query: { redirect: to.fullPath } })
-  } else if (to.meta.requiresGuest && authStore.isAuthenticated) {
-    next({ name: 'Dashboard' })
-  } else {
+  try {
+    const authStore = useAuthStore()
+    
+    if (to.meta.requiresAuth && !authStore.isAuthenticated) {
+      next({ name: 'Login', query: { redirect: to.fullPath } })
+    } else if (to.meta.requiresGuest && authStore.isAuthenticated) {
+      next({ name: 'Dashboard' })
+    } else {
+      next()
+    }
+  } catch (error) {
+    console.error('Navigation guard error:', error)
+    // Fallback: allow navigation if there's an error
     next()
   }
 })

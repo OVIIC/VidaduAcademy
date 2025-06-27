@@ -45,9 +45,14 @@
         <div class="space-y-3">
           <button
             @click="simulateSuccess"
-            class="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-3 px-4 rounded-lg transition duration-200"
+            :disabled="isProcessing"
+            class="w-full bg-green-600 hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-medium py-3 px-4 rounded-lg transition duration-200"
           >
-            🎉 Simulovať úspešnú platbu
+            <span v-if="isProcessing" class="flex items-center justify-center">
+              <div class="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+              Spracováva sa...
+            </span>
+            <span v-else>🎉 Simulovať úspešnú platbu</span>
           </button>
           
           <button
@@ -77,30 +82,76 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { useAuthStore } from '@/stores/auth'
+import { useEnrollmentStore } from '@/stores/enrollment'
 
 const route = useRoute()
 const router = useRouter()
+const authStore = useAuthStore()
+const enrollmentStore = useEnrollmentStore()
 
 // Generate a mock session ID
 const sessionId = ref(`cs_dev_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`)
 
 // Course information from query parameters
 const courseInfo = ref(null)
+const isProcessing = ref(false)
 
 onMounted(() => {
   // Get course info from query parameters
   if (route.query.courseTitle || route.query.coursePrice) {
     courseInfo.value = {
+      id: route.query.courseId || null,
       title: route.query.courseTitle || 'Neznámy kurz',
       price: route.query.coursePrice || '0'
     }
   }
 })
 
-const simulateSuccess = () => {
-  // Simulate successful payment
-  alert('🎉 Úspešná platba! Kurz bol pridaný do vašich kurzov.')
-  router.push('/my-courses')
+const simulateSuccess = async () => {
+  if (!courseInfo.value?.id) {
+    alert('❌ Chyba: ID kurzu nenájdené')
+    return
+  }
+
+  if (!authStore.user) {
+    alert('❌ Chyba: Užívateľ nie je prihlásený')
+    return
+  }
+
+  isProcessing.value = true
+  
+  try {
+    // Simulate successful payment and enroll user in course
+    console.log('Enrolling user in course:', courseInfo.value.id)
+    
+    // Try to enroll via API first
+    await enrollmentStore.enrollInCourse(parseInt(courseInfo.value.id))
+    
+    // Show success message for API enrollment
+    alert(`🎉 Úspešná platba! Kurz "${courseInfo.value.title}" bol pridaný do vašich kurzov.`)
+    
+  } catch (error) {
+    console.warn('API enrollment failed, using fallback:', error)
+    
+    // Fallback: Add course to local state for development testing
+    enrollmentStore.addCourseToMyCourses({
+      id: parseInt(courseInfo.value.id),
+      title: courseInfo.value.title,
+      price: courseInfo.value.price,
+      slug: route.query.courseSlug || `course-${courseInfo.value.id}`, // Add slug
+      // Mock additional course data
+      description: 'Mock course added after simulated purchase',
+      duration_minutes: 120,
+      thumbnail: null,
+    })
+    
+    alert(`🎉 Simulácia úspešnej platby! Kurz "${courseInfo.value.title}" bol pridaný do vašich kurzov.\n\n(Poznámka: Použité lokálne uloženie - API neúspešné)`)
+  } finally {
+    isProcessing.value = false
+    // Navigate immediately after success message
+    router.push('/my-courses')
+  }
 }
 
 const simulateCancel = () => {

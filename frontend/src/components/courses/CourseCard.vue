@@ -68,12 +68,19 @@
           <span class="text-sm text-gray-500 ml-1">{{ course.currency }}</span>
         </div>
         
-        <button
-          @click="showCourseDetail"
-          class="btn-primary"
-        >
-          Zistiť viac
-        </button>
+        <div class="flex flex-col items-end space-y-2">
+          <!-- Purchase status -->
+          <div v-if="isPurchased" class="text-sm font-medium text-green-600 bg-green-100 px-2 py-1 rounded">
+            Kurz je zakúpený
+          </div>
+          
+          <button
+            @click="showCourseDetail"
+            class="btn-primary"
+          >
+            Zistiť viac
+          </button>
+        </div>
       </div>
     </div>
 
@@ -81,6 +88,7 @@
     <CourseDetailModal
       :show="showModal"
       :course="course"
+      :isPurchased="isPurchased"
       @close="showModal = false"
       @purchase="handlePurchase"
     />
@@ -88,15 +96,16 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import {
   StarIcon,
   ClockIcon,
   AcademicCapIcon,
 } from '@heroicons/vue/24/outline'
+import { useEnrollmentStore } from '@/stores/enrollment'
 import CourseDetailModal from './CourseDetailModal.vue'
 
-defineProps({
+const props = defineProps({
   course: {
     type: Object,
     required: true,
@@ -105,7 +114,13 @@ defineProps({
 
 const emit = defineEmits(['purchase'])
 
+const enrollmentStore = useEnrollmentStore()
 const showModal = ref(false)
+
+// Check if course is purchased
+const isPurchased = computed(() => {
+  return enrollmentStore.hasPurchasedCourse(props.course.id)
+})
 
 const showCourseDetail = () => {
   showModal.value = true

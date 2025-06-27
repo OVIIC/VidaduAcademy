@@ -51,6 +51,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::prefix('payments')->group(function () {
         Route::post('/checkout', [PaymentController::class, 'createCheckoutSession']);
         Route::get('/history', [PaymentController::class, 'purchaseHistory']);
+        Route::get('/course/{courseId}/status', [PaymentController::class, 'checkCoursePurchaseStatus']);
     });
 
     // Learning routes

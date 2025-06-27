@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Frontend Test</title>
+</head>
+<body>
+    <h1>Test Frontend Functionality</h1>
+    <script>
+        // Test API calls
+        async function testAPI() {
+            try {
+                // Login
+                const loginResponse = await fetch('http://127.0.0.1:8000/api/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        email: 'admin@vidaduacademy.com',
+                        password: 'password'
+                    })
+                });
+                
+                const loginData = await loginResponse.json();
+                console.log('Login successful:', loginData);
+                
+                // Get courses
+                const coursesResponse = await fetch('http://127.0.0.1:8000/api/courses', {
+                    headers: {
+                        'Authorization': `Bearer ${loginData.token}`,
+                        'Accept': 'application/json'
+                    }
+                });
+                
+                const coursesData = await coursesResponse.json();
+                console.log('Courses loaded:', coursesData);
+                
+                // Check purchase status for each course
+                for (const course of coursesData.data) {
+                    const statusResponse = await fetch(`http://127.0.0.1:8000/api/payments/course/${course.id}/status`, {
+                        headers: {
+                            'Authorization': `Bearer ${loginData.token}`,
+                            'Accept': 'application/json'
+                        }
+                    });
+                    
+                    const statusData = await statusResponse.json();
+                    console.log(`Course "${course.title}" - Purchase Status:`, statusData);
+                }
+                
+            } catch (error) {
+                console.error('API test failed:', error);
+            }
+        }
+        
+        testAPI();
+    </script>
+</body>
+</html>

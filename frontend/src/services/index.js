@@ -58,6 +58,15 @@ export const paymentService = {
     const response = await api.get('/payments/history', { params })
     return response.data
   },
+
+  async checkCoursePurchaseStatus(courseId) {
+    try {
+      const response = await api.get(`/payments/course/${courseId}/status`)
+      return response.data
+    } catch (error) {
+      return { has_purchased: false, is_enrolled: false }
+    }
+  },
 }
 
 export const learningService = {

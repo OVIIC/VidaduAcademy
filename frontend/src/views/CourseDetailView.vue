@@ -32,21 +32,47 @@
 
               <div class="flex items-center space-x-4">
                 <span class="text-3xl font-bold">${{ course.price }}</span>
+                
+                <!-- If enrolled - Continue Learning -->
+                <router-link
+                  v-if="isEnrolled"
+                  :to="{ name: 'learn', params: { courseId: course.id } }"
+                  class="bg-green-500 hover:bg-green-600 text-white font-semibold px-8 py-3 rounded-lg transition duration-200"
+                >
+                  Continue Learning
+                </router-link>
+                
+                <!-- If purchased but not enrolled - Go to My Courses -->
+                <router-link
+                  v-else-if="hasPurchased"
+                  :to="{ name: 'MyCourses' }"
+                  class="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-8 py-3 rounded-lg transition duration-200"
+                >
+                  Go to My Courses
+                </router-link>
+                
+                <!-- If not purchased - Buy Now -->
                 <button
-                  v-if="!isEnrolled"
+                  v-else
                   @click="handleEnrollment"
                   :disabled="purchasing"
                   class="bg-yellow-500 hover:bg-yellow-600 disabled:opacity-50 text-black font-semibold px-8 py-3 rounded-lg transition duration-200"
                 >
                   {{ purchasing ? 'Processing...' : 'Enroll Now' }}
                 </button>
-                <router-link
-                  v-else
-                  :to="{ name: 'learn', params: { courseId: course.id } }"
-                  class="bg-green-500 hover:bg-green-600 text-white font-semibold px-8 py-3 rounded-lg transition duration-200"
-                >
-                  Continue Learning
-                </router-link>
+              </div>
+
+              <!-- Purchase Status Info -->
+              <div v-if="hasPurchased && !isEnrolled" class="mt-4 p-4 bg-blue-50 rounded-lg border border-blue-200">
+                <div class="flex items-center">
+                  <svg class="w-5 h-5 text-blue-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
+                  </svg>
+                  <div>
+                    <p class="text-sm font-medium text-blue-800">Kurz je zakúpený</p>
+                    <p class="text-xs text-blue-600">Tento kurz sa nachádza v sekcii "Moje kurzy"</p>
+                  </div>
+                </div>
               </div>
             </div>
 
@@ -212,6 +238,11 @@ export default {
       return enrollmentStore.isEnrolledInCourse(course.value.id)
     })
 
+    const hasPurchased = computed(() => {
+      if (!course.value?.id || !authStore.user) return false
+      return enrollmentStore.hasPurchasedCourse(course.value.id)
+    })
+
     const learningPoints = ref([
       'Build a successful YouTube channel from scratch',
       'Create engaging content that converts',
@@ -233,6 +264,11 @@ export default {
       try {
         const response = await api.get(`/courses/${route.params.id}`)
         course.value = response.data
+        
+        // Load purchase status if user is authenticated
+        if (authStore.user && course.value?.id) {
+          await enrollmentStore.checkCoursePurchaseStatus(course.value.id)
+        }
       } catch (error) {
         console.error('Error loading course:', error)
         router.push('/courses')
@@ -244,6 +280,12 @@ export default {
     const handleEnrollment = async () => {
       if (!authStore.user) {
         showAuthModal.value = true
+        return
+      }
+
+      // Check if course is already purchased
+      if (hasPurchased.value) {
+        alert('Tento kurz už máte zakúpený! Nájdete ho v sekcii "Moje kurzy".')
         return
       }
 
@@ -281,6 +323,7 @@ export default {
       course,
       showAuthModal,
       isEnrolled,
+      hasPurchased,
       learningPoints,
       formatDuration,
       handleEnrollment

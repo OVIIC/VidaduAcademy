@@ -119,6 +119,7 @@
 
           <!-- Action buttons -->
           <div class="flex space-x-3 pt-4 border-t border-gray-200">
+            <!-- Show different buttons based on authentication and purchase status -->
             <button
               v-if="!isAuthenticated"
               @click="showAuthModal"
@@ -126,6 +127,11 @@
             >
               Prihlásiť sa pre nákup
             </button>
+            <div v-else-if="isPurchased" class="flex-1">
+              <div class="bg-green-100 text-green-800 font-medium py-3 px-6 rounded-lg text-center">
+                Kurz je zakúpený
+              </div>
+            </div>
             <button
               v-else
               @click="purchaseCourse"
@@ -168,6 +174,10 @@ const props = defineProps({
   course: {
     type: Object,
     default: null
+  },
+  isPurchased: {
+    type: Boolean,
+    default: false
   }
 })
 
@@ -193,6 +203,11 @@ const goToLogin = () => {
 }
 
 const purchaseCourse = () => {
+  if (props.isPurchased) {
+    alert('Tento kurz už máte zakúpený a nachádza sa v sekcii "Moje kurzy".')
+    return
+  }
+  
   emit('purchase', props.course)
   closeModal()
 }

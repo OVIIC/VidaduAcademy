@@ -68,6 +68,22 @@ class PaymentController extends Controller
         }
     }
 
+    public function checkCoursePurchaseStatus($courseId): JsonResponse
+    {
+        $course = Course::findOrFail($courseId);
+        $user = Auth::user();
+
+        $hasPurchased = $user->hasPurchased($course);
+        $isEnrolled = $user->isEnrolledIn($course);
+
+        return response()->json([
+            'has_purchased' => $hasPurchased,
+            'is_enrolled' => $isEnrolled,
+            'course_id' => $course->id,
+            'course_title' => $course->title,
+        ]);
+    }
+
     public function purchaseHistory(): JsonResponse
     {
         $purchases = Auth::user()

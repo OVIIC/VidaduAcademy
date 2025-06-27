@@ -36,10 +36,12 @@ import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { courseService, paymentService } from '@/services'
 import { useAuthStore } from '@/stores/auth'
+import { useEnrollmentStore } from '@/stores/enrollment'
 import CourseCard from '@/components/courses/CourseCard.vue'
 
 const router = useRouter()
 const authStore = useAuthStore()
+const enrollmentStore = useEnrollmentStore()
 const courses = ref([])
 const loading = ref(false)
 
@@ -51,6 +53,11 @@ const loadCourses = async () => {
     console.log('API response:', response)
     courses.value = response.data || []
     console.log('Courses loaded:', courses.value.length)
+    
+    // Load purchase status for each course if user is authenticated
+    if (authStore.user && courses.value.length > 0) {
+      await loadPurchaseStatus()
+    }
   } catch (error) {
     console.error('Error loading courses:', error)
     courses.value = []
@@ -59,9 +66,27 @@ const loadCourses = async () => {
   }
 }
 
+const loadPurchaseStatus = async () => {
+  try {
+    for (const course of courses.value) {
+      await enrollmentStore.checkCoursePurchaseStatus(course.id)
+    }
+  } catch (error) {
+    console.error('Error loading purchase status:', error)
+  }
+}
+
 const handlePurchase = async (course) => {
   if (!authStore.user) {
     console.log('User not authenticated')
+    return
+  }
+
+  // Check if course is already purchased
+  const isPurchased = enrollmentStore.hasPurchasedCourse(course.id)
+  
+  if (isPurchased) {
+    alert('Tento kurz už máte zakúpený a nachádza sa v sekcii "Moje kurzy".')
     return
   }
 

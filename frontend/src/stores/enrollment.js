@@ -1,11 +1,12 @@
 import { defineStore } from 'pinia'
-import { enrollmentService } from '@/services'
+import { enrollmentService, paymentService } from '@/services'
 
 export const useEnrollmentStore = defineStore('enrollment', {
   state: () => ({
     myCourses: [],
     loading: false,
     lastUpdated: null,
+    coursePurchaseStatus: {}, // Cache for course purchase status
   }),
 
   getters: {
@@ -44,6 +45,11 @@ export const useEnrollmentStore = defineStore('enrollment', {
         return false
       }
       return state.myCourses.some(course => course.id === courseId)
+    },
+
+    hasPurchasedCourse: (state) => (courseId) => {
+      const status = state.coursePurchaseStatus[courseId]
+      return status ? status.has_purchased : false
     },
   },
 
@@ -109,6 +115,18 @@ export const useEnrollmentStore = defineStore('enrollment', {
         
         // In development, we can still throw to let the component handle fallback
         throw error
+      }
+    },
+
+    async checkCoursePurchaseStatus(courseId) {
+      try {
+        const response = await paymentService.checkCoursePurchaseStatus(courseId)
+        this.coursePurchaseStatus[courseId] = response
+        return response
+      } catch (error) {
+        console.error('Error checking course purchase status:', error)
+        this.coursePurchaseStatus[courseId] = { has_purchased: false, is_enrolled: false }
+        return { has_purchased: false, is_enrolled: false }
       }
     },
 

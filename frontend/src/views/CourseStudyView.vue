@@ -109,17 +109,19 @@
               </div>
             </div>
 
-            <!-- Video Player -->
-            <div v-if="selectedLesson.video_url" class="aspect-video bg-black">
-              <iframe
-                :src="getEmbedUrl(selectedLesson.video_url)"
-                class="w-full h-full"
-                frameborder="0"
-                allowfullscreen
-                title="Lesson Video"
-              ></iframe>
+            <!-- Basic Video Player -->
+            <div v-if="selectedLesson.video_url" class="mb-6">
+              <div class="aspect-video bg-black rounded-lg overflow-hidden">
+                <iframe
+                  :src="getEmbedUrl(selectedLesson.video_url)"
+                  class="w-full h-full"
+                  frameborder="0"
+                  allowfullscreen
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  title="Lesson Video"
+                ></iframe>
+              </div>
             </div>
-
             <!-- Lesson Content -->
             <div class="p-6">
               <div v-if="selectedLesson.description" class="mb-6">
@@ -230,7 +232,7 @@
           </div>
 
           <!-- Course Overview (when no lesson selected) -->
-          <div v-else class="bg-white rounded-lg shadow-sm p-6">
+          <div v-if="!selectedLesson" class="bg-white rounded-lg shadow-sm p-6">
             <h2 class="text-xl font-semibold text-gray-900 mb-4">Prehľad kurzu</h2>
             <p class="text-gray-700 mb-6">{{ course.description }}</p>
             
@@ -345,8 +347,8 @@
       </div>
     </div>
 
-    <!-- Error State -->
-    <div v-else class="text-center py-12">
+    <!-- Error State (Temporarily disabled) -->
+    <!-- <div v-else class="text-center py-12">
       <div class="text-gray-400 text-lg">Kurz sa nenašiel</div>
       <p class="text-gray-500 mt-2">Skúste sa vrátiť neskôr.</p>
       <router-link 
@@ -355,12 +357,12 @@
       >
         Späť na moje kurzy
       </router-link>
-    </div>
+    </div> -->
   </div>
 </template>
 
 <script setup>
-import { ref, computed, onMounted, nextTick } from 'vue'
+import { ref, computed, onMounted, nextTick, onUnmounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { learningService } from '@/services'
 
@@ -413,6 +415,7 @@ const nextLesson = computed(() => {
 const selectedLessonIndex = computed(() => {
   return selectedLesson.value ? lessons.value.findIndex(lesson => lesson.id === selectedLesson.value.id) : -1
 })
+
 
 const loadCourseContent = async () => {
   loading.value = true
@@ -658,7 +661,37 @@ const toggleLessonCompletion = async (lesson) => {
   }
 }
 
+// Add keyboard navigation support for lesson switching
+const handleKeyDown = (event) => {
+  // Only handle keys if not typing in input field
+  if (event.target.tagName === 'INPUT' || event.target.tagName === 'TEXTAREA') return
+  
+  switch (event.key) {
+    case 'ArrowLeft':
+      event.preventDefault()
+      if (selectedLessonIndex.value > 0) {
+        selectLesson(lessons.value[selectedLessonIndex.value - 1])
+      }
+      break
+    case 'ArrowRight':
+      event.preventDefault()
+      if (selectedLessonIndex.value < lessons.value.length - 1) {
+        selectLesson(lessons.value[selectedLessonIndex.value + 1])
+      }
+      break
+  }
+}
+
 onMounted(() => {
   loadCourseContent()
+  document.addEventListener('keydown', handleKeyDown)
+})
+
+onUnmounted(() => {
+  document.removeEventListener('keydown', handleKeyDown)
 })
 </script>
+
+<style scoped>
+/* Component specific styles */
+</style>

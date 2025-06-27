@@ -169,6 +169,14 @@
         </router-link>
       </div>
     </div>
+
+    <!-- Auth Modal -->
+    <AuthModal
+      :isOpen="showAuthModal"
+      :courseTitle="course?.title"
+      :coursePrice="course?.price"
+      @close="showAuthModal = false"
+    />
   </div>
 </template>
 
@@ -178,9 +186,13 @@ import { useRoute, useRouter } from 'vue-router'
 import { useCourseStore } from '@/stores/course'
 import { useAuthStore } from '@/stores/auth'
 import { api } from '@/services/api'
+import AuthModal from '@/components/auth/AuthModal.vue'
 
 export default {
   name: 'CourseDetailView',
+  components: {
+    AuthModal
+  },
   setup() {
     const route = useRoute()
     const router = useRouter()
@@ -190,6 +202,7 @@ export default {
     const loading = ref(false)
     const purchasing = ref(false)
     const course = ref(null)
+    const showAuthModal = ref(false)
 
     const isEnrolled = computed(() => {
       return authStore.user?.enrollments?.some(enrollment => 
@@ -228,7 +241,7 @@ export default {
 
     const handleEnrollment = async () => {
       if (!authStore.user) {
-        router.push('/login')
+        showAuthModal.value = true
         return
       }
 
@@ -257,6 +270,7 @@ export default {
       loading,
       purchasing,
       course,
+      showAuthModal,
       isEnrolled,
       learningPoints,
       formatDuration,

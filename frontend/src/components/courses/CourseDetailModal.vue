@@ -121,7 +121,7 @@
           <div class="flex space-x-3 pt-4 border-t border-gray-200">
             <button
               v-if="!isAuthenticated"
-              @click="goToLogin"
+              @click="showAuthModal"
               class="flex-1 bg-primary-600 hover:bg-primary-700 text-white font-medium py-3 px-6 rounded-lg transition duration-200"
             >
               Prihlásiť sa pre nákup
@@ -143,13 +143,22 @@
         </div>
       </div>
     </div>
+
+    <!-- Auth Modal -->
+    <AuthModal
+      :isOpen="showAuthModalFlag"
+      :courseTitle="course?.title"
+      :coursePrice="course?.price"
+      @close="showAuthModalFlag = false"
+    />
   </div>
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { useAuthStore } from '@/stores/auth'
 import { useRouter } from 'vue-router'
+import AuthModal from '@/components/auth/AuthModal.vue'
 
 const props = defineProps({
   show: {
@@ -167,10 +176,16 @@ const emit = defineEmits(['close', 'purchase'])
 const authStore = useAuthStore()
 const router = useRouter()
 
+const showAuthModalFlag = ref(false)
+
 const isAuthenticated = computed(() => !!authStore.user)
 
 const closeModal = () => {
   emit('close')
+}
+
+const showAuthModal = () => {
+  showAuthModalFlag.value = true
 }
 
 const goToLogin = () => {

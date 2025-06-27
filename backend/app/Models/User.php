@@ -17,14 +17,22 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'avatar',
+        'phone',
+        'location',
         'bio',
+        'avatar',
         'website',
         'youtube_channel',
-        'subscribers_count',
+        'subscriber_count',
+        'content_niche',
+        'goals',
+        'email_notifications',
+        'course_reminders',
+        'marketing_emails',
         'email_verified_at',
         'is_instructor',
         'is_active',
+        'subscribers_count',
     ];
 
     protected $hidden = [
@@ -38,6 +46,9 @@ class User extends Authenticatable
         'is_instructor' => 'boolean',
         'is_active' => 'boolean',
         'subscribers_count' => 'integer',
+        'email_notifications' => 'boolean',
+        'course_reminders' => 'boolean',
+        'marketing_emails' => 'boolean',
     ];
 
     public function enrollments(): HasMany

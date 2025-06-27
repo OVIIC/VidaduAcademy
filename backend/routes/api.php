@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\CourseController;
 use App\Http\Controllers\Api\PaymentController;
 use App\Http\Controllers\Api\LearningController;
 use App\Http\Controllers\Api\EnrollmentController;
+use App\Http\Controllers\Api\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -35,6 +36,17 @@ Route::post('/webhook/stripe', [PaymentController::class, 'webhook'])->name('str
 
 // Protected routes
 Route::middleware('auth:sanctum')->group(function () {
+    // User profile routes
+    Route::prefix('user')->group(function () {
+        Route::get('/profile', [UserController::class, 'profile']);
+        Route::put('/profile', [UserController::class, 'updateProfile']);
+        Route::put('/password', [UserController::class, 'updatePassword']);
+        Route::get('/certificates', [UserController::class, 'certificates']);
+        Route::get('/certificate/{enrollmentId}/download', [UserController::class, 'downloadCertificate'])->name('api.certificate.download');
+        Route::get('/export-data', [UserController::class, 'exportData']);
+        Route::delete('/account', [UserController::class, 'deleteAccount']);
+    });
+
     // Payment routes
     Route::prefix('payments')->group(function () {
         Route::post('/checkout', [PaymentController::class, 'createCheckoutSession']);

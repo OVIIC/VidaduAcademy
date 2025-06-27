@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Loading Modal Test</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @keyframes spin {
+          to {
+            transform: rotate(360deg);
+          }
+        }
+        .animate-spin {
+          animation: spin 1s linear infinite;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 p-8">
+    <h1 class="text-2xl font-bold mb-4">Loading Modal Test</h1>
+    
+    <button 
+        onclick="showModal()" 
+        class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+    >
+        Show Loading Modal
+    </button>
+    
+    <button 
+        onclick="hideModal()" 
+        class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 ml-2"
+    >
+        Hide Loading Modal
+    </button>
+
+    <!-- Loading Modal -->
+    <div id="loadingModal" class="fixed inset-0 z-50 overflow-y-auto hidden">
+        <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+            <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>
+            <span class="hidden sm:inline-block sm:align-middle sm:h-screen">&#8203;</span>
+            
+            <div class="relative inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-md sm:w-full sm:p-6">
+                <div class="text-center">
+                    <!-- Loading spinner -->
+                    <div class="mx-auto flex items-center justify-center h-16 w-16 mb-4">
+                        <div class="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-600"></div>
+                    </div>
+                    
+                    <!-- Title -->
+                    <h3 class="text-lg font-medium text-gray-900 mb-2">
+                        Presmerovanie na platbu
+                    </h3>
+                    
+                    <!-- Description -->
+                    <p class="text-sm text-gray-500 mb-4">
+                        Pripravujeme váš Stripe checkout. Prosím čakajte...
+                    </p>
+                    
+                    <!-- Course info -->
+                    <div class="bg-gray-50 rounded-lg p-3">
+                        <p class="text-sm font-medium text-gray-900">YouTube Channel Growth Masterclass</p>
+                        <p class="text-sm text-gray-500">€199.99</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showModal() {
+            document.getElementById('loadingModal').classList.remove('hidden');
+        }
+        
+        function hideModal() {
+            document.getElementById('loadingModal').classList.add('hidden');
+        }
+        
+        // Simulate the loading process
+        function simulateCheckout() {
+            showModal();
+            
+            // Simulate API call delay
+            setTimeout(() => {
+                alert('Redirecting to Stripe...');
+                hideModal();
+            }, 3000);
+        }
+        
+        // Add simulate button
+        setTimeout(() => {
+            const button = document.createElement('button');
+            button.textContent = 'Simulate Checkout';
+            button.className = 'bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 ml-2';
+            button.onclick = simulateCheckout;
+            document.body.appendChild(button);
+        }, 100);
+    </script>
+</body>
+</html>

@@ -18,6 +18,7 @@
           v-for="course in courses"
           :key="course.id"
           :course="course"
+          :isCheckoutLoading="showCheckoutLoading && checkoutCourse?.id === course.id"
           @purchase="handlePurchase"
         />
       </div>
@@ -28,6 +29,13 @@
         <p class="text-gray-500 mt-2">Skúste sa neskôr vrátiť pre nové kurzy.</p>
       </div>
     </div>
+
+    <!-- Checkout Loading Modal -->
+    <CheckoutLoadingModal
+      :show="showCheckoutLoading"
+      :courseTitle="checkoutCourse?.title"
+      :coursePrice="checkoutCourse?.price"
+    />
   </div>
 </template>
 
@@ -38,12 +46,15 @@ import { courseService, paymentService } from '@/services'
 import { useAuthStore } from '@/stores/auth'
 import { useEnrollmentStore } from '@/stores/enrollment'
 import CourseCard from '@/components/courses/CourseCard.vue'
+import CheckoutLoadingModal from '@/components/ui/CheckoutLoadingModal.vue'
 
 const router = useRouter()
 const authStore = useAuthStore()
 const enrollmentStore = useEnrollmentStore()
 const courses = ref([])
 const loading = ref(false)
+const showCheckoutLoading = ref(false)
+const checkoutCourse = ref(null)
 
 const loadCourses = async () => {
   loading.value = true
@@ -91,6 +102,10 @@ const handlePurchase = async (course) => {
   }
 
   try {
+    // Show loading modal
+    checkoutCourse.value = course
+    showCheckoutLoading.value = true
+    
     console.log('Creating Stripe checkout session for course:', course.title)
     
     // Try to create Stripe checkout session
@@ -104,6 +119,10 @@ const handlePurchase = async (course) => {
     }
   } catch (error) {
     console.error('Error creating checkout session:', error)
+    
+    // Hide loading modal on error
+    showCheckoutLoading.value = false
+    checkoutCourse.value = null
     
     // Fallback to our simulator for development
     console.log('Falling back to simulator checkout')

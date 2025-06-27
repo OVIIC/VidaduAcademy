@@ -89,6 +89,7 @@
       :show="showModal"
       :course="course"
       :isPurchased="isPurchased"
+      :isCheckoutLoading="isCheckoutLoading"
       @close="showModal = false"
       @purchase="handlePurchase"
     />
@@ -109,6 +110,10 @@ const props = defineProps({
   course: {
     type: Object,
     required: true,
+  },
+  isCheckoutLoading: {
+    type: Boolean,
+    default: false,
   },
 })
 

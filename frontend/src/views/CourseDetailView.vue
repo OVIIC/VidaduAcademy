@@ -203,6 +203,13 @@
       :coursePrice="course?.price"
       @close="showAuthModal = false"
     />
+
+    <!-- Checkout Loading Modal -->
+    <CheckoutLoadingModal
+      :show="purchasing"
+      :courseTitle="course?.title"
+      :coursePrice="course?.price"
+    />
   </div>
 </template>
 
@@ -215,11 +222,13 @@ import { useEnrollmentStore } from '@/stores/enrollment'
 import { api } from '@/services/api'
 import { paymentService } from '@/services'
 import AuthModal from '@/components/auth/AuthModal.vue'
+import CheckoutLoadingModal from '@/components/ui/CheckoutLoadingModal.vue'
 
 export default {
   name: 'CourseDetailView',
   components: {
-    AuthModal
+    AuthModal,
+    CheckoutLoadingModal
   },
   setup() {
     const route = useRoute()
@@ -297,6 +306,7 @@ export default {
         
         if (response.checkout_url) {
           // Redirect to Stripe Checkout
+          // Note: Loading modal will remain visible during redirect
           window.location.href = response.checkout_url
         } else {
           throw new Error('No checkout URL received')
@@ -304,12 +314,13 @@ export default {
       } catch (error) {
         console.error('Error creating checkout session:', error)
         
+        // Hide loading modal on error
+        purchasing.value = false
+        
         // Fallback to our simulator for development
         console.log('Falling back to simulator checkout')
         const checkoutUrl = `/checkout?courseTitle=${encodeURIComponent(course.value.title)}&coursePrice=${course.value.price}&courseId=${course.value.id}&courseSlug=${encodeURIComponent(course.value.slug)}`
         router.push(checkoutUrl)
-      } finally {
-        purchasing.value = false
       }
     }
 

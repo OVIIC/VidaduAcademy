@@ -157,6 +157,13 @@
       :coursePrice="course?.price"
       @close="showAuthModalFlag = false"
     />
+
+    <!-- Checkout Loading Modal -->
+    <CheckoutLoadingModal
+      :show="props.isCheckoutLoading"
+      :courseTitle="course?.title"
+      :coursePrice="course?.price"
+    />
   </div>
 </template>
 
@@ -165,6 +172,7 @@ import { computed, ref } from 'vue'
 import { useAuthStore } from '@/stores/auth'
 import { useRouter } from 'vue-router'
 import AuthModal from '@/components/auth/AuthModal.vue'
+import CheckoutLoadingModal from '@/components/ui/CheckoutLoadingModal.vue'
 
 const props = defineProps({
   show: {
@@ -176,6 +184,10 @@ const props = defineProps({
     default: null
   },
   isPurchased: {
+    type: Boolean,
+    default: false
+  },
+  isCheckoutLoading: {
     type: Boolean,
     default: false
   }
@@ -208,8 +220,9 @@ const purchaseCourse = () => {
     return
   }
   
-  emit('purchase', props.course)
+  // Close main modal and emit purchase event
   closeModal()
+  emit('purchase', props.course)
 }
 
 const formatDuration = (minutes) => {

@@ -72,7 +72,7 @@
         <!-- Course Content (Left Column) -->
         <div class="lg:col-span-2 space-y-6">
           <!-- Selected Lesson Content -->
-          <div v-if="selectedLesson" class="bg-white rounded-lg shadow-sm overflow-hidden">
+          <div v-if="selectedLesson" ref="lessonContentRef" class="bg-white rounded-lg shadow-sm overflow-hidden">
             <!-- Lesson Header -->
             <div class="bg-gradient-to-r from-primary-600 to-primary-700 px-6 py-4 text-white">
               <div class="flex items-center justify-between">
@@ -84,20 +84,24 @@
                   <button
                     v-if="selectedLessonIndex > 0"
                     @click="selectLesson(lessons[selectedLessonIndex - 1])"
-                    class="p-2 text-white hover:bg-primary-500 rounded-lg transition duration-200"
+                    :disabled="lessonSwitching"
+                    class="p-2 text-white hover:bg-primary-500 rounded-lg transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                     title="Predchádzajúca lekcia"
                   >
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div v-if="lessonSwitching" class="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                    <svg v-else class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
                     </svg>
                   </button>
                   <button
                     v-if="selectedLessonIndex < lessons.length - 1"
                     @click="selectLesson(lessons[selectedLessonIndex + 1])"
-                    class="p-2 text-white hover:bg-primary-500 rounded-lg transition duration-200"
+                    :disabled="lessonSwitching"
+                    class="p-2 text-white hover:bg-primary-500 rounded-lg transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                     title="Ďalšia lekcia"
                   >
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div v-if="lessonSwitching" class="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                    <svg v-else class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                     </svg>
                   </button>
@@ -199,16 +203,26 @@
                   <button
                     v-if="selectedLessonIndex > 0"
                     @click="selectLesson(lessons[selectedLessonIndex - 1])"
-                    class="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition duration-200"
+                    :disabled="lessonSwitching"
+                    class="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    Predchádzajúca
+                    <span v-if="lessonSwitching" class="flex items-center">
+                      <div class="animate-spin rounded-full h-4 w-4 border-b-2 border-gray-600 mr-2"></div>
+                      Načítava...
+                    </span>
+                    <span v-else>Predchádzajúca</span>
                   </button>
                   <button
                     v-if="selectedLessonIndex < lessons.length - 1"
                     @click="selectLesson(lessons[selectedLessonIndex + 1])"
-                    class="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition duration-200"
+                    :disabled="lessonSwitching"
+                    class="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    Ďalšia lekcia
+                    <span v-if="lessonSwitching" class="flex items-center">
+                      <div class="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                      Načítava...
+                    </span>
+                    <span v-else>Ďalšia lekcia</span>
                   </button>
                 </div>
               </div>
@@ -242,13 +256,19 @@
               <div
                 v-for="(lesson, index) in lessons"
                 :key="lesson.id"
-                class="border rounded-lg p-4 hover:bg-gray-50 transition duration-200 cursor-pointer"
+                class="border rounded-lg p-4 hover:bg-gray-50 transition duration-200 cursor-pointer relative"
                 @click="selectLesson(lesson)"
                 :class="{
                   'border-primary-500 bg-primary-50': selectedLesson?.id === lesson.id,
-                  'border-gray-200': selectedLesson?.id !== lesson.id
+                  'border-gray-200': selectedLesson?.id !== lesson.id,
+                  'opacity-50 pointer-events-none': lessonSwitching
                 }"
               >
+                <!-- Loading overlay when switching -->
+                <div v-if="lessonSwitching && selectedLesson?.id === lesson.id" class="absolute inset-0 bg-white bg-opacity-75 flex items-center justify-center rounded-lg">
+                  <div class="animate-spin rounded-full h-6 w-6 border-b-2 border-primary-600"></div>
+                </div>
+                
                 <div class="flex items-center justify-between">
                   <div class="flex items-center">
                     <div class="flex-shrink-0 w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center mr-3">
@@ -340,7 +360,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, nextTick } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { learningService } from '@/services'
 
@@ -351,6 +371,8 @@ const loading = ref(false)
 const course = ref(null)
 const lessons = ref([])
 const selectedLesson = ref(null)
+const lessonContentRef = ref(null)
+const lessonSwitching = ref(false)
 
 const progressPercentage = computed(() => {
   // Try to get progress from course enrollment data or calculate from lessons
@@ -478,8 +500,34 @@ const loadCourseContent = async () => {
 }
 
 const selectLesson = (lesson) => {
+  // Don't change lesson if already switching
+  if (lessonSwitching.value) return
+  
+  lessonSwitching.value = true
   selectedLesson.value = lesson
   console.log('Selected lesson:', lesson.title)
+  
+  // Scroll to lesson content after a small delay to ensure DOM update
+  nextTick(() => {
+    if (lessonContentRef.value) {
+      // Get the position of the lesson content
+      const rect = lessonContentRef.value.getBoundingClientRect()
+      const offset = 80 // Add some offset for better visibility
+      
+      // Scroll to position with smooth animation
+      window.scrollTo({
+        top: window.pageYOffset + rect.top - offset,
+        behavior: 'smooth'
+      })
+      
+      // Reset switching flag after scroll animation completes
+      setTimeout(() => {
+        lessonSwitching.value = false
+      }, 1000) // Approximate scroll animation duration
+    } else {
+      lessonSwitching.value = false
+    }
+  })
 }
 
 const startLesson = (lesson) => {

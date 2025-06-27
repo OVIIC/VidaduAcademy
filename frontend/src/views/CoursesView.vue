@@ -45,12 +45,14 @@ import { useRouter } from 'vue-router'
 import { courseService, paymentService } from '@/services'
 import { useAuthStore } from '@/stores/auth'
 import { useEnrollmentStore } from '@/stores/enrollment'
+import { usePerformance } from '@/utils/performanceMonitor'
 import CourseCard from '@/components/courses/CourseCard.vue'
 import CheckoutLoadingModal from '@/components/ui/CheckoutLoadingModal.vue'
 
 const router = useRouter()
 const authStore = useAuthStore()
 const enrollmentStore = useEnrollmentStore()
+const { measureAsync, logMemory } = usePerformance()
 const courses = ref([])
 const loading = ref(false)
 const showCheckoutLoading = ref(false)
@@ -60,15 +62,22 @@ const loadCourses = async () => {
   loading.value = true
   try {
     console.log('Loading courses...')
-    const response = await courseService.getAllCourses()
+    const response = await measureAsync('Load Courses API', async () => {
+      return await courseService.getAllCourses()
+    })
     console.log('API response:', response)
     courses.value = response.data || []
     console.log('Courses loaded:', courses.value.length)
     
     // Load purchase status for each course if user is authenticated
     if (authStore.user && courses.value.length > 0) {
-      await loadPurchaseStatus()
+      await measureAsync('Load Purchase Status', async () => {
+        await loadPurchaseStatus()
+      })
     }
+    
+    // Log memory usage after loading
+    logMemory('After loading courses')
   } catch (error) {
     console.error('Error loading courses:', error)
     courses.value = []

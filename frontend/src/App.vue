@@ -11,16 +11,25 @@
     </main>
     
     <AppFooter />
+    
+    <!-- Performance Dashboard (development only) -->
+    <PerformanceDashboard v-if="isDevelopment" />
   </div>
 </template>
 
 <script setup>
-import { onMounted } from 'vue'
+import { onMounted, computed } from 'vue'
 import { useAuthStore } from '@/stores/auth'
 import AppNavigation from '@/components/layout/AppNavigation.vue'
 import AppFooter from '@/components/layout/AppFooter.vue'
+import PerformanceDashboard from '@/components/debug/PerformanceDashboard.vue'
 
 const authStore = useAuthStore()
+
+// Show performance dashboard only in development
+const isDevelopment = computed(() => {
+  return import.meta.env.DEV || import.meta.env.VITE_SHOW_PERFORMANCE === 'true'
+})
 
 onMounted(() => {
   // Initialize auth state from localStorage

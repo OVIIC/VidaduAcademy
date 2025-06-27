@@ -1,4 +1,18 @@
 import api from './api'
+import { apiCache } from '@/utils/cache'
+
+// Helper function for cached API calls
+const cachedApiCall = async (cacheKey, apiCall, ttl = 5 * 60 * 1000) => {
+  // Check if data is in cache
+  if (apiCache.has(cacheKey)) {
+    return apiCache.get(cacheKey)
+  }
+
+  // Make API call and cache result
+  const response = await apiCall()
+  apiCache.set(cacheKey, response, ttl)
+  return response
+}
 
 export const authService = {
   async login(credentials) {
@@ -24,23 +38,35 @@ export const authService = {
 
 export const courseService = {
   async getAllCourses(params = {}) {
-    const response = await api.get('/courses', { params })
-    return response.data
+    const cacheKey = apiCache.generateKey('/courses', params)
+    return cachedApiCall(cacheKey, async () => {
+      const response = await api.get('/courses', { params })
+      return response.data
+    }, 10 * 60 * 1000) // Cache for 10 minutes
   },
 
   async getCourse(slug) {
-    const response = await api.get(`/courses/${slug}`)
-    return response.data
+    const cacheKey = apiCache.generateKey(`/courses/${slug}`)
+    return cachedApiCall(cacheKey, async () => {
+      const response = await api.get(`/courses/${slug}`)
+      return response.data
+    }, 15 * 60 * 1000) // Cache for 15 minutes
   },
 
   async getFeaturedCourses() {
-    const response = await api.get('/courses/featured')
-    return response.data
+    const cacheKey = apiCache.generateKey('/courses/featured')
+    return cachedApiCall(cacheKey, async () => {
+      const response = await api.get('/courses/featured')
+      return response.data
+    }, 10 * 60 * 1000) // Cache for 10 minutes
   },
 
   async getCoursesByInstructor(instructorId) {
-    const response = await api.get(`/courses/instructor/${instructorId}`)
-    return response.data
+    const cacheKey = apiCache.generateKey(`/courses/instructor/${instructorId}`)
+    return cachedApiCall(cacheKey, async () => {
+      const response = await api.get(`/courses/instructor/${instructorId}`)
+      return response.data
+    }, 15 * 60 * 1000) // Cache for 15 minutes
   },
 }
 

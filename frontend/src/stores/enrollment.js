@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import { enrollmentService, paymentService } from '@/services'
+import { apiCache } from '@/utils/cache'
 
 export const useEnrollmentStore = defineStore('enrollment', {
   state: () => ({
@@ -119,14 +120,27 @@ export const useEnrollmentStore = defineStore('enrollment', {
     },
 
     async checkCoursePurchaseStatus(courseId) {
+      const cacheKey = `purchase-status:${courseId}`
+      
+      // Check cache first
+      if (apiCache.has(cacheKey)) {
+        const cachedData = apiCache.get(cacheKey)
+        this.coursePurchaseStatus[courseId] = cachedData
+        return cachedData
+      }
+
       try {
         const response = await paymentService.checkCoursePurchaseStatus(courseId)
+        
+        // Cache the result for 2 minutes (purchase status changes infrequently)
+        apiCache.set(cacheKey, response, 2 * 60 * 1000)
         this.coursePurchaseStatus[courseId] = response
         return response
       } catch (error) {
         console.error('Error checking course purchase status:', error)
-        this.coursePurchaseStatus[courseId] = { has_purchased: false, is_enrolled: false }
-        return { has_purchased: false, is_enrolled: false }
+        const fallbackData = { has_purchased: false, is_enrolled: false }
+        this.coursePurchaseStatus[courseId] = fallbackData
+        return fallbackData
       }
     },
 

@@ -61,9 +61,20 @@ class User extends Authenticatable
         return $this->hasMany(Purchase::class);
     }
 
-    public function instructedCourses(): HasMany
+    /**
+     * Get courses taught by this user (if instructor)
+     */
+    public function taughtCourses(): HasMany
     {
         return $this->hasMany(Course::class, 'instructor_id');
+    }
+
+    /**
+     * Get published courses taught by this user
+     */
+    public function publishedCourses(): HasMany
+    {
+        return $this->taughtCourses()->where('status', 'published');
     }
 
     public function lessonProgress(): HasMany

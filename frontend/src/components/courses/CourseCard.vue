@@ -1,10 +1,12 @@
 <template>
   <div class="card hover:shadow-lg transition-shadow duration-300 group">
     <div class="relative overflow-hidden">
-      <img
+      <LazyImage
         :src="course.thumbnail || '/placeholder-course.jpg'"
         :alt="course.title"
-        class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+        container-class="w-full h-48"
+        image-class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+        :fallback-src="'/placeholder-course.jpg'"
       />
       <div v-if="course.featured" class="absolute top-3 right-3">
         <StarIcon class="h-5 w-5 text-yellow-400 fill-current" />
@@ -105,6 +107,7 @@ import {
 } from '@heroicons/vue/24/outline'
 import { useEnrollmentStore } from '@/stores/enrollment'
 import CourseDetailModal from './CourseDetailModal.vue'
+import LazyImage from '@/components/ui/LazyImage.vue'
 
 const props = defineProps({
   course: {

@@ -117,5 +117,25 @@ export const useAuthStore = defineStore('auth', {
       this.user = user
       localStorage.setItem('user', JSON.stringify(user))
     },
+
+    // Debug method for development testing
+    debugLogin() {
+      const mockUser = {
+        id: 1,
+        name: 'Test User',
+        email: 'test@example.com',
+        is_instructor: false
+      }
+      const mockToken = 'mock-token-' + Date.now()
+      
+      this.user = mockUser
+      this.token = mockToken
+      this.isAuthenticated = true
+      
+      localStorage.setItem('token', mockToken)
+      localStorage.setItem('user', JSON.stringify(mockUser))
+      
+      console.log('Debug login activated with user:', mockUser)
+    }
   },
 })

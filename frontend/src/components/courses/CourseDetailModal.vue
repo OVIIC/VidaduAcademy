@@ -175,7 +175,6 @@ const emit = defineEmits(['close', 'purchase'])
 
 const authStore = useAuthStore()
 const router = useRouter()
-
 const showAuthModalFlag = ref(false)
 
 const isAuthenticated = computed(() => !!authStore.user)

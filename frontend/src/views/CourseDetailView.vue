@@ -247,16 +247,12 @@ export default {
 
       purchasing.value = true
       try {
-        const response = await api.post('/payments/create-checkout-session', {
-          course_id: course.value.id
-        })
-        
-        if (response.data.checkout_url) {
-          window.location.href = response.data.checkout_url
-        }
+        // Redirect to our Stripe checkout page with course info
+        const checkoutUrl = `/checkout?courseTitle=${encodeURIComponent(course.value.title)}&coursePrice=${course.value.price}&courseId=${course.value.id}`
+        router.push(checkoutUrl)
       } catch (error) {
-        console.error('Error creating checkout session:', error)
-        alert('Error processing payment. Please try again.')
+        console.error('Error navigating to checkout:', error)
+        alert('Error processing request. Please try again.')
       } finally {
         purchasing.value = false
       }

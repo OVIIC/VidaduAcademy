@@ -33,10 +33,12 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 import { courseService, paymentService } from '@/services'
 import { useAuthStore } from '@/stores/auth'
 import CourseCard from '@/components/courses/CourseCard.vue'
 
+const router = useRouter()
 const authStore = useAuthStore()
 const courses = ref([])
 const loading = ref(false)
@@ -65,22 +67,10 @@ const handlePurchase = async (course) => {
 
   try {
     console.log('Processing purchase for course:', course.title)
-    // TODO: Implement actual purchase logic
-    // For now, just log the purchase attempt
-    console.log('Purchase would be processed for:', {
-      courseId: course.id,
-      courseTitle: course.title,
-      price: course.price,
-      userId: authStore.user.id
-    })
     
-    // In real implementation, this would redirect to payment gateway
-    // const checkoutSession = await paymentService.createCheckoutSession(
-    //   course.id,
-    //   window.location.origin + '/payment/success',
-    //   window.location.origin + '/payment/cancel'
-    // )
-    // window.location.href = checkoutSession.url
+    // Redirect to our Stripe checkout page with course info
+    const checkoutUrl = `/checkout?courseTitle=${encodeURIComponent(course.title)}&coursePrice=${course.price}&courseId=${course.id}`
+    router.push(checkoutUrl)
   } catch (error) {
     console.error('Error processing purchase:', error)
   }

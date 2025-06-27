@@ -53,6 +53,12 @@ const router = createRouter({
       props: true,
     },
     {
+      path: '/checkout',
+      name: 'StripeCheckout',
+      component: () => import('@/views/checkout/StripeCheckoutView.vue'),
+      meta: { requiresAuth: true },
+    },
+    {
       path: '/learn/:courseSlug',
       name: 'Learn',
       component: () => import('@/views/LearnView.vue'),

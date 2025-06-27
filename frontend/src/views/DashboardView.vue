@@ -61,7 +61,7 @@
             <h2 class="text-xl font-bold text-gray-900 mb-4">Pokračovať v učení</h2>
             
             <!-- Loading -->
-            <div v-if="enrollmentStore.loading" class="flex justify-center py-8">
+            <div v-if="loading" class="flex justify-center py-8">
               <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600"></div>
             </div>
             
@@ -160,6 +160,9 @@ const authStore = useAuthStore()
 const enrollmentStore = useEnrollmentStore()
 
 const user = computed(() => authStore.user)
+
+// Loading state
+const loading = computed(() => enrollmentStore.loading)
 
 // Get courses from enrollment store
 const enrolledCourses = computed(() => enrollmentStore.myCourses || [])

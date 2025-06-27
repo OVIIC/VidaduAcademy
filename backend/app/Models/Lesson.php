@@ -16,6 +16,7 @@ class Lesson extends Model
         'title',
         'slug',
         'description',
+        'content',
         'video_url',
         'video_duration',
         'order',
@@ -46,5 +47,21 @@ class Lesson extends Model
         $minutes = intval($this->video_duration / 60);
         $seconds = $this->video_duration % 60;
         return sprintf('%02d:%02d', $minutes, $seconds);
+    }
+
+    // Mutators for Filament repeater fields
+    public function setResourcesAttribute($value)
+    {
+        if (is_array($value) && isset($value[0]['title'])) {
+            // Resources are already in correct format
+            $this->attributes['resources'] = json_encode($value);
+        } else {
+            $this->attributes['resources'] = json_encode($value ?: []);
+        }
+    }
+
+    public function getResourcesAttribute($value)
+    {
+        return json_decode($value, true) ?: [];
     }
 }

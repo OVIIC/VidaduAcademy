@@ -127,4 +127,41 @@ class EnrollmentController extends Controller
             'data' => $courses
         ]);
     }
+
+    /**
+     * Enroll authenticated user in a course (self-enrollment)
+     */
+    public function enrollSelf(Request $request): JsonResponse
+    {
+        $validated = $request->validate([
+            'course_id' => 'required|exists:courses,id',
+        ]);
+
+        $user = $request->user();
+        $courseId = $validated['course_id'];
+
+        // Check if user is already enrolled
+        $existingEnrollment = Enrollment::where([
+            'user_id' => $user->id,
+            'course_id' => $courseId,
+        ])->first();
+
+        if ($existingEnrollment) {
+            return response()->json([
+                'message' => 'User is already enrolled in this course',
+                'enrollment' => $existingEnrollment->load(['course'])
+            ], 200);
+        }
+
+        $enrollment = Enrollment::create([
+            'user_id' => $user->id,
+            'course_id' => $courseId,
+            'enrolled_at' => now(),
+            'progress_percentage' => 0,
+        ]);
+
+        $enrollment->load(['user', 'course']);
+
+        return response()->json($enrollment, 201);
+    }
 }

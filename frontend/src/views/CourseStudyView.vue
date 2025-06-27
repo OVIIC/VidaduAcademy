@@ -71,8 +71,152 @@
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <!-- Course Content (Left Column) -->
         <div class="lg:col-span-2 space-y-6">
-          <!-- Course Overview -->
-          <div class="bg-white rounded-lg shadow-sm p-6">
+          <!-- Selected Lesson Content -->
+          <div v-if="selectedLesson" class="bg-white rounded-lg shadow-sm overflow-hidden">
+            <!-- Lesson Header -->
+            <div class="bg-gradient-to-r from-primary-600 to-primary-700 px-6 py-4 text-white">
+              <div class="flex items-center justify-between">
+                <div>
+                  <h2 class="text-xl font-semibold">{{ selectedLesson.title }}</h2>
+                  <p class="text-primary-100 mt-1">Lekcia {{ selectedLessonIndex + 1 }} z {{ lessons.length }}</p>
+                </div>
+                <div class="flex items-center space-x-2">
+                  <button
+                    v-if="selectedLessonIndex > 0"
+                    @click="selectLesson(lessons[selectedLessonIndex - 1])"
+                    class="p-2 text-white hover:bg-primary-500 rounded-lg transition duration-200"
+                    title="Predchádzajúca lekcia"
+                  >
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                    </svg>
+                  </button>
+                  <button
+                    v-if="selectedLessonIndex < lessons.length - 1"
+                    @click="selectLesson(lessons[selectedLessonIndex + 1])"
+                    class="p-2 text-white hover:bg-primary-500 rounded-lg transition duration-200"
+                    title="Ďalšia lekcia"
+                  >
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Video Player -->
+            <div v-if="selectedLesson.video_url" class="aspect-video bg-black">
+              <iframe
+                :src="getEmbedUrl(selectedLesson.video_url)"
+                class="w-full h-full"
+                frameborder="0"
+                allowfullscreen
+                title="Lesson Video"
+              ></iframe>
+            </div>
+
+            <!-- Lesson Content -->
+            <div class="p-6">
+              <div v-if="selectedLesson.description" class="mb-6">
+                <h3 class="text-lg font-semibold text-gray-900 mb-3">Popis lekcie</h3>
+                <p class="text-gray-700">{{ selectedLesson.description }}</p>
+              </div>
+
+              <div v-if="selectedLesson.content" class="mb-6">
+                <h3 class="text-lg font-semibold text-gray-900 mb-3">Obsah lekcie</h3>
+                <div class="prose max-w-none text-gray-700" v-html="selectedLesson.content"></div>
+              </div>
+
+              <!-- Lesson Resources -->
+              <div v-if="selectedLesson.resources && selectedLesson.resources.length > 0" class="mb-6">
+                <h3 class="text-lg font-semibold text-gray-900 mb-3">Zdroje a súbory</h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <a
+                    v-for="resource in selectedLesson.resources"
+                    :key="resource.url"
+                    :href="resource.url"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="flex items-center p-4 border border-gray-200 rounded-lg hover:border-primary-300 hover:bg-primary-50 transition duration-200"
+                  >
+                    <div class="flex-shrink-0 mr-3">
+                      <div class="w-8 h-8 bg-primary-100 rounded-lg flex items-center justify-center">
+                        <svg v-if="resource.type === 'pdf'" class="w-4 h-4 text-primary-600" fill="currentColor" viewBox="0 0 20 20">
+                          <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clip-rule="evenodd" />
+                        </svg>
+                        <svg v-else-if="resource.type === 'video'" class="w-4 h-4 text-primary-600" fill="currentColor" viewBox="0 0 20 20">
+                          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd" />
+                        </svg>
+                        <svg v-else class="w-4 h-4 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                        </svg>
+                      </div>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                      <p class="text-sm font-medium text-gray-900 truncate">{{ resource.title }}</p>
+                      <p v-if="resource.description" class="text-xs text-gray-500 truncate">{{ resource.description }}</p>
+                      <p class="text-xs text-primary-600 font-medium uppercase">{{ getResourceTypeLabel(resource.type) }}</p>
+                    </div>
+                    <div class="flex-shrink-0 ml-2">
+                      <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                      </svg>
+                    </div>
+                  </a>
+                </div>
+              </div>
+
+              <!-- Lesson Transcript -->
+              <div v-if="selectedLesson.transcript" class="mb-6">
+                <h3 class="text-lg font-semibold text-gray-900 mb-3">Prepis videa</h3>
+                <div class="bg-gray-50 rounded-lg p-4">
+                  <p class="text-sm text-gray-700 whitespace-pre-wrap">{{ selectedLesson.transcript }}</p>
+                </div>
+              </div>
+
+              <!-- Lesson Actions -->
+              <div class="flex items-center justify-between pt-6 border-t border-gray-200">
+                <button
+                  @click="toggleLessonCompletion(selectedLesson)"
+                  :class="[
+                    'flex items-center px-4 py-2 rounded-lg font-medium transition duration-200',
+                    selectedLesson.completed
+                      ? 'bg-green-100 text-green-800 hover:bg-green-200'
+                      : 'bg-primary-100 text-primary-800 hover:bg-primary-200'
+                  ]"
+                >
+                  <svg v-if="selectedLesson.completed" class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                  </svg>
+                  <svg v-else class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                  </svg>
+                  {{ selectedLesson.completed ? 'Označiť ako nedokončené' : 'Označiť ako dokončené' }}
+                </button>
+
+                <div class="flex items-center space-x-2">
+                  <button
+                    v-if="selectedLessonIndex > 0"
+                    @click="selectLesson(lessons[selectedLessonIndex - 1])"
+                    class="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition duration-200"
+                  >
+                    Predchádzajúca
+                  </button>
+                  <button
+                    v-if="selectedLessonIndex < lessons.length - 1"
+                    @click="selectLesson(lessons[selectedLessonIndex + 1])"
+                    class="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition duration-200"
+                  >
+                    Ďalšia lekcia
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Course Overview (when no lesson selected) -->
+          <div v-else class="bg-white rounded-lg shadow-sm p-6">
             <h2 class="text-xl font-semibold text-gray-900 mb-4">Prehľad kurzu</h2>
             <p class="text-gray-700 mb-6">{{ course.description }}</p>
             
@@ -90,7 +234,7 @@
             </div>
           </div>
 
-          <!-- Course Lessons -->
+          <!-- Course Lessons List -->
           <div class="bg-white rounded-lg shadow-sm p-6">
             <h2 class="text-xl font-semibold text-gray-900 mb-4">Obsah kurzu</h2>
             
@@ -209,7 +353,17 @@ const lessons = ref([])
 const selectedLesson = ref(null)
 
 const progressPercentage = computed(() => {
-  return course.value?.enrollment_data?.progress_percentage || 0
+  // Try to get progress from course enrollment data or calculate from lessons
+  const enrollmentProgress = course.value?.progress_percentage || course.value?.enrollment?.progress_percentage
+  
+  if (enrollmentProgress !== undefined) {
+    return enrollmentProgress
+  }
+  
+  // Fallback: calculate from completed lessons
+  const completed = completedLessons.value
+  const total = totalLessons.value
+  return total > 0 ? Math.round((completed / total) * 100) : 0
 })
 
 const completedLessons = computed(() => {
@@ -234,6 +388,10 @@ const nextLesson = computed(() => {
   return lessons.value.find(lesson => !lesson.completed) || lessons.value[0]
 })
 
+const selectedLessonIndex = computed(() => {
+  return selectedLesson.value ? lessons.value.findIndex(lesson => lesson.id === selectedLesson.value.id) : -1
+})
+
 const loadCourseContent = async () => {
   loading.value = true
   try {
@@ -244,14 +402,71 @@ const loadCourseContent = async () => {
     course.value = response.course || response
     lessons.value = response.lessons || []
     
+    // Store enrollment data in course for progress tracking
+    if (response.enrollment) {
+      course.value.enrollment = response.enrollment
+      course.value.progress_percentage = response.enrollment.progress_percentage
+    }
+    
+    // Convert video_duration from seconds to minutes for display and map progress data
+    if (lessons.value.length > 0) {
+      lessons.value = lessons.value.map(lesson => ({
+        ...lesson,
+        duration_minutes: lesson.video_duration ? Math.ceil(lesson.video_duration / 60) : 15,
+        completed: lesson.user_progress?.completed || false,
+        progress_percentage: lesson.user_progress?.progress_percentage || 0,
+        watch_time_seconds: lesson.user_progress?.watch_time_seconds || 0
+      }))
+    }
+    
     // Mock some lessons if none exist
     if (lessons.value.length === 0) {
       lessons.value = [
-        { id: 1, title: 'Úvod do kurzu', description: 'Základy a prehľad kurzu', duration_minutes: 15, completed: false },
-        { id: 2, title: 'Prvé kroky', description: 'Začíname s prácou', duration_minutes: 20, completed: false },
-        { id: 3, title: 'Pokročilé techniky', description: 'Hlbšie znalosti', duration_minutes: 25, completed: false },
-        { id: 4, title: 'Praktické cvičenia', description: 'Aplikácia poznatkov', duration_minutes: 30, completed: false },
-        { id: 5, title: 'Záver a certifikát', description: 'Dokončenie kurzu', duration_minutes: 10, completed: false }
+        { 
+          id: 1, 
+          title: 'Úvod do kurzu', 
+          description: 'Základy a prehľad kurzu', 
+          content: '<h3>Vitajte v kurze!</h3><p>V tejto úvodnej lekcii sa zoznámite so základmi kurzu.</p>',
+          duration_minutes: 15, 
+          completed: false,
+          video_url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'
+        },
+        { 
+          id: 2, 
+          title: 'Prvé kroky', 
+          description: 'Začíname s prácou', 
+          content: '<h3>Prvé kroky</h3><p>Teraz sa naučíte základné techniky a postupy.</p>',
+          duration_minutes: 20, 
+          completed: false,
+          video_url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'
+        },
+        { 
+          id: 3, 
+          title: 'Pokročilé techniky', 
+          description: 'Hlbšie znalosti', 
+          content: '<h3>Pokročilé techniky</h3><p>V tejto lekcii sa dostaneme k pokročilejším témam.</p>',
+          duration_minutes: 25, 
+          completed: false,
+          video_url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'
+        },
+        { 
+          id: 4, 
+          title: 'Praktické cvičenia', 
+          description: 'Aplikácia poznatkov', 
+          content: '<h3>Praktické cvičenia</h3><p>Teraz si vyskúšate naučené poznatky na praktických príkladoch.</p>',
+          duration_minutes: 30, 
+          completed: false,
+          video_url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'
+        },
+        { 
+          id: 5, 
+          title: 'Záver a certifikát', 
+          description: 'Dokončenie kurzu', 
+          content: '<h3>Záver kurzu</h3><p>Gratulujeme! Dokončili ste kurz a môžete si stiahnuť certifikát.</p>',
+          duration_minutes: 10, 
+          completed: false,
+          video_url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'
+        }
       ]
     }
   } catch (error) {
@@ -311,6 +526,88 @@ const formatEnrollmentDate = (dateString) => {
     month: 'long',
     day: 'numeric'
   })
+}
+
+const getEmbedUrl = (url) => {
+  if (!url) return ''
+  
+  // YouTube URL conversion
+  if (url.includes('youtube.com/watch?v=')) {
+    const videoId = url.split('v=')[1].split('&')[0]
+    return `https://www.youtube.com/embed/${videoId}`
+  }
+  
+  if (url.includes('youtu.be/')) {
+    const videoId = url.split('youtu.be/')[1].split('?')[0]
+    return `https://www.youtube.com/embed/${videoId}`
+  }
+  
+  // Vimeo URL conversion
+  if (url.includes('vimeo.com/')) {
+    const videoId = url.split('vimeo.com/')[1]
+    return `https://player.vimeo.com/video/${videoId}`
+  }
+  
+  // Direct video URLs
+  return url
+}
+
+const getResourceTypeLabel = (type) => {
+  const labels = {
+    pdf: 'PDF dokument',
+    link: 'Webový odkaz',
+    download: 'Stiahnutie',
+    video: 'Video',
+    image: 'Obrázok',
+    document: 'Dokument',
+    external: 'Externý zdroj'
+  }
+  return labels[type] || type
+}
+
+const toggleLessonCompletion = async (lesson) => {
+  try {
+    const wasCompleted = lesson.completed
+    const newCompletionStatus = !wasCompleted
+    
+    // Optimistically update UI
+    lesson.completed = newCompletionStatus
+    
+    // Call API to update lesson completion status
+    const progressData = {
+      completed: newCompletionStatus,
+      watch_time_seconds: lesson.watch_time_seconds || 0
+    }
+    
+    const response = await learningService.updateProgress(
+      course.value.slug,
+      lesson.slug,
+      progressData
+    )
+    
+    console.log(`Lesson ${lesson.title} marked as ${newCompletionStatus ? 'completed' : 'incomplete'}`)
+    console.log('Progress update response:', response)
+    
+    // Update lesson with fresh data from server
+    if (response.progress) {
+      lesson.completed = response.progress.completed
+      lesson.watch_time_seconds = response.progress.watch_time_seconds
+      lesson.progress_percentage = response.progress.progress_percentage
+    }
+    
+    // Update course progress if enrollment data is returned
+    if (response.enrollment) {
+      course.value.progress_percentage = response.enrollment.progress_percentage
+    }
+    
+  } catch (error) {
+    console.error('Error updating lesson completion:', error)
+    // Revert the change if API call fails
+    lesson.completed = !lesson.completed
+    
+    // Show error message to user
+    alert('Nastala chyba pri aktualizácii pokroku lekcie. Skúste to znovu.')
+  }
 }
 
 onMounted(() => {

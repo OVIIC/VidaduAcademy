@@ -51,6 +51,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // My enrolled courses
     Route::get('/my-courses', [EnrollmentController::class, 'getMyEnrolledCourses']);
+    Route::post('/enroll-me', [EnrollmentController::class, 'enrollSelf']);
 });
 
 // Authentication routes will be handled by Laravel Sanctum

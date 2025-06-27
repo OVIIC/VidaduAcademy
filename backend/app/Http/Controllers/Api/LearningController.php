@@ -110,7 +110,7 @@ class LearningController extends Controller
     public function updateProgress(Request $request, string $courseSlug, string $lessonSlug): JsonResponse
     {
         $request->validate([
-            'watch_time_seconds' => 'required|integer|min:0',
+            'watch_time_seconds' => 'sometimes|integer|min:0',
             'completed' => 'sometimes|boolean',
         ]);
 
@@ -133,13 +133,17 @@ class LearningController extends Controller
             ->first();
 
         if (!$progress) {
-            return response()->json([
-                'error' => 'Lesson progress not found'
-            ], 404);
+            // Create lesson progress if it doesn't exist
+            $progress = $user->lessonProgress()->create([
+                'lesson_id' => $lesson->id,
+                'enrollment_id' => $enrollment->id,
+                'watch_time_seconds' => 0,
+                'completed' => false,
+            ]);
         }
 
         $progress->update([
-            'watch_time_seconds' => max($progress->watch_time_seconds, $request->watch_time_seconds),
+            'watch_time_seconds' => max($progress->watch_time_seconds, $request->get('watch_time_seconds', $progress->watch_time_seconds)),
             'completed' => $request->get('completed', $progress->completed),
             'completed_at' => $request->get('completed') ? now() : $progress->completed_at,
         ]);

@@ -19,8 +19,11 @@ class StripeService
         Stripe::setApiKey(config('services.stripe.secret'));
     }
 
-    public function createCheckoutSession(Course $course, User $user, string $successUrl, string $cancelUrl): string
+    public function createCheckoutSession(Course $course, User $user, ?string $successUrl = null, ?string $cancelUrl = null): string
     {
+        // Provide default URLs if none provided
+        $successUrl = $successUrl ?: config('app.frontend_url', 'http://localhost:3005') . '/payment/success';
+        $cancelUrl = $cancelUrl ?: config('app.frontend_url', 'http://localhost:3005') . '/course/' . $course->slug;
         $session = Session::create([
             'payment_method_types' => ['card'],
             'customer_email' => $user->email,
@@ -28,7 +31,7 @@ class StripeService
             'line_items' => [
                 [
                     'price_data' => [
-                        'currency' => strtolower($course->currency),
+                        'currency' => config('services.stripe.currency'),
                         'unit_amount' => $course->price * 100, // Stripe expects amount in cents
                         'product_data' => [
                             'name' => $course->title,
@@ -61,7 +64,7 @@ class StripeService
             [
                 'stripe_session_id' => $session->id,
                 'amount' => $course->price,
-                'currency' => $course->currency,
+                'currency' => config('services.stripe.currency'),
                 'status' => 'pending',
             ]
         );
@@ -82,30 +85,30 @@ class StripeService
             throw $e;
         }
 
-        switch ($event['type']) {
+        switch ($event->type) {
             case 'checkout.session.completed':
-                $this->handleCheckoutSessionCompleted($event['data']['object']);
+                $this->handleCheckoutSessionCompleted($event->data->object);
                 break;
 
             case 'payment_intent.succeeded':
-                $this->handlePaymentIntentSucceeded($event['data']['object']);
+                $this->handlePaymentIntentSucceeded($event->data->object);
                 break;
 
             case 'payment_intent.payment_failed':
-                $this->handlePaymentIntentFailed($event['data']['object']);
+                $this->handlePaymentIntentFailed($event->data->object);
                 break;
 
             default:
-                Log::info('Unhandled Stripe webhook event type: ' . $event['type']);
+                Log::info('Unhandled Stripe webhook event type: ' . $event->type);
         }
     }
 
-    private function handleCheckoutSessionCompleted(array $session): void
+    private function handleCheckoutSessionCompleted($session): void
     {
-        $sessionId = $session['id'];
-        $paymentIntentId = $session['payment_intent'];
-        $userId = $session['metadata']['user_id'] ?? null;
-        $courseId = $session['metadata']['course_id'] ?? null;
+        $sessionId = $session->id;
+        $paymentIntentId = $session->payment_intent;
+        $userId = $session->metadata->user_id ?? null;
+        $courseId = $session->metadata->course_id ?? null;
 
         if (!$userId || !$courseId) {
             Log::error('Missing metadata in checkout session: ' . $sessionId);
@@ -131,9 +134,9 @@ class StripeService
         Log::info("Course purchase completed: User {$userId} purchased Course {$courseId}");
     }
 
-    private function handlePaymentIntentSucceeded(array $paymentIntent): void
+    private function handlePaymentIntentSucceeded($paymentIntent): void
     {
-        $paymentIntentId = $paymentIntent['id'];
+        $paymentIntentId = $paymentIntent->id;
 
         $purchase = Purchase::where('stripe_payment_intent_id', $paymentIntentId)->first();
 
@@ -147,9 +150,9 @@ class StripeService
         }
     }
 
-    private function handlePaymentIntentFailed(array $paymentIntent): void
+    private function handlePaymentIntentFailed($paymentIntent): void
     {
-        $paymentIntentId = $paymentIntent['id'];
+        $paymentIntentId = $paymentIntent->id;
 
         $purchase = Purchase::where('stripe_payment_intent_id', $paymentIntentId)->first();
 

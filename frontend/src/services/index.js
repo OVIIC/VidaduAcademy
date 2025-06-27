@@ -45,7 +45,7 @@ export const courseService = {
 }
 
 export const paymentService = {
-  async createCheckoutSession(courseId, successUrl, cancelUrl) {
+  async createCheckoutSession(courseId, successUrl = null, cancelUrl = null) {
     const response = await api.post('/payments/checkout', {
       course_id: courseId,
       success_url: successUrl,

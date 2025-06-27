@@ -78,10 +78,31 @@ class User extends Authenticatable
 
     public function hasPurchased(Course $course): bool
     {
-        return $this->purchases()
+        // Check if user has completed purchase AND is currently enrolled
+        $hasCompletedPurchase = $this->purchases()
             ->where('course_id', $course->id)
             ->where('status', 'completed')
             ->exists();
+        
+        $isCurrentlyEnrolled = $this->isEnrolledIn($course);
+        
+        // User has access only if they both purchased and are enrolled
+        return $hasCompletedPurchase && $isCurrentlyEnrolled;
+    }
+
+    /**
+     * Cancel purchase and remove enrollment for a course
+     */
+    public function cancelPurchaseAndUnenroll(Course $course): bool
+    {
+        // Find and delete enrollment (this will trigger purchase cancellation via model event)
+        $enrollment = $this->enrollments()->where('course_id', $course->id)->first();
+        
+        if ($enrollment) {
+            $enrollment->delete(); // This will trigger the boot method
+        }
+        
+        return true;
     }
 
     public function getProgressForCourse(Course $course): ?Enrollment

@@ -66,13 +66,24 @@ const handlePurchase = async (course) => {
   }
 
   try {
-    console.log('Processing purchase for course:', course.title)
+    console.log('Creating Stripe checkout session for course:', course.title)
     
-    // Redirect to our Stripe checkout page with course info
+    // Try to create Stripe checkout session
+    const response = await paymentService.createCheckoutSession(course.id)
+    
+    if (response.checkout_url) {
+      // Redirect to Stripe Checkout
+      window.location.href = response.checkout_url
+    } else {
+      throw new Error('No checkout URL received')
+    }
+  } catch (error) {
+    console.error('Error creating checkout session:', error)
+    
+    // Fallback to our simulator for development
+    console.log('Falling back to simulator checkout')
     const checkoutUrl = `/checkout?courseTitle=${encodeURIComponent(course.title)}&coursePrice=${course.price}&courseId=${course.id}&courseSlug=${encodeURIComponent(course.slug)}`
     router.push(checkoutUrl)
-  } catch (error) {
-    console.error('Error processing purchase:', error)
   }
 }
 

@@ -8,9 +8,9 @@
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
           </svg>
         </div>
-        <h2 class="mt-6 text-3xl font-extrabold text-gray-900">Payment Successful!</h2>
+        <h2 class="mt-6 text-3xl font-extrabold text-gray-900">Platba úspešná!</h2>
         <p class="mt-2 text-sm text-gray-600">
-          Thank you for your purchase. You now have access to your course.
+          Ďakujeme za váš nákup. Kurz bol pridaný do vašich kurzov.
         </p>
       </div>
 
@@ -127,13 +127,14 @@
 
 <script>
 import { ref, onMounted } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { api } from '@/services/api'
 
 export default {
   name: 'PaymentSuccessView',
   setup() {
     const route = useRoute()
+    const router = useRouter()
     const course = ref(null)
     const paymentDetails = ref(null)
 
@@ -170,6 +171,11 @@ export default {
     }
 
     onMounted(() => {
+      // Automatically redirect to My Courses with success message
+      setTimeout(() => {
+        router.push('/my-courses?payment=success')
+      }, 2000) // Wait 2 seconds to show success page briefly
+      
       loadPaymentDetails()
     })
 

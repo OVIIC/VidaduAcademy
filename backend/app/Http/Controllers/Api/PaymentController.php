@@ -32,17 +32,26 @@ class PaymentController extends Controller
         }
 
         try {
+            $frontendUrl = config('app.frontend_url', 'http://localhost:3005');
+            
             $sessionUrl = $this->stripeService->createCheckoutSession(
                 $course,
                 $user,
-                $request->get('success_url', config('app.frontend_url') . '/course/' . $course->slug),
-                $request->get('cancel_url', config('app.frontend_url') . '/course/' . $course->slug)
+                $request->get('success_url', $frontendUrl . '/my-courses?payment=success'),
+                $request->get('cancel_url', $frontendUrl . '/course/' . $course->slug)
             );
 
             return response()->json(['checkout_url' => $sessionUrl]);
         } catch (\Exception $e) {
+            \Log::error('Stripe checkout session creation failed: ' . $e->getMessage(), [
+                'user_id' => $user->id,
+                'course_id' => $course->id,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            
             return response()->json([
-                'error' => 'Unable to create checkout session'
+                'error' => 'Unable to create checkout session: ' . $e->getMessage()
             ], 500);
         }
     }

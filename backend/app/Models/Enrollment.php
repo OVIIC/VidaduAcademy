@@ -40,6 +40,19 @@ class Enrollment extends Model
         return $this->belongsTo(Lesson::class, 'last_accessed_lesson_id');
     }
 
+    protected static function boot()
+    {
+        parent::boot();
+        
+        // When enrollment is deleted, mark related purchase as refunded
+        static::deleting(function ($enrollment) {
+            Purchase::where('user_id', $enrollment->user_id)
+                ->where('course_id', $enrollment->course_id)
+                ->where('status', 'completed')
+                ->update(['status' => 'refunded', 'refunded_at' => now()]);
+        });
+    }
+
     public function getIsCompletedAttribute(): bool
     {
         return $this->completed_at !== null;

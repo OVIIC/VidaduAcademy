@@ -187,6 +187,7 @@ import { useCourseStore } from '@/stores/course'
 import { useAuthStore } from '@/stores/auth'
 import { useEnrollmentStore } from '@/stores/enrollment'
 import { api } from '@/services/api'
+import { paymentService } from '@/services'
 import AuthModal from '@/components/auth/AuthModal.vue'
 
 export default {
@@ -248,12 +249,23 @@ export default {
 
       purchasing.value = true
       try {
-        // Redirect to our Stripe checkout page with course info
+        // Create Stripe checkout session
+        console.log('Creating Stripe checkout session for course:', course.value.id)
+        const response = await paymentService.createCheckoutSession(course.value.id)
+        
+        if (response.checkout_url) {
+          // Redirect to Stripe Checkout
+          window.location.href = response.checkout_url
+        } else {
+          throw new Error('No checkout URL received')
+        }
+      } catch (error) {
+        console.error('Error creating checkout session:', error)
+        
+        // Fallback to our simulator for development
+        console.log('Falling back to simulator checkout')
         const checkoutUrl = `/checkout?courseTitle=${encodeURIComponent(course.value.title)}&coursePrice=${course.value.price}&courseId=${course.value.id}&courseSlug=${encodeURIComponent(course.value.slug)}`
         router.push(checkoutUrl)
-      } catch (error) {
-        console.error('Error navigating to checkout:', error)
-        alert('Error processing request. Please try again.')
       } finally {
         purchasing.value = false
       }

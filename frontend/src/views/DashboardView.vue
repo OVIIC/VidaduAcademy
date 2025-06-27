@@ -60,7 +60,12 @@
           <div class="bg-white rounded-lg shadow-sm p-6">
             <h2 class="text-xl font-bold text-gray-900 mb-4">Pokračovať v učení</h2>
             
-            <div v-if="recentCourses.length > 0" class="space-y-4">
+            <!-- Loading -->
+            <div v-if="enrollmentStore.loading" class="flex justify-center py-8">
+              <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600"></div>
+            </div>
+            
+            <div v-else-if="recentCourses.length > 0" class="space-y-4">
               <div
                 v-for="course in recentCourses"
                 :key="course.id"
@@ -79,11 +84,18 @@
                   </div>
                   <div class="ml-4">
                     <router-link
-                      :to="{ name: 'learn', params: { courseId: course.id } }"
+                      v-if="course.slug"
+                      :to="{ name: 'CourseStudy', params: { slug: course.slug } }"
                       class="bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition duration-200"
                     >
                       Pokračovať
                     </router-link>
+                    <div
+                      v-else
+                      class="bg-gray-300 text-gray-500 px-4 py-2 rounded-lg text-sm font-medium cursor-not-allowed"
+                    >
+                      Nedostupné
+                    </div>
                   </div>
                 </div>
               </div>
@@ -139,56 +151,61 @@
   </div>
 </template>
 
-<script>
-import { ref, computed, onMounted } from 'vue'
+<script setup>
+import { computed, onMounted } from 'vue'
 import { useAuthStore } from '@/stores/auth'
-import { useCourseStore } from '@/stores/course'
+import { useEnrollmentStore } from '@/stores/enrollment'
 
-export default {
-  name: 'DashboardView',
-  setup() {
-    const authStore = useAuthStore()
-    const courseStore = useCourseStore()
+const authStore = useAuthStore()
+const enrollmentStore = useEnrollmentStore()
 
-    const user = computed(() => authStore.user)
-    const enrolledCourses = computed(() => user.value?.enrollments || [])
-    
-    const completedCourses = computed(() => {
-      return enrolledCourses.value.filter(enrollment => enrollment.progress === 100).length
+const user = computed(() => authStore.user)
+
+// Get courses from enrollment store
+const enrolledCourses = computed(() => enrollmentStore.myCourses || [])
+
+const completedCourses = computed(() => {
+  return enrolledCourses.value.filter(course => {
+    const progress = course.enrollment_data?.progress_percentage || 0
+    return progress >= 100
+  }).length
+})
+
+const certificates = computed(() => completedCourses.value)
+
+// Sort courses by progress percentage (highest to lowest)
+const recentCourses = computed(() => {
+  return enrolledCourses.value
+    .filter(course => {
+      const progress = course.enrollment_data?.progress_percentage || 0
+      return progress > 0 // Show courses with any progress
     })
-
-    const certificates = computed(() => completedCourses.value)
-
-    const recentCourses = computed(() => {
-      return enrolledCourses.value
-        .filter(enrollment => enrollment.progress > 0 && enrollment.progress < 100)
-        .slice(0, 3)
-        .map(enrollment => ({
-          ...enrollment.course,
-          progress: enrollment.progress
-        }))
+    .sort((a, b) => {
+      const progressA = a.enrollment_data?.progress_percentage || 0
+      const progressB = b.enrollment_data?.progress_percentage || 0
+      return progressB - progressA // Sort descending (highest first)
     })
+    .slice(0, 5) // Show top 5 courses
+    .map(course => ({
+      id: course.id,
+      title: course.title,
+      slug: course.slug,
+      progress: course.enrollment_data?.progress_percentage || 0,
+      thumbnail: course.thumbnail,
+      instructor: course.instructor
+    }))
+})
 
-    const loadDashboardData = async () => {
-      try {
-        // Load user enrollments and progress
-        await authStore.fetchUser()
-      } catch (error) {
-        console.error('Error loading dashboard data:', error)
-      }
-    }
-
-    onMounted(() => {
-      loadDashboardData()
-    })
-
-    return {
-      user,
-      enrolledCourses,
-      completedCourses,
-      certificates,
-      recentCourses
-    }
+const loadDashboardData = async () => {
+  try {
+    // Load user courses from enrollment store
+    await enrollmentStore.loadMyCourses(true)
+  } catch (error) {
+    console.error('Error loading dashboard data:', error)
   }
 }
+
+onMounted(() => {
+  loadDashboardData()
+})
 </script>

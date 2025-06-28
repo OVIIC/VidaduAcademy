@@ -16,17 +16,17 @@ const cachedApiCall = async (cacheKey, apiCall, ttl = 5 * 60 * 1000) => {
 
 export const authService = {
   async login(credentials) {
-    const response = await api.post('/login', credentials)
+    const response = await api.post('/auth/login', credentials)
     return response.data
   },
 
   async register(userData) {
-    const response = await api.post('/register', userData)
+    const response = await api.post('/auth/register', userData)
     return response.data
   },
 
   async logout() {
-    const response = await api.post('/logout')
+    const response = await api.post('/auth/logout')
     return response.data
   },
 

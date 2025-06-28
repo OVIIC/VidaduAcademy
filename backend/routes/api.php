@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\PaymentController;
 use App\Http\Controllers\Api\LearningController;
 use App\Http\Controllers\Api\EnrollmentController;
 use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Api\AuthController;
 
 /*
 |--------------------------------------------------------------------------
@@ -67,15 +68,29 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/enroll-me', [EnrollmentController::class, 'enrollSelf']);
 });
 
-// Authentication routes will be handled by Laravel Sanctum
-Route::middleware('guest')->group(function () {
-    Route::post('/register', [App\Http\Controllers\Auth\RegisterController::class, 'register']);
-    Route::post('/login', [App\Http\Controllers\Auth\LoginController::class, 'login']);
+// Authentication routes with enhanced security
+Route::prefix('auth')->group(function () {
+    Route::post('/register', [AuthController::class, 'register'])
+        ->middleware('rate.limit:registration,3,5'); // 3 attempts per 5 minutes
+    
+    Route::post('/login', [AuthController::class, 'login'])
+        ->middleware('rate.limit:login,5,1'); // 5 attempts per minute
+    
+    Route::middleware('auth:sanctum')->group(function () {
+        Route::post('/logout', [AuthController::class, 'logout']);
+        Route::post('/logout-all', [AuthController::class, 'logoutAll']);
+        Route::get('/me', [AuthController::class, 'me']);
+        Route::put('/change-password', [AuthController::class, 'changePassword'])
+            ->middleware('rate.limit:password_change,3,60'); // 3 attempts per hour
+    });
 });
 
-Route::middleware('auth:sanctum')->group(function () {
-    Route::post('/logout', [App\Http\Controllers\Auth\LoginController::class, 'logout']);
-});
+// Security reporting endpoint
+Route::post('/security/violations', function (Request $request) {
+    // Log CSP violations and other security events from frontend
+    \Log::warning('Frontend security violation', $request->all());
+    return response()->json(['status' => 'logged']);
+})->middleware('rate.limit:security_reports,10,1');
 
 // Enrollment routes (admin/instructor only)
 Route::middleware(['auth:sanctum'])->prefix('enrollments')->group(function () {

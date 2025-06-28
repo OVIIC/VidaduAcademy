@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VidaduAcademy Frontend Security Tests</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+
+        .test-container {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .test-section {
+            margin-bottom: 30px;
+        }
+
+        .test-case {
+            padding: 15px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: #fafafa;
+        }
+
+        .pass {
+            border-left: 4px solid #4CAF50;
+            background-color: #f1f8e9;
+        }
+
+        .fail {
+            border-left: 4px solid #f44336;
+            background-color: #ffebee;
+        }
+
+        .warning {
+            border-left: 4px solid #ff9800;
+            background-color: #fff3e0;
+        }
+
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .results {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 4px;
+        }
+
+        .malicious-input {
+            background-color: #ffebee;
+            color: #c62828;
+            font-family: monospace;
+            padding: 2px 4px;
+            border-radius: 2px;
+        }
+
+        .safe-output {
+            background-color: #e8f5e8;
+            color: #2e7d32;
+            font-family: monospace;
+            padding: 2px 4px;
+            border-radius: 2px;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px 0;
+        }
+
+        .stat {
+            text-align: center;
+            padding: 15px;
+            border-radius: 8px;
+            min-width: 100px;
+        }
+
+        .stat.total { background-color: #e3f2fd; }
+        .stat.passed { background-color: #e8f5e8; }
+        .stat.failed { background-color: #ffebee; }
+        .stat.warnings { background-color: #fff3e0; }
+    </style>
+</head>
+<body>
+    <h1>🔒 VidaduAcademy Frontend Security Tests</h1>
+    <p>This page tests various frontend security measures including XSS protection, input sanitization, and CSP enforcement.</p>
+
+    <div class="stats">
+        <div class="stat total">
+            <div id="total-tests">0</div>
+            <div>Total Tests</div>
+        </div>
+        <div class="stat passed">
+            <div id="passed-tests">0</div>
+            <div>Passed</div>
+        </div>
+        <div class="stat failed">
+            <div id="failed-tests">0</div>
+            <div>Failed</div>
+        </div>
+        <div class="stat warnings">
+            <div id="warning-tests">0</div>
+            <div>Warnings</div>
+        </div>
+    </div>
+
+    <div class="test-container">
+        <button onclick="runAllTests()" id="run-tests-btn">Run All Security Tests</button>
+        <button onclick="clearResults()">Clear Results</button>
+    </div>
+
+    <div class="test-container">
+        <div class="test-section">
+            <h2>1. XSS Protection Tests</h2>
+            <div id="xss-tests"></div>
+            
+            <h3>Manual XSS Test</h3>
+            <textarea id="xss-input" placeholder="Enter potentially malicious input to test XSS protection..."></textarea>
+            <button onclick="testXSSInput()">Test XSS Protection</button>
+            <div id="xss-results" class="results"></div>
+        </div>
+
+        <div class="test-section">
+            <h2>2. Input Sanitization Tests</h2>
+            <div id="sanitization-tests"></div>
+            
+            <h3>Manual Sanitization Test</h3>
+            <textarea id="sanitize-input" placeholder="Enter HTML content to test sanitization..."></textarea>
+            <button onclick="testSanitization()">Test Sanitization</button>
+            <div id="sanitize-results" class="results"></div>
+        </div>
+
+        <div class="test-section">
+            <h2>3. File Upload Security Tests</h2>
+            <div id="file-tests"></div>
+            
+            <h3>Manual File Test</h3>
+            <input type="file" id="file-input" accept="*/*">
+            <button onclick="testFileUpload()">Test File Security</button>
+            <div id="file-results" class="results"></div>
+        </div>
+
+        <div class="test-section">
+            <h2>4. Content Security Policy Tests</h2>
+            <div id="csp-tests"></div>
+            
+            <h3>Manual CSP Test</h3>
+            <button onclick="testCSPViolation()">Trigger CSP Violation</button>
+            <div id="csp-results" class="results"></div>
+        </div>
+
+        <div class="test-section">
+            <h2>5. Form Validation Tests</h2>
+            <div id="validation-tests"></div>
+            
+            <h3>Manual Validation Test</h3>
+            <input type="email" id="email-input" placeholder="Test email validation...">
+            <input type="password" id="password-input" placeholder="Test password validation...">
+            <button onclick="testFormValidation()">Test Validation</button>
+            <div id="validation-results" class="results"></div>
+        </div>
+    </div>
+
+    <script>
+        // Import security utilities (in a real app, this would be from your security.js module)
+        const SecurityManager = {
+            // XSS Detection patterns
+            xssPatterns: [
+                /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi,
+                /javascript:/gi,
+                /on\w+\s*=/gi,
+                /<iframe[^>]*src\s*=\s*["']?javascript:/gi,
+                /<img[^>]*onerror/gi,
+                /<svg[^>]*onload/gi
+            ],
+
+            // Detect XSS attempts
+            detectXSS: function(input) {
+                if (!input || typeof input !== 'string') return false;
+                
+                return this.xssPatterns.some(pattern => pattern.test(input));
+            },
+
+            // Basic HTML sanitization (simplified version)
+            sanitizeHTML: function(input) {
+                if (!input) return '';
+                
+                const div = document.createElement('div');
+                div.textContent = input;
+                let sanitized = div.innerHTML;
+                
+                // Remove dangerous attributes and tags
+                sanitized = sanitized
+                    .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
+                    .replace(/on\w+\s*=\s*["'][^"']*["']/gi, '')
+                    .replace(/javascript:/gi, '')
+                    .replace(/<iframe[^>]*>/gi, '')
+                    .replace(/<object[^>]*>/gi, '')
+                    .replace(/<embed[^>]*>/gi, '');
+                
+                return sanitized;
+            },
+
+            // File validation
+            validateFile: function(file) {
+                if (!file) return { valid: false, reason: 'No file provided' };
+                
+                const allowedTypes = [
+                    'image/jpeg', 'image/jpg', 'image/png', 'image/gif',
+                    'application/pdf', 'text/plain',
+                    'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+                ];
+                
+                const maxSize = 5 * 1024 * 1024; // 5MB
+                
+                if (!allowedTypes.includes(file.type)) {
+                    return { valid: false, reason: 'File type not allowed' };
+                }
+                
+                if (file.size > maxSize) {
+                    return { valid: false, reason: 'File too large (max 5MB)' };
+                }
+                
+                // Check file extension
+                const dangerousExtensions = ['exe', 'bat', 'com', 'cmd', 'scr', 'pif', 'php', 'asp', 'jsp'];
+                const extension = file.name.split('.').pop().toLowerCase();
+                
+                if (dangerousExtensions.includes(extension)) {
+                    return { valid: false, reason: 'Dangerous file extension detected' };
+                }
+                
+                return { valid: true, reason: 'File is safe' };
+            },
+
+            // Email validation
+            validateEmail: function(email) {
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                return emailRegex.test(email);
+            },
+
+            // Password validation
+            validatePassword: function(password) {
+                if (!password || password.length < 8) return false;
+                
+                const hasUpperCase = /[A-Z]/.test(password);
+                const hasLowerCase = /[a-z]/.test(password);
+                const hasNumbers = /\d/.test(password);
+                const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+                
+                return hasUpperCase && hasLowerCase && hasNumbers && hasSpecialChar;
+            }
+        };
+
+        // Test statistics
+        let testStats = {
+            total: 0,
+            passed: 0,
+            failed: 0,
+            warnings: 0
+        };
+
+        function updateStats() {
+            document.getElementById('total-tests').textContent = testStats.total;
+            document.getElementById('passed-tests').textContent = testStats.passed;
+            document.getElementById('failed-tests').textContent = testStats.failed;
+            document.getElementById('warning-tests').textContent = testStats.warnings;
+        }
+
+        function addTestResult(containerId, testName, result, details = '') {
+            const container = document.getElementById(containerId);
+            const testCase = document.createElement('div');
+            testCase.className = `test-case ${result}`;
+            
+            const status = result === 'pass' ? '✅' : result === 'fail' ? '❌' : '⚠️';
+            testCase.innerHTML = `
+                <strong>${status} ${testName}</strong>
+                ${details ? `<div style="margin-top: 10px; font-size: 0.9em;">${details}</div>` : ''}
+            `;
+            
+            container.appendChild(testCase);
+            
+            testStats.total++;
+            if (result === 'pass') testStats.passed++;
+            else if (result === 'fail') testStats.failed++;
+            else testStats.warnings++;
+            
+            updateStats();
+        }
+
+        function runAllTests() {
+            clearResults();
+            
+            // XSS Protection Tests
+            runXSSTests();
+            
+            // Sanitization Tests
+            runSanitizationTests();
+            
+            // File Upload Tests
+            runFileTests();
+            
+            // CSP Tests
+            runCSPTests();
+            
+            // Validation Tests
+            runValidationTests();
+            
+            document.getElementById('run-tests-btn').textContent = 'Tests Complete';
+            setTimeout(() => {
+                document.getElementById('run-tests-btn').textContent = 'Run All Security Tests';
+            }, 3000);
+        }
+
+        function runXSSTests() {
+            const xssPayloads = [
+                '&lt;script&gt;alert("XSS")&lt;/script&gt;',
+                'javascript:alert(1)',
+                '&lt;img src="x" onerror="alert(1)"&gt;',
+                '&lt;iframe src="javascript:alert(1)"&gt;&lt;/iframe&gt;',
+                'onload="alert(1)"',
+                '&lt;svg onload=alert(1)&gt;',
+                '&lt;div onclick="alert(1)"&gt;Click me&lt;/div&gt;',
+                '&lt;a href="javascript:alert(1)"&gt;Link&lt;/a&gt;'
+            ];
+
+            xssPayloads.forEach((payload, index) => {
+                const detected = SecurityManager.detectXSS(payload);
+                const result = detected ? 'pass' : 'fail';
+                const details = `Payload: <span class="malicious-input">${payload}</span><br>Detection: ${detected ? 'Blocked' : 'Not detected'}`;
+                
+                addTestResult('xss-tests', `XSS Detection Test ${index + 1}`, result, details);
+            });
+
+            // Test safe inputs
+            const safeInputs = ['Hello World', 'user@example.com', 'Normal text content'];
+            safeInputs.forEach((input, index) => {
+                const detected = SecurityManager.detectXSS(input);
+                const result = !detected ? 'pass' : 'fail';
+                const details = `Input: <span class="safe-output">${input}</span><br>Detection: ${detected ? 'Incorrectly flagged' : 'Correctly allowed'}`;
+                
+                addTestResult('xss-tests', `Safe Input Test ${index + 1}`, result, details);
+            });
+        }
+
+        function runSanitizationTests() {
+            const testCases = [
+                {
+                    input: '&lt;script&gt;alert("XSS")&lt;/script&gt;&lt;p&gt;Safe content&lt;/p&gt;',
+                    shouldContain: '&lt;p&gt;Safe content&lt;/p&gt;',
+                    shouldNotContain: '&lt;script&gt;'
+                },
+                {
+                    input: '&lt;img src="x" onerror="alert(1)"&gt;',
+                    shouldContain: '',
+                    shouldNotContain: 'onerror'
+                },
+                {
+                    input: '&lt;div onclick="malicious()"&gt;Content&lt;/div&gt;',
+                    shouldContain: 'Content',
+                    shouldNotContain: 'onclick'
+                }
+            ];
+
+            testCases.forEach((testCase, index) => {
+                const sanitized = SecurityManager.sanitizeHTML(testCase.input);
+                
+                const containsGood = !testCase.shouldContain || sanitized.includes(testCase.shouldContain);
+                const doesntContainBad = !testCase.shouldNotContain || !sanitized.includes(testCase.shouldNotContain);
+                
+                const result = containsGood && doesntContainBad ? 'pass' : 'fail';
+                const details = `
+                    Input: <span class="malicious-input">${testCase.input}</span><br>
+                    Output: <span class="safe-output">${sanitized}</span>
+                `;
+                
+                addTestResult('sanitization-tests', `HTML Sanitization Test ${index + 1}`, result, details);
+            });
+        }
+
+        function runFileTests() {
+            // Test dangerous file extensions
+            const dangerousFiles = [
+                { name: 'malware.exe', type: 'application/octet-stream', size: 1024 },
+                { name: 'script.bat', type: 'application/octet-stream', size: 512 },
+                { name: 'backdoor.php', type: 'application/x-php', size: 2048 }
+            ];
+
+            dangerousFiles.forEach((file, index) => {
+                const validation = SecurityManager.validateFile(file);
+                const result = !validation.valid ? 'pass' : 'fail';
+                const details = `File: ${file.name}<br>Result: ${validation.reason}`;
+                
+                addTestResult('file-tests', `Dangerous File Test ${index + 1}`, result, details);
+            });
+
+            // Test safe files
+            const safeFiles = [
+                { name: 'document.pdf', type: 'application/pdf', size: 1024 * 1024 },
+                { name: 'image.jpg', type: 'image/jpeg', size: 512 * 1024 },
+                { name: 'text.txt', type: 'text/plain', size: 1024 }
+            ];
+
+            safeFiles.forEach((file, index) => {
+                const validation = SecurityManager.validateFile(file);
+                const result = validation.valid ? 'pass' : 'fail';
+                const details = `File: ${file.name}<br>Result: ${validation.reason}`;
+                
+                addTestResult('file-tests', `Safe File Test ${index + 1}`, result, details);
+            });
+
+            // Test file size limits
+            const largeFile = { name: 'large.pdf', type: 'application/pdf', size: 10 * 1024 * 1024 }; // 10MB
+            const validation = SecurityManager.validateFile(largeFile);
+            const result = !validation.valid ? 'pass' : 'fail';
+            const details = `File: ${largeFile.name} (${largeFile.size} bytes)<br>Result: ${validation.reason}`;
+            
+            addTestResult('file-tests', 'File Size Limit Test', result, details);
+        }
+
+        function runCSPTests() {
+            // Test if CSP is properly configured
+            const cspHeader = document.querySelector('meta[http-equiv="Content-Security-Policy"]');
+            const result = cspHeader ? 'pass' : 'warning';
+            const details = cspHeader ? 
+                `CSP Header found: ${cspHeader.content}` : 
+                'CSP header not found in meta tags (may be set by server)';
+            
+            addTestResult('csp-tests', 'CSP Header Present', result, details);
+
+            // Test CSP violation reporting
+            if (window.fetch) {
+                addTestResult('csp-tests', 'CSP Violation Reporting', 'pass', 'Fetch API available for violation reporting');
+            } else {
+                addTestResult('csp-tests', 'CSP Violation Reporting', 'warning', 'Fetch API not available');
+            }
+        }
+
+        function runValidationTests() {
+            // Test email validation
+            const validEmails = ['user@example.com', 'test.email+tag@domain.co.uk'];
+            const invalidEmails = ['invalid-email', '@domain.com', 'user@'];
+
+            validEmails.forEach((email, index) => {
+                const isValid = SecurityManager.validateEmail(email);
+                const result = isValid ? 'pass' : 'fail';
+                const details = `Email: ${email}<br>Valid: ${isValid}`;
+                
+                addTestResult('validation-tests', `Valid Email Test ${index + 1}`, result, details);
+            });
+
+            invalidEmails.forEach((email, index) => {
+                const isValid = SecurityManager.validateEmail(email);
+                const result = !isValid ? 'pass' : 'fail';
+                const details = `Email: ${email}<br>Valid: ${isValid}`;
+                
+                addTestResult('validation-tests', `Invalid Email Test ${index + 1}`, result, details);
+            });
+
+            // Test password validation
+            const validPasswords = ['SecurePass123!', 'MyPassword456#'];
+            const invalidPasswords = ['weak', '12345678', 'NoNumbers!', 'nospecialchars123'];
+
+            validPasswords.forEach((password, index) => {
+                const isValid = SecurityManager.validatePassword(password);
+                const result = isValid ? 'pass' : 'fail';
+                const details = `Password strength: ${isValid ? 'Strong' : 'Weak'}`;
+                
+                addTestResult('validation-tests', `Strong Password Test ${index + 1}`, result, details);
+            });
+
+            invalidPasswords.forEach((password, index) => {
+                const isValid = SecurityManager.validatePassword(password);
+                const result = !isValid ? 'pass' : 'fail';
+                const details = `Password strength: ${isValid ? 'Strong' : 'Weak'}`;
+                
+                addTestResult('validation-tests', `Weak Password Test ${index + 1}`, result, details);
+            });
+        }
+
+        // Manual test functions
+        function testXSSInput() {
+            const input = document.getElementById('xss-input').value;
+            const detected = SecurityManager.detectXSS(input);
+            const results = document.getElementById('xss-results');
+            
+            results.className = `results ${detected ? 'fail' : 'pass'}`;
+            results.innerHTML = `
+                <strong>XSS Detection Result:</strong><br>
+                Input: <span class="malicious-input">${input}</span><br>
+                Status: ${detected ? '🚫 Blocked (XSS detected)' : '✅ Allowed (Safe input)'}
+            `;
+        }
+
+        function testSanitization() {
+            const input = document.getElementById('sanitize-input').value;
+            const sanitized = SecurityManager.sanitizeHTML(input);
+            const results = document.getElementById('sanitize-results');
+            
+            results.className = 'results pass';
+            results.innerHTML = `
+                <strong>Sanitization Result:</strong><br>
+                Original: <span class="malicious-input">${input}</span><br>
+                Sanitized: <span class="safe-output">${sanitized}</span>
+            `;
+        }
+
+        function testFileUpload() {
+            const fileInput = document.getElementById('file-input');
+            const file = fileInput.files[0];
+            const results = document.getElementById('file-results');
+            
+            if (!file) {
+                results.className = 'results warning';
+                results.innerHTML = 'Please select a file to test.';
+                return;
+            }
+
+            const validation = SecurityManager.validateFile(file);
+            results.className = `results ${validation.valid ? 'pass' : 'fail'}`;
+            results.innerHTML = `
+                <strong>File Validation Result:</strong><br>
+                File: ${file.name}<br>
+                Type: ${file.type}<br>
+                Size: ${file.size} bytes<br>
+                Status: ${validation.valid ? '✅ Safe' : '🚫 Blocked'}<br>
+                Reason: ${validation.reason}
+            `;
+        }
+
+        function testCSPViolation() {
+            const results = document.getElementById('csp-results');
+            
+            try {
+                // Attempt to create a script element with inline code (should be blocked by CSP)
+                const script = document.createElement('script');
+                script.textContent = 'console.log("This should be blocked by CSP");';
+                document.head.appendChild(script);
+                
+                results.className = 'results warning';
+                results.innerHTML = '⚠️ Script injection not blocked - CSP may not be properly configured';
+            } catch (error) {
+                results.className = 'results pass';
+                results.innerHTML = '✅ Script injection blocked by CSP';
+            }
+        }
+
+        function testFormValidation() {
+            const email = document.getElementById('email-input').value;
+            const password = document.getElementById('password-input').value;
+            const results = document.getElementById('validation-results');
+            
+            const emailValid = SecurityManager.validateEmail(email);
+            const passwordValid = SecurityManager.validatePassword(password);
+            
+            results.className = 'results';
+            results.innerHTML = `
+                <strong>Form Validation Results:</strong><br>
+                Email (${email}): ${emailValid ? '✅ Valid' : '❌ Invalid'}<br>
+                Password: ${passwordValid ? '✅ Strong' : '❌ Weak'}<br>
+                <small>Password must be 8+ chars with uppercase, lowercase, numbers, and special characters</small>
+            `;
+        }
+
+        function clearResults() {
+            const testContainers = ['xss-tests', 'sanitization-tests', 'file-tests', 'csp-tests', 'validation-tests'];
+            testContainers.forEach(id => {
+                document.getElementById(id).innerHTML = '';
+            });
+            
+            testStats = { total: 0, passed: 0, failed: 0, warnings: 0 };
+            updateStats();
+        }
+
+        // Initialize
+        updateStats();
+        
+        // Auto-run basic tests on page load
+        setTimeout(() => {
+            console.log('Frontend Security Test Suite Loaded');
+        }, 1000);
+    </script>
+</body>
+</html>

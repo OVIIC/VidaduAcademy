@@ -1,14 +1,184 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="sk">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover" />
+    
+    <!-- Primary Meta Tags -->
     <title>VidaduAcademy - YouTube Growth & Channel Management</title>
-    <meta name="description" content="Learn YouTube growth strategies, content creation, and channel management from successful creators. Start your YouTube journey today!" />
+    <meta name="title" content="VidaduAcademy - YouTube Growth & Channel Management" />
+    <meta name="description" content="Naučte sa rásť váš YouTube kanál s našimi kurzami od úspešných tvorcov. Stratégie, optimalizácia, monetizácia a viac!" />
+    <meta name="keywords" content="YouTube, kanál, rast, kurzy, online vzdelávanie, monetizácia, optimalizácia" />
+    <meta name="author" content="VidaduAcademy" />
+    <meta name="language" content="Slovak" />
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://vidaduacademy.com/" />
+    <meta property="og:title" content="VidaduAcademy - YouTube Growth & Channel Management" />
+    <meta property="og:description" content="Naučte sa rásť váš YouTube kanál s našimi kurzami od úspešných tvorcov" />
+    <meta property="og:image" content="/og-image.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:site_name" content="VidaduAcademy" />
+    <meta property="og:locale" content="sk_SK" />
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://vidaduacademy.com/" />
+    <meta property="twitter:title" content="VidaduAcademy - YouTube Growth & Channel Management" />
+    <meta property="twitter:description" content="Naučte sa rásť váš YouTube kanál s našimi kurzami od úspešných tvorcov" />
+    <meta property="twitter:image" content="/twitter-image.jpg" />
+    
+    <!-- Favicon and Icons -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#6366f1" />
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="/manifest.json" />
+    
+    <!-- Theme and App Meta -->
+    <meta name="theme-color" content="#6366f1" />
+    <meta name="msapplication-TileColor" content="#6366f1" />
+    <meta name="msapplication-config" content="/browserconfig.xml" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="VidaduAcademy" />
+    
+    <!-- Performance and Security -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    
+    <!-- Preconnect to external domains -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    
+    <!-- Critical CSS will be injected by Vite -->
+    <style>
+      /* Critical loading styles */
+      #app {
+        min-height: 100vh;
+        min-height: 100dvh;
+      }
+      
+      .loading-screen {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+        color: white;
+      }
+      
+      .loading-spinner {
+        width: 40px;
+        height: 40px;
+        border: 4px solid rgba(255, 255, 255, 0.3);
+        border-top: 4px solid white;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+      
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+      
+      /* Hide loading screen when app loads */
+      .app-loaded .loading-screen {
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.3s ease, visibility 0.3s ease;
+      }
+    </style>
   </head>
   <body class="bg-gray-50">
+    <!-- Loading Screen -->
+    <div id="loading-screen" class="loading-screen">
+      <div class="text-center">
+        <div class="loading-spinner mx-auto mb-4"></div>
+        <div class="text-lg font-semibold">VidaduAcademy</div>
+        <div class="text-sm opacity-80">Načítava...</div>
+      </div>
+    </div>
+    
+    <!-- App Container -->
     <div id="app"></div>
+    
+    <!-- Service Worker Registration -->
+    <script>
+      // Register service worker for PWA functionality
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js')
+            .then((registration) => {
+              console.log('SW registered: ', registration);
+              
+              // Check for updates
+              registration.addEventListener('updatefound', () => {
+                const newWorker = registration.installing;
+                newWorker.addEventListener('statechange', () => {
+                  if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                    // Show update notification
+                    if (confirm('Nová verzia aplikácie je dostupná. Chcete ju nahrať?')) {
+                      newWorker.postMessage({ type: 'SKIP_WAITING' });
+                      window.location.reload();
+                    }
+                  }
+                });
+              });
+            })
+            .catch((registrationError) => {
+              console.log('SW registration failed: ', registrationError);
+            });
+        });
+      }
+      
+      // Hide loading screen when app is ready
+      window.addEventListener('DOMContentLoaded', () => {
+        setTimeout(() => {
+          const loadingScreen = document.getElementById('loading-screen');
+          if (loadingScreen) {
+            document.body.classList.add('app-loaded');
+            setTimeout(() => {
+              loadingScreen.remove();
+            }, 300);
+          }
+        }, 500);
+      });
+      
+      // Performance monitoring
+      if ('performance' in window && 'PerformanceObserver' in window) {
+        // Monitor Largest Contentful Paint
+        const lcp = new PerformanceObserver((list) => {
+          const entries = list.getEntries();
+          const lastEntry = entries[entries.length - 1];
+          console.log('LCP:', lastEntry.startTime);
+        });
+        lcp.observe({ entryTypes: ['largest-contentful-paint'] });
+        
+        // Monitor First Input Delay
+        const fid = new PerformanceObserver((list) => {
+          const entries = list.getEntries();
+          entries.forEach((entry) => {
+            console.log('FID:', entry.processingStart - entry.startTime);
+          });
+        });
+        fid.observe({ entryTypes: ['first-input'] });
+      }
+    </script>
+    
+    <!-- Main App Script -->
     <script type="module" src="/src/main.js"></script>
   </body>
 </html>

@@ -8,7 +8,8 @@
             <div class="w-8 h-8 bg-gradient-to-r from-primary-600 to-secondary-600 rounded-lg flex items-center justify-center">
               <span class="text-white font-bold text-sm">V</span>
             </div>
-            <span class="text-xl font-bold text-gray-900">VidaduAcademy</span>
+            <span class="text-lg sm:text-xl font-bold text-gray-900 hidden xs:block">VidaduAcademy</span>
+            <span class="text-lg font-bold text-gray-900 block xs:hidden">VA</span>
           </router-link>
         </div>
 

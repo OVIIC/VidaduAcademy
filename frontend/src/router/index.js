@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
-import HomeView from '@/views/HomeView.vue'
+import HomeView from '@/views/HomeViewMobile.vue'
 
 const router = createRouter({
   history: createWebHistory(),
@@ -13,7 +13,7 @@ const router = createRouter({
     {
       path: '/courses',
       name: 'Courses',
-      component: () => import('@/views/CoursesView.vue'),
+      component: () => import('@/views/CoursesViewMobile.vue'),
     },
     {
       path: '/course/:slug',

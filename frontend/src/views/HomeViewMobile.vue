@@ -337,14 +337,14 @@ const featuredCourses = computed(() => {
 })
 
 const getEnrollmentData = (courseId) => {
-  return enrollmentStore.enrollments.find(e => e.course_id === courseId)
+  return enrollmentStore.myCourses.find(course => course.id === courseId)
 }
 
 onMounted(async () => {
   await courseStore.fetchFeaturedCourses()
   
   if (authStore.isAuthenticated) {
-    await enrollmentStore.fetchEnrollments()
+    await enrollmentStore.loadMyCourses()
   }
 })
 </script>

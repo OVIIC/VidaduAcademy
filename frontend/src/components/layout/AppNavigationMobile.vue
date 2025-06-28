@@ -34,8 +34,7 @@
           >
             Kurzy
           </router-link>
-          <router-link 
-
+        </div>
         <!-- Auth Section - Desktop -->
         <div class="hidden md:flex items-center space-x-4">
           <!-- Theme Toggle -->

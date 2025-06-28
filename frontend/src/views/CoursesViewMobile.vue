@@ -393,7 +393,7 @@ const loadMoreCourses = () => {
 }
 
 const getEnrollmentData = (courseId) => {
-  return enrollmentStore.enrollments.find(e => e.course_id === courseId)
+  return enrollmentStore.myCourses.find(course => course.id === courseId)
 }
 
 // Watch filters
@@ -406,7 +406,7 @@ watch(() => filters.value, () => {
 onMounted(async () => {
   await Promise.all([
     loadCourses(),
-    authStore.isAuthenticated ? enrollmentStore.fetchEnrollments() : Promise.resolve()
+    authStore.isAuthenticated ? enrollmentStore.loadMyCourses() : Promise.resolve()
   ])
 })
 </script>

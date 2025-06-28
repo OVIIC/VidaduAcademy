@@ -35,20 +35,6 @@
             Kurzy
           </router-link>
           <router-link 
-            to="/about" 
-            class="nav-link"
-            :class="{ 'nav-link-active': $route.name === 'About' }"
-          >
-            O nás
-          </router-link>
-          <router-link 
-            to="/contact" 
-            class="nav-link"
-            :class="{ 'nav-link-active': $route.name === 'Contact' }"
-          >
-            Kontakt
-          </router-link>
-        </div>
 
         <!-- Auth Section - Desktop -->
         <div class="hidden md:flex items-center space-x-4">
@@ -145,23 +131,9 @@
           </router-link>
           
           <router-link 
-            to="/about" 
-            @click="closeMobileMenu"
-            class="mobile-nav-link"
-            :class="{ 'mobile-nav-link-active': $route.name === 'About' }"
-          >
-            <InformationCircleIcon class="w-5 h-5" />
-            <span>O nás</span>
           </router-link>
           
           <router-link 
-            to="/contact" 
-            @click="closeMobileMenu"
-            class="mobile-nav-link"
-            :class="{ 'mobile-nav-link-active': $route.name === 'Contact' }"
-          >
-            <EnvelopeIcon class="w-5 h-5" />
-            <span>Kontakt</span>
           </router-link>
 
           <!-- Divider -->

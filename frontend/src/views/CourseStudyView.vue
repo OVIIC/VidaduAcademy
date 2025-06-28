@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-gray-50">
+  <div class="min-h-screen bg-gray-50 dark:bg-gray-900">
     <!-- Loading -->
     <div v-if="loading" class="flex justify-center items-center h-64">
       <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600"></div>
@@ -8,18 +8,18 @@
     <!-- Course Content -->
     <div v-else-if="course" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <!-- Course Header -->
-      <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
+      <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 mb-6">
         <div class="flex items-start justify-between">
           <div class="flex-1">
-            <nav class="text-sm text-gray-500 mb-2">
-              <router-link to="/my-courses" class="hover:text-primary-600">Moje kurzy</router-link>
+            <nav class="text-sm text-gray-500 dark:text-gray-400 mb-2">
+              <router-link to="/my-courses" class="hover:text-primary-600 dark:hover:text-primary-400">Moje kurzy</router-link>
               <span class="mx-2">/</span>
-              <span class="text-gray-900">{{ course.title }}</span>
+              <span class="text-gray-900 dark:text-gray-100">{{ course.title }}</span>
             </nav>
             
-            <h1 class="text-3xl font-bold text-gray-900 mb-4">{{ course.title }}</h1>
+            <h1 class="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-4">{{ course.title }}</h1>
             
-            <div class="flex items-center space-x-6 text-sm text-gray-600">
+            <div class="flex items-center space-x-6 text-sm text-gray-600 dark:text-gray-400">
               <div class="flex items-center">
                 <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
                   <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
@@ -61,7 +61,7 @@
                 />
               </svg>
               <div class="absolute inset-0 flex items-center justify-center">
-                <span class="text-sm font-semibold text-gray-900">{{ Math.round(progressPercentage) }}%</span>
+                <span class="text-sm font-semibold text-gray-900 dark:text-gray-100">{{ Math.round(progressPercentage) }}%</span>
               </div>
             </div>
           </div>
@@ -72,7 +72,7 @@
         <!-- Course Content (Left Column) -->
         <div class="lg:col-span-2 space-y-6">
           <!-- Selected Lesson Content -->
-          <div v-if="selectedLesson" ref="lessonContentRef" class="bg-white rounded-lg shadow-sm overflow-hidden">
+          <div v-if="selectedLesson" ref="lessonContentRef" class="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden">
             <!-- Lesson Header -->
             <div class="bg-gradient-to-r from-primary-600 to-primary-700 px-6 py-4 text-white">
               <div class="flex items-center justify-between">
@@ -125,18 +125,18 @@
             <!-- Lesson Content -->
             <div class="p-6">
               <div v-if="selectedLesson.description" class="mb-6">
-                <h3 class="text-lg font-semibold text-gray-900 mb-3">Popis lekcie</h3>
-                <p class="text-gray-700">{{ selectedLesson.description }}</p>
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-3">Popis lekcie</h3>
+                <p class="text-gray-700 dark:text-gray-300">{{ selectedLesson.description }}</p>
               </div>
 
               <div v-if="selectedLesson.content" class="mb-6">
-                <h3 class="text-lg font-semibold text-gray-900 mb-3">Obsah lekcie</h3>
-                <div class="prose max-w-none text-gray-700" v-html="selectedLesson.content"></div>
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-3">Obsah lekcie</h3>
+                <div class="prose max-w-none text-gray-700 dark:text-gray-300" v-html="selectedLesson.content"></div>
               </div>
 
               <!-- Lesson Resources -->
               <div v-if="selectedLesson.resources && selectedLesson.resources.length > 0" class="mb-6">
-                <h3 class="text-lg font-semibold text-gray-900 mb-3">Zdroje a súbory</h3>
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-3">Zdroje a súbory</h3>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <a
                     v-for="resource in selectedLesson.resources"
@@ -160,12 +160,12 @@
                       </div>
                     </div>
                     <div class="flex-1 min-w-0">
-                      <p class="text-sm font-medium text-gray-900 truncate">{{ resource.title }}</p>
-                      <p v-if="resource.description" class="text-xs text-gray-500 truncate">{{ resource.description }}</p>
+                      <p class="text-sm font-medium text-gray-900 dark:text-gray-100 truncate">{{ resource.title }}</p>
+                      <p v-if="resource.description" class="text-xs text-gray-500 dark:text-gray-400 truncate">{{ resource.description }}</p>
                       <p class="text-xs text-primary-600 font-medium uppercase">{{ getResourceTypeLabel(resource.type) }}</p>
                     </div>
                     <div class="flex-shrink-0 ml-2">
-                      <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg class="w-4 h-4 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                       </svg>
                     </div>
@@ -175,9 +175,9 @@
 
               <!-- Lesson Transcript -->
               <div v-if="selectedLesson.transcript" class="mb-6">
-                <h3 class="text-lg font-semibold text-gray-900 mb-3">Prepis videa</h3>
-                <div class="bg-gray-50 rounded-lg p-4">
-                  <p class="text-sm text-gray-700 whitespace-pre-wrap">{{ selectedLesson.transcript }}</p>
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-3">Prepis videa</h3>
+                <div class="bg-gray-50 dark:bg-gray-800 rounded-lg p-4">
+                  <p class="text-sm text-gray-700 dark:text-gray-300 whitespace-pre-wrap">{{ selectedLesson.transcript }}</p>
                 </div>
               </div>
 
@@ -206,7 +206,7 @@
                     v-if="selectedLessonIndex > 0"
                     @click="selectLesson(lessons[selectedLessonIndex - 1])"
                     :disabled="lessonSwitching"
-                    class="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                    class="px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     <span v-if="lessonSwitching" class="flex items-center">
                       <div class="animate-spin rounded-full h-4 w-4 border-b-2 border-gray-600 mr-2"></div>
@@ -232,19 +232,19 @@
           </div>
 
           <!-- Course Overview (when no lesson selected) -->
-          <div v-if="!selectedLesson" class="bg-white rounded-lg shadow-sm p-6">
-            <h2 class="text-xl font-semibold text-gray-900 mb-4">Prehľad kurzu</h2>
-            <p class="text-gray-700 mb-6">{{ course.description }}</p>
+          <div v-if="!selectedLesson" class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6">
+            <h2 class="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-4">Prehľad kurzu</h2>
+            <p class="text-gray-700 dark:text-gray-300 mb-6">{{ course.description }}</p>
             
             <!-- What you will learn -->
             <div v-if="course.what_you_will_learn && course.what_you_will_learn.length > 0" class="mb-6">
-              <h3 class="text-lg font-semibold text-gray-900 mb-3">Čo sa naučíte</h3>
+              <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-3">Čo sa naučíte</h3>
               <ul class="space-y-2">
                 <li v-for="item in course.what_you_will_learn" :key="item" class="flex items-start">
                   <svg class="w-5 h-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
                   </svg>
-                  <span class="text-gray-700">{{ item }}</span>
+                  <span class="text-gray-700 dark:text-gray-300">{{ item }}</span>
                 </li>
               </ul>
             </div>

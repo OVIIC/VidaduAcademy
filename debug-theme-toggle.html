@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug Theme Toggle - VidaduAcademy</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            padding: 20px; 
+            background: #f0f0f0;
+        }
+        .test-section { 
+            background: white; 
+            padding: 20px; 
+            margin: 20px 0; 
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .check { color: green; }
+        .error { color: red; }
+        .info { color: blue; }
+        iframe { 
+            width: 100%; 
+            height: 600px; 
+            border: 1px solid #ccc; 
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🌙 Theme Toggle Debug Tool - VidaduAcademy</h1>
+    
+    <div class="test-section">
+        <h2>📊 Server Status</h2>
+        <div id="serverStatus">Checking server...</div>
+    </div>
+    
+    <div class="test-section">
+        <h2>🔧 Theme Toggle Instructions</h2>
+        <p><strong>Desktop:</strong> Hľadajte tlačidlo s ikonou slnka/mesiaca/počítača v hornej navigácii vpravo</p>
+        <p><strong>Mobile:</strong> Otvorte hamburger menu (≡) a rolujte dole na "Téma rozhrania"</p>
+        <p><strong>Advanced:</strong> Kliknite na šípku vedľa theme toggle pre dropdown menu</p>
+    </div>
+    
+    <div class="test-section">
+        <h2>🎯 Test Checklist</h2>
+        <ul>
+            <li>✅ Tlačidlo sa zobrazuje v navigácii</li>
+            <li>✅ Ikona sa mení (slnko/mesiac/počítač)</li>
+            <li>✅ Klik prepína tému</li>
+            <li>✅ Pozadie sa mení z svetlého na tmavé</li>
+            <li>✅ Text zostáva čitateľný</li>
+            <li>✅ Téma sa zachová po refresh</li>
+        </ul>
+    </div>
+    
+    <div class="test-section">
+        <h2>🖥️ Live Site Preview</h2>
+        <iframe src="http://localhost:3000" title="VidaduAcademy Live Preview"></iframe>
+    </div>
+
+    <script>
+        // Check server status
+        fetch('http://localhost:3000')
+            .then(response => {
+                if (response.ok) {
+                    document.getElementById('serverStatus').innerHTML = 
+                        '<span class="check">✅ Server beží na http://localhost:3000</span>';
+                } else {
+                    document.getElementById('serverStatus').innerHTML = 
+                        '<span class="error">❌ Server problém (status: ' + response.status + ')</span>';
+                }
+            })
+            .catch(error => {
+                document.getElementById('serverStatus').innerHTML = 
+                    '<span class="error">❌ Server nebeží alebo nie je dostupný</span>';
+            });
+    </script>
+</body>
+</html>

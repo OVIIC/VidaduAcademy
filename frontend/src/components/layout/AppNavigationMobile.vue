@@ -1,6 +1,6 @@
 <template>
   <nav 
-    class="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-b border-gray-200 safe-area-inset-top"
+    class="fixed top-0 left-0 right-0 z-50 bg-white/95 dark:bg-gray-900/95 backdrop-blur-md border-b border-gray-200 dark:border-gray-700 safe-area-inset-top transition-colors duration-200"
     role="navigation"
     aria-label="Hlavná navigácia"
   >
@@ -52,6 +52,9 @@
 
         <!-- Auth Section - Desktop -->
         <div class="hidden md:flex items-center space-x-4">
+          <!-- Theme Toggle -->
+          <ThemeToggle />
+          
           <template v-if="authStore.isAuthenticated">
             <router-link 
               to="/dashboard" 
@@ -117,7 +120,7 @@
       <div 
         v-if="isMobileMenuOpen"
         id="mobile-menu"
-        class="md:hidden bg-white border-t border-gray-200 shadow-lg"
+        class="md:hidden bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700 shadow-lg transition-colors duration-200"
       >
         <div class="container-responsive px-4 py-4 space-y-2">
           <!-- Main Navigation -->
@@ -211,6 +214,11 @@
               Zaregistrovať sa
             </router-link>
           </template>
+          
+          <!-- Theme Toggle Section -->
+          <div class="border-t border-gray-200 dark:border-gray-700 mt-4 pt-4">
+            <ThemeToggle :in-navigation="true" />
+          </div>
         </div>
       </div>
     </transition>
@@ -232,6 +240,7 @@
 import { ref, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
+import ThemeToggle from '@/components/ui/ThemeToggle.vue'
 import {
   HomeIcon,
   AcademicCapIcon,
@@ -329,6 +338,19 @@ router.afterEach(() => {
   font-weight: 600;
 }
 
+/* Dark mode nav-link styles */
+.dark .nav-link {
+  color: rgb(209 213 219);
+}
+
+.dark .nav-link:hover {
+  color: rgb(129 140 248);
+}
+
+.dark .nav-link-active {
+  color: rgb(129 140 248);
+}
+
 .mobile-nav-link {
   display: flex;
   align-items: center;
@@ -349,6 +371,21 @@ router.afterEach(() => {
   color: rgb(79 70 229);
   background-color: rgb(238 242 255);
   font-weight: 600;
+}
+
+/* Dark mode mobile-nav-link styles */
+.dark .mobile-nav-link {
+  color: rgb(209 213 219);
+}
+
+.dark .mobile-nav-link:hover {
+  color: rgb(129 140 248);
+  background-color: rgb(55 65 81);
+}
+
+.dark .mobile-nav-link-active {
+  color: rgb(129 140 248);
+  background-color: rgb(30 27 75);
 }
 
 /* Hamburger Menu Animation */

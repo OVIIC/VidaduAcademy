@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-white">
+  <div class="bg-white dark:bg-gray-900 transition-colors duration-200">
     <!-- Hero Section -->
     <section class="relative bg-gradient-to-br from-secondary-900 via-secondary-800 to-primary-900 text-white overflow-hidden">
       <div class="absolute inset-0 bg-black opacity-20"></div>

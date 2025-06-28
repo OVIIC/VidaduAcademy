@@ -4,6 +4,7 @@ export default {
     "./index.html",
     "./src/**/*.{vue,js,ts,jsx,tsx}",
   ],
+  darkMode: 'class', // Enable dark mode with 'dark' class
   theme: {
     screens: {
       'xs': '375px',    // iPhone SE

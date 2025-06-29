@@ -117,6 +117,96 @@
               </div>
             </div>
           </div>
+
+          <!-- Your Courses Section -->
+          <div class="bg-white rounded-lg shadow-sm p-6 mt-8">
+            <div class="flex items-center justify-between mb-6">
+              <h2 class="text-xl font-bold text-gray-900">Tvoje kurzy</h2>
+              <router-link
+                to="/my-courses"
+                class="text-primary-600 hover:text-primary-700 text-sm font-medium"
+              >
+                Zobraziť všetky
+              </router-link>
+            </div>
+            
+            <!-- Loading -->
+            <div v-if="loading" class="flex justify-center py-8">
+              <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600"></div>
+            </div>
+            
+            <!-- Courses Grid -->
+            <div v-else-if="enrolledCourses.length > 0" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div
+                v-for="course in enrolledCourses.slice(0, 4)"
+                :key="course.id"
+                class="bg-gray-50 rounded-lg p-4 hover:bg-gray-100 transition duration-200"
+              >
+                <div class="flex items-start space-x-4">
+                  <!-- Course Thumbnail -->
+                  <div class="flex-shrink-0">
+                    <img
+                      v-if="course.thumbnail"
+                      :src="course.thumbnail"
+                      :alt="course.title"
+                      class="w-16 h-12 object-cover rounded-lg"
+                    >
+                    <div
+                      v-else
+                      class="w-16 h-12 bg-gradient-to-br from-primary-400 to-secondary-500 rounded-lg flex items-center justify-center"
+                    >
+                      <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                      </svg>
+                    </div>
+                  </div>
+                  
+                  <!-- Course Info -->
+                  <div class="flex-1 min-w-0">
+                    <h3 class="font-medium text-gray-900 truncate mb-1">{{ course.title }}</h3>
+                    <p v-if="course.instructor?.name" class="text-sm text-gray-500 mb-2">{{ course.instructor.name }}</p>
+                    
+                    <!-- Progress Bar -->
+                    <div class="w-full bg-gray-200 rounded-full h-2 mb-2">
+                      <div
+                        class="bg-primary-600 h-2 rounded-full transition-all duration-300"
+                        :style="{ width: `${course.enrollment_data?.progress_percentage || 0}%` }"
+                      ></div>
+                    </div>
+                    <div class="flex items-center justify-between">
+                      <span class="text-xs text-gray-500">
+                        {{ course.enrollment_data?.progress_percentage || 0 }}% dokončené
+                      </span>
+                      <router-link
+                        v-if="course.slug"
+                        :to="{ name: 'CourseStudy', params: { slug: course.slug } }"
+                        class="text-xs text-primary-600 hover:text-primary-700 font-medium"
+                      >
+                        Otvoriť →
+                      </router-link>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Empty State -->
+            <div v-else class="text-center py-8">
+              <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+              </svg>
+              <h3 class="mt-2 text-sm font-medium text-gray-900">Žiadne zakúpené kurzy</h3>
+              <p class="mt-1 text-sm text-gray-500">Začnite objavovaním našich kurzov.</p>
+              <div class="mt-6">
+                <router-link
+                  to="/courses"
+                  class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700"
+                >
+                  Prehliadať kurzy
+                </router-link>
+              </div>
+            </div>
+          </div>
         </div>
 
         <!-- Sidebar -->

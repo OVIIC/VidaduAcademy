@@ -16,12 +16,12 @@
       <div class="relative container-responsive z-20 w-full">
         <div class="text-center">
           <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight mb-6 drop-shadow-lg">
-            Ovládnite rast
-            <span class="text-red-500 block">YouTube kanála</span>
+            Dominuj na YouTube
+            <span class="text-red-500 block">so svojim kanálom</span>
           </h1>
           <p class="text-xl lg:text-2xl text-gray-100 mb-8 max-w-3xl mx-auto drop-shadow-md">
-            Učte sa od úspešných YouTube tvorcov a premeňte svoj kanál na 
-            prosperujúci biznis.
+            Nauč sa od úspešných YouTube tvorcov ako premeniť svoj kanál na 
+            profitujúci biznis.
           </p>
           
           <!-- Stats Section in Hero -->

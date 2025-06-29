@@ -15,10 +15,14 @@
       <!-- Content - highest z-index -->
       <div class="relative container-responsive z-20 w-full">
         <div class="text-center">
-          <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight mb-6 drop-shadow-lg">
-            Dominuj na YouTube
-            <span class="text-red-500 block">so svojim kanálom</span>
-          </h1>
+          <div class="melting-text-container mb-16 pb-12">
+            <h1 class="melting-text text-4xl sm:text-5xl lg:text-6xl font-bold leading-relaxed drop-shadow-lg mb-2">
+              Dominuj na YouTube
+            </h1>
+            <h1 class="melting-text-secondary text-4xl sm:text-5xl lg:text-6xl font-bold leading-relaxed drop-shadow-lg">
+              <span class="text-red-500">so svojim kanálom</span>
+            </h1>
+          </div>
           <p class="text-xl lg:text-2xl text-gray-100 mb-8 max-w-3xl mx-auto drop-shadow-md">
             Nauč sa od úspešných YouTube tvorcov ako premeniť svoj kanál na 
             profitujúci biznis.
@@ -337,3 +341,111 @@ onUnmounted(() => {
   }
 })
 </script>
+
+<style scoped>
+/* Melting Text Effect */
+.melting-text-container {
+  position: relative;
+  overflow: hidden;
+}
+
+.melting-text {
+  position: relative;
+  animation: melt 4s infinite ease-in-out;
+  background: linear-gradient(90deg, #ffffff, #f3f4f6, #ffffff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.melting-text-secondary {
+  position: relative;
+  animation: melt 4s infinite ease-in-out 0.5s;
+}
+
+.melting-text-secondary span {
+  background: linear-gradient(90deg, #ef4444, #dc2626, #ef4444);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.melting-text::before,
+.melting-text::after {
+  content: 'Dominuj na YouTube';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, #ffffff, #f3f4f6, #ffffff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  z-index: -1;
+  transform: scaleY(1);
+  opacity: 0.4;
+  animation: drip 4s infinite ease-in-out;
+}
+
+.melting-text::after {
+  filter: blur(8px);
+  opacity: 0.2;
+}
+
+.melting-text-secondary::before,
+.melting-text-secondary::after {
+  content: 'so svojim kanálom';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, #ef4444, #dc2626, #ef4444);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  z-index: -1;
+  transform: scaleY(1);
+  opacity: 0.4;
+  animation: drip 4s infinite ease-in-out 0.5s;
+}
+
+.melting-text-secondary::after {
+  filter: blur(8px);
+  opacity: 0.2;
+}
+
+/* Keyframes for melting effect */
+@keyframes melt {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(15px);
+  }
+}
+
+@keyframes drip {
+  0%, 100% {
+    transform: scaleY(1);
+    opacity: 0.4;
+  }
+  50% {
+    transform: scaleY(1.3);
+    opacity: 0.6;
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  @keyframes melt {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(10px);
+    }
+  }
+}
+</style>

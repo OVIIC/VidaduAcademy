@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Success Debug</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 50px auto; padding: 20px; }
+        .info { background: #f0f8ff; padding: 15px; border-radius: 5px; margin: 10px 0; }
+        .error { background: #ffe6e6; padding: 15px; border-radius: 5px; margin: 10px 0; }
+        .success { background: #e6ffe6; padding: 15px; border-radius: 5px; margin: 10px 0; }
+        code { background: #f5f5f5; padding: 2px 5px; border-radius: 3px; }
+    </style>
+</head>
+<body>
+    <h1>🔍 Payment Success Debug Page</h1>
+    
+    <div class="info">
+        <h3>Current URL Information:</h3>
+        <p><strong>Full URL:</strong> <code id="fullUrl"></code></p>
+        <p><strong>Query Parameters:</strong></p>
+        <div id="queryParams"></div>
+    </div>
+
+    <div class="info">
+        <h3>Testing Payment Verification API:</h3>
+        <button onclick="testVerification()" id="testBtn">Test Verification</button>
+        <div id="apiResult"></div>
+    </div>
+
+    <div class="info">
+        <h3>Backend Connection Test:</h3>
+        <button onclick="testBackend()" id="backendBtn">Test Backend API</button>
+        <div id="backendResult"></div>
+    </div>
+
+    <div class="info">
+        <h3>Manual Actions:</h3>
+        <button onclick="redirectToMyCourses()">Go to My Courses</button>
+        <button onclick="redirectToCourses()">Browse Courses</button>
+    </div>
+
+    <script>
+        // Display current URL and query params
+        document.getElementById('fullUrl').textContent = window.location.href;
+        
+        const urlParams = new URLSearchParams(window.location.search);
+        const queryDiv = document.getElementById('queryParams');
+        
+        if (urlParams.toString()) {
+            let paramsHtml = '<ul>';
+            for (const [key, value] of urlParams) {
+                paramsHtml += `<li><strong>${key}:</strong> <code>${value}</code></li>`;
+            }
+            paramsHtml += '</ul>';
+            queryDiv.innerHTML = paramsHtml;
+        } else {
+            queryDiv.innerHTML = '<p><em>No query parameters found</em></p>';
+        }
+
+        async function testVerification() {
+            const btn = document.getElementById('testBtn');
+            const result = document.getElementById('apiResult');
+            
+            btn.disabled = true;
+            btn.textContent = 'Testing...';
+            
+            const sessionId = urlParams.get('session_id');
+            
+            if (!sessionId) {
+                result.innerHTML = '<div class="error">No session_id found in URL</div>';
+                btn.disabled = false;
+                btn.textContent = 'Test Verification';
+                return;
+            }
+
+            try {
+                const response = await fetch('http://localhost:8000/api/payments/verify', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ session_id: sessionId })
+                });
+
+                const data = await response.json();
+                
+                if (response.ok) {
+                    result.innerHTML = `<div class="success">
+                        <h4>✅ Verification Successful!</h4>
+                        <p><strong>Course:</strong> ${data.course?.title || 'Unknown'}</p>
+                        <p><strong>Status:</strong> ${data.payment?.status || 'Unknown'}</p>
+                    </div>`;
+                } else {
+                    result.innerHTML = `<div class="error">
+                        <h4>❌ Verification Failed</h4>
+                        <p><strong>Error:</strong> ${data.error || 'Unknown error'}</p>
+                    </div>`;
+                }
+            } catch (error) {
+                result.innerHTML = `<div class="error">
+                    <h4>❌ Network Error</h4>
+                    <p><strong>Error:</strong> ${error.message}</p>
+                </div>`;
+            }
+
+            btn.disabled = false;
+            btn.textContent = 'Test Verification';
+        }
+
+        async function testBackend() {
+            const btn = document.getElementById('backendBtn');
+            const result = document.getElementById('backendResult');
+            
+            btn.disabled = true;
+            btn.textContent = 'Testing...';
+
+            try {
+                const response = await fetch('http://localhost:8000/api/courses');
+                
+                if (response.ok) {
+                    result.innerHTML = '<div class="success">✅ Backend API is accessible</div>';
+                } else {
+                    result.innerHTML = `<div class="error">❌ Backend returned status: ${response.status}</div>`;
+                }
+            } catch (error) {
+                result.innerHTML = `<div class="error">❌ Backend connection failed: ${error.message}</div>`;
+            }
+
+            btn.disabled = false;
+            btn.textContent = 'Test Backend API';
+        }
+
+        function redirectToMyCourses() {
+            window.location.href = '/my-courses';
+        }
+
+        function redirectToCourses() {
+            window.location.href = '/courses';
+        }
+    </script>
+</body>
+</html>

@@ -56,7 +56,7 @@
         <div class="lg:hidden bg-gray-800 border-b border-gray-700 p-4">
           <div class="flex items-center justify-between">
             <router-link
-              :to="{ name: 'learn', params: { courseId: lesson.course.id } }"
+              :to="{ name: 'CourseStudy', params: { slug: lesson.course.slug } }"
               class="text-primary-400 hover:text-primary-300"
             >
               ← Back

@@ -32,12 +32,12 @@ class PaymentController extends Controller
         }
 
         try {
-            $frontendUrl = config('app.frontend_url', 'http://localhost:3005');
+            $frontendUrl = config('app.frontend_url', 'http://localhost:3001');
             
             $sessionUrl = $this->stripeService->createCheckoutSession(
                 $course,
                 $user,
-                $request->get('success_url', $frontendUrl . '/my-courses?payment=success'),
+                $request->get('success_url', $frontendUrl . '/my-courses?payment=success&session_id={CHECKOUT_SESSION_ID}'),
                 $request->get('cancel_url', $frontendUrl . '/course/' . $course->slug)
             );
 

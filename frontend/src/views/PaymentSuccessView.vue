@@ -16,7 +16,7 @@
 
       <!-- Course Information -->
       <div v-if="course" class="bg-white rounded-lg shadow-md p-6">
-        <h3 class="text-lg font-medium text-gray-900 mb-4">Course Enrolled</h3>
+        <h3 class="text-lg font-medium text-gray-900 mb-4">Zakúpený kurz</h3>
         <div class="flex items-start space-x-4">
           <div class="w-16 h-16 bg-gradient-to-r from-primary-500 to-secondary-600 rounded-lg flex items-center justify-center flex-shrink-0">
             <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
@@ -26,19 +26,27 @@
           <div class="flex-1">
             <h4 class="text-base font-medium text-gray-900">{{ course.title }}</h4>
             <p class="text-sm text-gray-600 mt-1">{{ course.description }}</p>
-            <div class="mt-3 flex items-center text-sm text-gray-500">
+            <div v-if="course.lessons" class="mt-3 flex items-center text-sm text-gray-500">
               <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
                 <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
               </svg>
               {{ course.lessons?.length || 0 }} lessons
-              <span class="mx-2">•</span>
-              <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+              <span v-if="course.duration" class="mx-2">•</span>
+              <svg v-if="course.duration" class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
                 <path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
               </svg>
-              {{ formatDuration(course.duration) }}
+              <span v-if="course.duration">{{ formatDuration(course.duration) }}</span>
             </div>
           </div>
         </div>
+      </div>
+
+      <!-- Generic success message if no course details -->
+      <div v-else class="bg-white rounded-lg shadow-md p-6">
+        <h3 class="text-lg font-medium text-gray-900 mb-4">Platba úspešná</h3>
+        <p class="text-gray-600">
+          Váš kurz bol úspešne zakúpený. Môžete ho nájsť v sekcii "Moje kurzy".
+        </p>
       </div>
 
       <!-- Next Steps -->
@@ -79,7 +87,7 @@
       <div class="space-y-3">
         <router-link
           v-if="course"
-          :to="{ name: 'learn', params: { courseId: course.id } }"
+          :to="{ name: 'CourseStudy', params: { slug: course.slug } }"
           class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition duration-200"
         >
           Start Learning Now
@@ -151,32 +159,61 @@ export default {
         const sessionId = route.query.session_id
         
         if (sessionId) {
+          console.log('Verifying payment with session ID:', sessionId)
+          
           // Verify payment and get course details
-          const response = await api.get(`/payments/verify/${sessionId}`)
+          const response = await api.post('/payments/verify', { session_id: sessionId })
           course.value = response.data.course
           paymentDetails.value = response.data.payment
+          
+          console.log('Payment verified successfully:', response.data)
         } else {
+          console.log('No session ID found, checking for course_id in query params')
+          
           // If no session_id, try to get course from query params
           const courseId = route.query.course_id
-          if (courseId) {
+          const courseSlug = route.query.course_slug
+          
+          if (courseSlug) {
+            console.log('Loading course by slug:', courseSlug)
+            const courseResponse = await api.get(`/courses/${courseSlug}`)
+            course.value = courseResponse.data
+          } else if (courseId) {
+            console.log('Loading course by ID:', courseId)
             const courseResponse = await api.get(`/courses/${courseId}`)
             course.value = courseResponse.data
+          } else {
+            console.log('No course identifier found in query params')
+            // Set a generic success message
+            course.value = { title: 'Kurz', description: 'Váš kurz bol úspešne zakúpený' }
           }
         }
       } catch (error) {
         console.error('Error loading payment details:', error)
+        
         // Even if there's an error, we still show the success page
         // as the payment was successful according to Stripe
+        course.value = { 
+          title: 'Kurz úspešne zakúpený', 
+          description: 'Váš kurz bol úspešne zakúpený. Nájdete ho v sekcii "Moje kurzy".' 
+        }
       }
     }
 
     onMounted(() => {
-      // Automatically redirect to My Courses with success message
-      setTimeout(() => {
-        router.push('/my-courses?payment=success')
-      }, 2000) // Wait 2 seconds to show success page briefly
-      
+      // First load payment details, then set redirect timer
       loadPaymentDetails()
+      
+      // Automatically redirect to My Courses after showing success message
+      setTimeout(() => {
+        try {
+          router.push('/my-courses?payment=success')
+        } catch (error) {
+          console.error('Redirect error:', error)
+          // Fallback: try direct location change
+          window.location.href = '/my-courses?payment=success'
+        }
+      }, 4000) // Wait 4 seconds to show success page
     })
 
     return {

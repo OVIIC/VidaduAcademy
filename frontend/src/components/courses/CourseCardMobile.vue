@@ -221,15 +221,15 @@ const handleCourseAction = async () => {
   
   if (isEnrolled.value) {
     // Navigate to course study view
-    router.push(`/learn/${props.course.slug}`)
+    router.push(`/study/${props.course.slug}`)
   } else {
     if (!authStore.isAuthenticated) {
       router.push('/login')
       return
     }
     
-    // Navigate to course detail or purchase
-    router.push(`/courses/${props.course.slug}`)
+    // Navigate to course detail for purchase
+    router.push(`/course/${props.course.slug}`)
   }
 }
 </script>

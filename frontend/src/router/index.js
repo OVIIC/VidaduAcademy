@@ -76,7 +76,8 @@ const router = createRouter({
       path: '/payment/success',
       name: 'PaymentSuccess',
       component: () => import('@/views/PaymentSuccessView.vue'),
-      meta: { requiresAuth: true },
+      // Remove auth requirement for payment success page
+      // meta: { requiresAuth: true },
     },
     {
       path: '/profile',

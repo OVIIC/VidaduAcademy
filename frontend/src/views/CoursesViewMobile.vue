@@ -329,6 +329,13 @@ const loadCourses = async (append = false) => {
 
     const response = await courseService.getAllCourses(params)
     
+    console.log('🔍 CoursesView Debug:', {
+      params,
+      response,
+      'response.data': response.data,
+      'response.total': response.total
+    })
+    
     if (append) {
       courses.value = [...courses.value, ...response.data]
     } else {
@@ -336,6 +343,12 @@ const loadCourses = async (append = false) => {
     }
     
     totalCourses.value = response.total
+    
+    console.log('📊 After setting courses:', {
+      'courses.value': courses.value,
+      'courses.value.length': courses.value?.length,
+      'totalCourses.value': totalCourses.value
+    })
   } catch (error) {
     console.error('Error loading courses:', error)
   } finally {

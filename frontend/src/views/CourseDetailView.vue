@@ -36,7 +36,7 @@
                 <!-- If enrolled - Continue Learning -->
                 <router-link
                   v-if="isEnrolled"
-                  :to="{ name: 'learn', params: { courseId: course.id } }"
+                  :to="{ name: 'CourseStudy', params: { slug: course.slug } }"
                   class="bg-green-500 hover:bg-green-600 text-white font-semibold px-8 py-3 rounded-lg transition duration-200"
                 >
                   Continue Learning
@@ -271,7 +271,7 @@ export default {
     const loadCourse = async () => {
       loading.value = true
       try {
-        const response = await api.get(`/courses/${route.params.id}`)
+        const response = await api.get(`/courses/${route.params.slug}`)
         course.value = response.data
         
         // Load purchase status if user is authenticated

@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\CourseController;
 use App\Http\Controllers\Api\PaymentController;
+use App\Http\Controllers\Api\PaymentVerificationController;
 use App\Http\Controllers\Api\LearningController;
 use App\Http\Controllers\Api\EnrollmentController;
 use App\Http\Controllers\Api\UserController;
@@ -34,6 +35,9 @@ Route::prefix('courses')->group(function () {
 
 // Stripe webhook (public, no auth required)
 Route::post('/webhook/stripe', [PaymentController::class, 'webhook'])->name('stripe.webhook');
+
+// Payment verification (public, no auth required)
+Route::post('/payments/verify', [PaymentVerificationController::class, 'verifyPayment'])->name('payments.verify');
 
 // Protected routes
 Route::middleware('auth:sanctum')->group(function () {

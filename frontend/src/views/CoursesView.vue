@@ -118,7 +118,9 @@ const handlePurchase = async (course) => {
     console.log('Creating Stripe checkout session for course:', course.title)
     
     // Try to create Stripe checkout session
-    const response = await paymentService.createCheckoutSession(course.id)
+    const successUrl = `${window.location.origin}/payment/success?session_id={CHECKOUT_SESSION_ID}`
+    const cancelUrl = `${window.location.origin}/courses?cancelled=true`
+    const response = await paymentService.createCheckoutSession(course.id, successUrl, cancelUrl)
     
     if (response.checkout_url) {
       // Redirect to Stripe Checkout

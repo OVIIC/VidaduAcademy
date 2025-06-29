@@ -4,7 +4,15 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
-lerna-debug.log*
+
+# macOS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
 
 # Environment variables
 .env
@@ -42,15 +50,6 @@ coverage/
 *.swo
 *~
 
-# OS generated files
-.DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
-Thumbs.db
-
 # Laravel specific
 bootstrap/compiled.php
 storage/framework/cache/*
@@ -85,3 +84,16 @@ vite.config.ts.timestamp-*
 # Temporary files
 *.tmp
 *.temp
+*.bak
+*.backup
+*~
+*.swp
+*.swo
+
+# Test files and debug files  
+test-*
+*test.html
+*debug.html
+debug-*
+*-test.sh
+*-debug.sh

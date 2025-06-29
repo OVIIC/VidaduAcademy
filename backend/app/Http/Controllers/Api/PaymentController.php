@@ -37,7 +37,7 @@ class PaymentController extends Controller
             $sessionUrl = $this->stripeService->createCheckoutSession(
                 $course,
                 $user,
-                $request->get('success_url', $frontendUrl . '/my-courses?payment=success&session_id={CHECKOUT_SESSION_ID}'),
+                $request->get('success_url', $frontendUrl . '/payment/success?session_id={CHECKOUT_SESSION_ID}'),
                 $request->get('cancel_url', $frontendUrl . '/course/' . $course->slug)
             );
 

@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\LearningController;
 use App\Http\Controllers\Api\EnrollmentController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\StripeWebhookController;
 
 /*
 |--------------------------------------------------------------------------
@@ -113,3 +114,7 @@ Route::get('/health', function () {
         'environment' => app()->environment(),
     ]);
 });
+
+// Stripe webhook (must be before auth middleware)
+Route::post('/stripe/webhook', [StripeWebhookController::class, 'handleWebhook'])
+    ->name('stripe.webhook');

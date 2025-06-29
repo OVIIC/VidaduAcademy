@@ -86,7 +86,7 @@
       <!-- Action Buttons -->
       <div class="space-y-3">
         <router-link
-          v-if="course"
+          v-if="course && course.slug"
           :to="{ name: 'CourseStudy', params: { slug: course.slug } }"
           class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition duration-200"
         >
@@ -136,6 +136,7 @@
 <script>
 import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { useAuthStore } from '@/stores/auth'
 import { api } from '@/services/api'
 
 export default {
@@ -143,6 +144,7 @@ export default {
   setup() {
     const route = useRoute()
     const router = useRouter()
+    const authStore = useAuthStore()
     const course = ref(null)
     const paymentDetails = ref(null)
 
@@ -153,67 +155,59 @@ export default {
       return hours > 0 ? `${hours}h ${mins}m` : `${mins}m`
     }
 
-    const loadPaymentDetails = async () => {
+    const loadPaymentDetails = async (retryCount = 0) => {
       try {
-        // Extract session_id from URL query params
         const sessionId = route.query.session_id
         
         if (sessionId) {
-          console.log('Verifying payment with session ID:', sessionId)
+          console.log(`Attempting payment verification (attempt ${retryCount + 1})...`)
           
           // Verify payment and get course details
           const response = await api.post('/payments/verify', { session_id: sessionId })
           course.value = response.data.course
           paymentDetails.value = response.data.payment
           
-          console.log('Payment verified successfully:', response.data)
+          console.log('Payment verification successful:', response.data)
         } else {
-          console.log('No session ID found, checking for course_id in query params')
-          
-          // If no session_id, try to get course from query params
-          const courseId = route.query.course_id
-          const courseSlug = route.query.course_slug
-          
-          if (courseSlug) {
-            console.log('Loading course by slug:', courseSlug)
-            const courseResponse = await api.get(`/courses/${courseSlug}`)
-            course.value = courseResponse.data
-          } else if (courseId) {
-            console.log('Loading course by ID:', courseId)
-            const courseResponse = await api.get(`/courses/${courseId}`)
-            course.value = courseResponse.data
-          } else {
-            console.log('No course identifier found in query params')
-            // Set a generic success message
-            course.value = { title: 'Kurz', description: 'Váš kurz bol úspešne zakúpený' }
-          }
+          console.warn('No session_id in URL query parameters')
+          // Fallback: show generic success
+          course.value = { title: 'Kurz úspešne zakúpený', description: 'Váš kurz bol úspešne zakúpený.' }
         }
       } catch (error) {
-        console.error('Error loading payment details:', error)
+        console.error(`Payment verification failed (attempt ${retryCount + 1}):`, error)
         
-        // Even if there's an error, we still show the success page
-        // as the payment was successful according to Stripe
-        course.value = { 
-          title: 'Kurz úspešne zakúpený', 
-          description: 'Váš kurz bol úspešne zakúpený. Nájdete ho v sekcii "Moje kurzy".' 
+        // Retry up to 3 times with exponential backoff
+        if (retryCount < 2 && route.query.session_id) {
+          const delay = Math.pow(2, retryCount) * 1000 // 1s, 2s, 4s
+          console.log(`Retrying in ${delay}ms...`)
+          setTimeout(() => loadPaymentDetails(retryCount + 1), delay)
+        } else {
+          // Show success even if API fails after all retries
+          course.value = { 
+            title: 'Kurz úspešne zakúpený', 
+            description: 'Váš kurz bol úspešne zakúpený. Nájdete ho v sekcii "Moje kurzy".' 
+          }
         }
       }
     }
 
     onMounted(() => {
-      // First load payment details, then set redirect timer
+      // Initialize auth if needed
+      if (!authStore.isAuthenticated) {
+        authStore.initializeAuth()
+      }
+      
+      // Load payment details
       loadPaymentDetails()
       
-      // Automatically redirect to My Courses after showing success message
+      // Auto-redirect after 4 seconds
       setTimeout(() => {
-        try {
+        if (authStore.isAuthenticated) {
           router.push('/my-courses?payment=success')
-        } catch (error) {
-          console.error('Redirect error:', error)
-          // Fallback: try direct location change
-          window.location.href = '/my-courses?payment=success'
+        } else {
+          router.push('/login?redirect=/my-courses&payment=success')
         }
-      }, 4000) // Wait 4 seconds to show success page
+      }, 4000)
     })
 
     return {

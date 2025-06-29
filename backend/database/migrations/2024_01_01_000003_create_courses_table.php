@@ -18,7 +18,6 @@ return new class extends Migration
             $table->string('currency', 3)->default('USD');
             $table->string('thumbnail')->nullable();
             $table->enum('status', ['draft', 'published', 'archived'])->default('draft');
-            $table->foreignId('category_id')->constrained()->onDelete('cascade');
             $table->foreignId('instructor_id')->constrained('users')->onDelete('cascade');
             $table->unsignedInteger('duration_minutes')->default(0);
             $table->enum('difficulty_level', ['beginner', 'intermediate', 'advanced'])->default('beginner');
@@ -30,7 +29,6 @@ return new class extends Migration
             $table->softDeletes();
 
             $table->index(['status', 'published_at']);
-            $table->index(['category_id', 'status']);
             $table->index(['instructor_id']);
         });
     }

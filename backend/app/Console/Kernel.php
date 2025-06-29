@@ -12,7 +12,17 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-        // $schedule->command('inspire')->hourly();
+        // Check and fix pending payments every hour
+        $schedule->command('payments:fix-pending --days=1')
+            ->hourly()
+            ->withoutOverlapping()
+            ->runInBackground();
+            
+        // Weekly cleanup of older pending payments
+        $schedule->command('payments:fix-pending --days=7')
+            ->weekly()
+            ->sundays()
+            ->at('02:00');
     }
 
     /**

@@ -302,7 +302,9 @@ export default {
       try {
         // Create Stripe checkout session
         console.log('Creating Stripe checkout session for course:', course.value.id)
-        const response = await paymentService.createCheckoutSession(course.value.id)
+        const successUrl = `${window.location.origin}/payment/success?session_id={CHECKOUT_SESSION_ID}`
+        const cancelUrl = `${window.location.origin}/course/${course.value.slug}?cancelled=true`
+        const response = await paymentService.createCheckoutSession(course.value.id, successUrl, cancelUrl)
         
         if (response.checkout_url) {
           // Redirect to Stripe Checkout

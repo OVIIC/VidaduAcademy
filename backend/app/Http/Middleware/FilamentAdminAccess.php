@@ -20,8 +20,8 @@ class FilamentAdminAccess
             return redirect()->route('filament.admin.auth.login');
         }
 
-        // Check if user has admin panel access permission
-        if (!auth()->user()->can('access admin panel')) {
+        // Check if user has admin panel access permission or admin role
+        if (!auth()->user()->can('access admin panel') && !auth()->user()->hasRole('admin')) {
             abort(403, 'You do not have permission to access the admin panel.');
         }
 

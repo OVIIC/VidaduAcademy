@@ -1,7 +1,7 @@
 // VidaduAcademy Service Worker
-const CACHE_NAME = 'vidadu-academy-v1.0.0'
-const STATIC_CACHE_NAME = 'vidadu-static-v1.0.0'
-const DYNAMIC_CACHE_NAME = 'vidadu-dynamic-v1.0.0'
+const CACHE_NAME = 'vidadu-academy-v1.0.1'
+const STATIC_CACHE_NAME = 'vidadu-static-v1.0.1'
+const DYNAMIC_CACHE_NAME = 'vidadu-dynamic-v1.0.1'
 
 // Cache static assets
 const STATIC_ASSETS = [
@@ -23,6 +23,7 @@ const CACHE_BLACKLIST = [
   /\/api\/auth\/login/,
   /\/api\/auth\/logout/,
   /\/api\/payments/,
+  /\/payment\/success/,
   /\/admin/,
 ]
 
@@ -77,6 +78,12 @@ self.addEventListener('fetch', (event) => {
   // Skip non-GET requests and blacklisted URLs
   if (request.method !== 'GET' || 
       CACHE_BLACKLIST.some(pattern => pattern.test(url.pathname))) {
+    return
+  }
+
+  // Skip payment success pages completely - let them load normally
+  if (url.pathname.includes('/payment/success') || 
+      url.pathname.includes('/api/payments/')) {
     return
   }
 

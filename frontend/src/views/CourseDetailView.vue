@@ -58,7 +58,7 @@
                   :disabled="purchasing"
                   class="bg-yellow-500 hover:bg-yellow-600 disabled:opacity-50 text-black font-semibold px-8 py-3 rounded-lg transition duration-200"
                 >
-                  {{ purchasing ? 'Processing...' : 'Enroll Now' }}
+                  {{ purchasing ? 'Processing...' : 'Kúp si kurz' }}
                 </button>
               </div>
 

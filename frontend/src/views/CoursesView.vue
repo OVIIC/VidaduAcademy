@@ -3,8 +3,22 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <!-- Header -->
       <div class="mb-8">
-        <h1 class="text-3xl font-bold text-gray-900">Všetky kurzy</h1>
-        <p class="mt-2 text-gray-600">Objavte kurzy na rast vašeho YouTube kanála</p>
+        <div class="flex items-center justify-between">
+          <div>
+            <h1 class="text-3xl font-bold text-gray-900">Všetky kurzy</h1>
+            <p class="mt-2 text-gray-600">Objavte kurzy na rast vašeho YouTube kanála</p>
+          </div>
+          <button
+            @click="refreshCourses"
+            :disabled="refreshing"
+            class="bg-primary-600 hover:bg-primary-700 disabled:opacity-50 text-white px-4 py-2 rounded-lg transition-colors flex items-center space-x-2"
+          >
+            <svg class="w-4 h-4" :class="{ 'animate-spin': refreshing }" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+            </svg>
+            <span>{{ refreshing ? 'Obnovuje...' : 'Obnoviť' }}</span>
+          </button>
+        </div>
       </div>
 
       <!-- Loading -->
@@ -40,11 +54,12 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { courseService, paymentService } from '@/services'
 import { useAuthStore } from '@/stores/auth'
 import { useEnrollmentStore } from '@/stores/enrollment'
+import { useCourseStore } from '@/stores/course'
 import { usePerformance } from '@/utils/performanceMonitor'
 import CourseCard from '@/components/courses/CourseCard.vue'
 import CheckoutLoadingModal from '@/components/ui/CheckoutLoadingModal.vue'
@@ -52,21 +67,22 @@ import CheckoutLoadingModal from '@/components/ui/CheckoutLoadingModal.vue'
 const router = useRouter()
 const authStore = useAuthStore()
 const enrollmentStore = useEnrollmentStore()
+const courseStore = useCourseStore()
 const { measureAsync, logMemory } = usePerformance()
-const courses = ref([])
-const loading = ref(false)
+
+// Use course store instead of local state
+const courses = computed(() => courseStore.courses)
+const loading = computed(() => courseStore.loading)
+const refreshing = ref(false)
 const showCheckoutLoading = ref(false)
 const checkoutCourse = ref(null)
 
 const loadCourses = async () => {
-  loading.value = true
   try {
-    console.log('Loading courses...')
-    const response = await measureAsync('Load Courses API', async () => {
-      return await courseService.getAllCourses()
+    console.log('Loading courses via course store...')
+    await measureAsync('Load Courses API', async () => {
+      return await courseStore.fetchCourses()
     })
-    console.log('API response:', response)
-    courses.value = response.data || []
     console.log('Courses loaded:', courses.value.length)
     
     // Load purchase status for each course if user is authenticated
@@ -80,9 +96,6 @@ const loadCourses = async () => {
     logMemory('After loading courses')
   } catch (error) {
     console.error('Error loading courses:', error)
-    courses.value = []
-  } finally {
-    loading.value = false
   }
 }
 
@@ -139,6 +152,27 @@ const handlePurchase = async (course) => {
     console.log('Falling back to simulator checkout')
     const checkoutUrl = `/checkout?courseTitle=${encodeURIComponent(course.title)}&coursePrice=${course.price}&courseId=${course.id}&courseSlug=${encodeURIComponent(course.slug)}`
     router.push(checkoutUrl)
+  }
+}
+
+const refreshCourses = async () => {
+  refreshing.value = true
+  try {
+    console.log('Refreshing courses via course store...')
+    
+    // Use course store refresh method
+    await courseStore.refreshCourses()
+    
+    // Reload purchase status if user is authenticated
+    if (authStore.user && courses.value.length > 0) {
+      await loadPurchaseStatus()
+    }
+    
+    console.log('Courses refreshed successfully, total:', courses.value.length)
+  } catch (error) {
+    console.error('Error refreshing courses:', error)
+  } finally {
+    refreshing.value = false
   }
 }
 

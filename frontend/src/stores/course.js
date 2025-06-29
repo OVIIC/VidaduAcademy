@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { courseService } from '@/services'
 import { useToast } from 'vue-toastification'
+import { apiCache } from '@/utils/cache'
 
 const toast = useToast()
 
@@ -123,6 +124,17 @@ export const useCourseStore = defineStore('course', {
       if (this.hasMorePages && !this.loading) {
         this.fetchCourses({ page: this.pagination.current_page + 1 })
       }
+    },
+
+    async refreshCourses() {
+      // Clear cache for courses
+      apiCache.clear()
+      
+      // Fetch fresh data
+      await this.fetchCourses({ page: 1 })
+      await this.fetchFeaturedCourses()
+      
+      console.log('Courses refreshed from server')
     },
   },
 })

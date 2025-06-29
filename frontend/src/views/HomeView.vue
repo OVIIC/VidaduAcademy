@@ -1,24 +1,51 @@
 <template>
-  <div class="bg-white">
+  <div>
     <!-- Hero Section -->
-    <section class="relative bg-gradient-to-br from-secondary-900 via-secondary-800 to-primary-900 text-white">
-      <div class="absolute inset-0 bg-black opacity-20"></div>
-      <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-32">
+    <section class="relative w-full py-12 sm:py-16 lg:py-20 text-white overflow-hidden min-h-[80vh] flex items-center" style="background-color: #3B3157;">
+      
+      <!-- Matrix Rain Animation - Full width hero background -->
+      <canvas ref="matrixCanvas" 
+              class="absolute top-0 left-0 w-full h-full z-0" 
+              style="pointer-events: none;">
+      </canvas>
+      
+      <!-- Light overlay for better text readability (over Matrix) -->
+      <div class="absolute inset-0 bg-black opacity-20 z-10"></div>
+      
+      <!-- Content - highest z-index -->
+      <div class="relative container-responsive z-20 w-full">
         <div class="text-center">
-          <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight mb-6">
-            Ovládnite rast YouTube
-            <span class="text-youtube-red block">Vybudujte svoj kanál</span>
+          <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight mb-6 drop-shadow-lg">
+            Ovládnite rast
+            <span class="text-red-500 block">YouTube kanála</span>
           </h1>
-          <p class="text-xl lg:text-2xl text-gray-200 mb-8 max-w-3xl mx-auto">
-            Učte sa od úspešných YouTube tvorcov a premeňte svoj kanál na prosperujúci biznis. 
-            Pridajte sa k tisíckam študentov, ktorí už rozširujú svoje publikum.
+          <p class="text-xl lg:text-2xl text-gray-100 mb-8 max-w-3xl mx-auto drop-shadow-md">
+            Učte sa od úspešných YouTube tvorcov a premeňte svoj kanál na 
+            prosperujúci biznis.
           </p>
+          
+          <!-- Stats Section in Hero -->
+          <div class="grid grid-cols-3 gap-4 max-w-2xl mx-auto mb-8 text-center">
+            <div class="bg-black bg-opacity-20 backdrop-blur-sm rounded-lg p-4">
+              <div class="text-2xl font-bold text-white drop-shadow-md">1000+</div>
+              <div class="text-sm text-gray-200">spokojných študentov</div>
+            </div>
+            <div class="bg-black bg-opacity-20 backdrop-blur-sm rounded-lg p-4">
+              <div class="text-2xl font-bold text-white drop-shadow-md">50+</div>
+              <div class="text-sm text-gray-200">hodín obsahu</div>
+            </div>
+            <div class="bg-black bg-opacity-20 backdrop-blur-sm rounded-lg p-4">
+              <div class="text-2xl font-bold text-white drop-shadow-md">4.8⭐</div>
+              <div class="text-sm text-gray-200">priemerné hodnotenie</div>
+            </div>
+          </div>
+          
           <div class="flex flex-col sm:flex-row gap-4 justify-center">
-            <router-link to="/courses" class="btn-primary text-lg px-8 py-4">
-              Preskúmajte kurzy
+            <router-link to="/courses" class="bg-red-500 hover:bg-red-600 text-white font-medium py-4 px-8 rounded-lg transition-colors text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-1">
+              🚀 Preskúmajte kurzy
             </router-link>
-            <router-link to="/register" class="btn-outline border-white text-white hover:bg-white hover:text-primary-900 text-lg px-8 py-4">
-              Zaregistrovať sa
+            <router-link to="/register" class="bg-transparent border-2 border-white text-white hover:bg-white hover:text-gray-900 font-medium py-4 px-8 rounded-lg transition-all text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-1">
+              ✨ Zaregistrovať sa
             </router-link>
           </div>
         </div>
@@ -65,32 +92,8 @@
       </div>
     </section>
 
-    <!-- Stats Section -->
-    <section class="py-16 bg-white">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="grid grid-cols-2 lg:grid-cols-4 gap-8 text-center">
-          <div class="animate-fade-in">
-            <div class="text-4xl lg:text-5xl font-bold text-primary-600 mb-2">10K+</div>
-            <div class="text-gray-600 font-medium">Zapísaných študentov</div>
-          </div>
-          <div class="animate-fade-in">
-            <div class="text-4xl lg:text-5xl font-bold text-primary-600 mb-2">50+</div>
-            <div class="text-gray-600 font-medium">Expertných kurzov</div>
-          </div>
-          <div class="animate-fade-in">
-            <div class="text-4xl lg:text-5xl font-bold text-primary-600 mb-2">95%</div>
-            <div class="text-gray-600 font-medium">Úspešnosť</div>
-          </div>
-          <div class="animate-fade-in">
-            <div class="text-4xl lg:text-5xl font-bold text-primary-600 mb-2">24/7</div>
-            <div class="text-gray-600 font-medium">Dostupná podpora</div>
-          </div>
-        </div>
-      </div>
-    </section>
-
     <!-- Features Section -->
-    <section class="py-16 bg-secondary-50">
+    <section class="py-16 bg-white">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-16">
           <h2 class="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
@@ -237,7 +240,7 @@
 </template>
 
 <script setup>
-import { onMounted } from 'vue'
+import { onMounted, ref, onUnmounted } from 'vue'
 import {
   AcademicCapIcon,
   PlayIcon,
@@ -250,8 +253,87 @@ import { useCourseStore } from '@/stores/course'
 import CourseCard from '@/components/courses/CourseCard.vue'
 
 const courseStore = useCourseStore()
+const matrixCanvas = ref(null)
+let animationId = null
+
+const initMatrix = () => {
+  console.log('🎬 Starting Matrix Rain Animation...')
+  const canvas = matrixCanvas.value
+  if (!canvas) {
+    console.error('❌ Canvas not found!')
+    return
+  }
+
+  const ctx = canvas.getContext('2d')
+  
+  const resizeCanvas = () => {
+    const heroSection = canvas.parentElement
+    canvas.width = heroSection.offsetWidth
+    canvas.height = heroSection.offsetHeight
+    console.log(`📐 Canvas resized to full hero section: ${canvas.width}x${canvas.height}`)
+  }
+  
+  resizeCanvas()
+  window.addEventListener('resize', resizeCanvas)
+  
+  const fontSize = 14
+  const columns = canvas.width / fontSize
+  const drops = []
+  
+  // Initialize drops
+  for (let x = 0; x < columns; x++) {
+    drops[x] = Math.random() * canvas.height
+  }
+  
+  console.log(`💧 Created ${drops.length} drops for ${Math.floor(columns)} columns`)
+  
+  const animate = () => {
+    // Create slower fade effect
+    ctx.fillStyle = 'rgba(59, 49, 87, 0.05)'
+    ctx.fillRect(0, 0, canvas.width, canvas.height)
+    
+    // Set text properties
+    ctx.font = `${fontSize}px 'Courier New', monospace`
+    
+    // Draw characters
+    for (let i = 0; i < drops.length; i++) {
+      const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789<>{}[]()+=/*-_|\\:;.,?!@#$%^&*'
+      const text = chars[Math.floor(Math.random() * chars.length)]
+      
+      // Add opacity variation
+      const alpha = Math.random() * 0.4 + 0.6
+      const hexAlpha = Math.floor(alpha * 255).toString(16).padStart(2, '0')
+      ctx.fillStyle = '#7A65B4' + hexAlpha
+      
+      // Draw character
+      ctx.fillText(text, i * fontSize, drops[i] * fontSize)
+      
+      // Move drop down (slower speed)
+      if (drops[i] * fontSize > canvas.height && Math.random() > 0.985) {
+        drops[i] = 0
+      }
+      drops[i] += 0.2 + Math.random() * 0.3
+    }
+    
+    animationId = requestAnimationFrame(animate)
+  }
+  
+  console.log('🎮 Starting animation loop...')
+  animate()
+}
 
 onMounted(() => {
   courseStore.fetchFeaturedCourses()
+  
+  // Start matrix animation
+  setTimeout(() => {
+    initMatrix()
+  }, 100)
+})
+
+onUnmounted(() => {
+  if (animationId) {
+    cancelAnimationFrame(animationId)
+  }
 })
 </script>

@@ -1,5 +1,5 @@
 <template>
-  <div id="app" class="min-h-screen bg-gray-50 flex flex-col">
+  <div id="app" class="min-h-screen flex flex-col">
     <!-- Skip to main content link for accessibility -->
     <a 
       href="#main-content" 

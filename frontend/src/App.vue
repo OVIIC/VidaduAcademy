@@ -10,7 +10,8 @@
     
     <AppNavigationMobile />
     
-    <main id="main-content" class="flex-1 pt-safe-top pb-safe-bottom">
+    <main id="main-content" class="flex-1 pt-16 pb-safe-bottom">
+      <!-- pt-16 compenzuje fixed navigation výšku -->
       <router-view v-slot="{ Component, route }">
         <transition 
           name="page-transition" 

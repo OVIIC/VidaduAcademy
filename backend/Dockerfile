@@ -70,8 +70,14 @@ COPY . /var/www/html
 
 # Set permissions first
 RUN chown -R www-data:www-data /var/www/html \
-    && chmod -R 755 /var/www/html/storage \
-    && chmod -R 755 /var/www/html/bootstrap/cache
+    && chmod -R 775 /var/www/html/storage \
+    && chmod -R 775 /var/www/html/bootstrap/cache \
+    && mkdir -p /var/www/html/storage/logs \
+    && mkdir -p /var/www/html/storage/framework/cache \
+    && mkdir -p /var/www/html/storage/framework/sessions \
+    && mkdir -p /var/www/html/storage/framework/views \
+    && touch /var/www/html/storage/logs/laravel.log \
+    && chmod 666 /var/www/html/storage/logs/laravel.log
 
 # Run composer scripts after setting permissions
 RUN composer dump-autoload --optimize || echo "Autoload dump failed, continuing..."
@@ -97,6 +103,12 @@ done\n\
 \n\
 # Create .env from environment variables (Render compatible)
 echo "Creating .env file from environment variables..."\n\
+\n\
+# Fix permissions at runtime\n\
+echo "Setting Laravel permissions..."\n\
+chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache\n\
+chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache\n\
+\n\
 echo "APP_NAME=${APP_NAME:-VidaduAcademy}" > /var/www/html/.env\n\
 echo "APP_ENV=${APP_ENV:-production}" >> /var/www/html/.env\n\
 echo "APP_KEY=${APP_KEY}" >> /var/www/html/.env\n\

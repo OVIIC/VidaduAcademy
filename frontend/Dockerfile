@@ -3,7 +3,7 @@ FROM node:18-alpine AS build
 
 # Set environment variables for build optimization
 ENV NODE_OPTIONS=--max-old-space-size=4096
-ENV NPM_CONFIG_NETWORK_TIMEOUT=300000
+ENV NPM_CONFIG_TIMEOUT=300000
 ENV NPM_CONFIG_FETCH_RETRY_MINTIMEOUT=20000
 ENV NPM_CONFIG_FETCH_RETRY_MAXTIMEOUT=120000
 ENV NPM_CONFIG_FETCH_RETRIES=5
@@ -13,7 +13,7 @@ WORKDIR /app
 # Copy package files
 COPY package*.json ./
 
-# Install ALL dependencies with network retry logic
+# Install ALL dependencies with timeout fix
 RUN npm config set registry https://registry.npmjs.org/ && \
     npm config set timeout 300000 && \
     npm config set fetch-retry-mintimeout 20000 && \

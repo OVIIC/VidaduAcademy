@@ -91,6 +91,20 @@ railway login
 
 See [RAILWAY_DEPLOYMENT_COMPLETE.md](RAILWAY_DEPLOYMENT_COMPLETE.md) for detailed deployment instructions.
 
+### Render Deployment (Recommended)
+
+For free production deployment on Render:
+
+```bash
+# Quick setup
+./render-setup.sh
+
+# Manual setup - Go to render.com
+# Follow the deployment guide
+```
+
+See [RENDER_DEPLOYMENT_GUIDE.md](RENDER_DEPLOYMENT_GUIDE.md) for detailed deployment instructions.
+
 ### Environment Variables
 
 #### Local Development
@@ -118,7 +132,10 @@ FILESYSTEM_DISK=local
 ```
 
 #### Production (Railway)
-See [railway-env-template.md](railway-env-template.md) for production environment variables.
+See [railway-env-template.md](railway-env-template.md) for Railway environment variables.
+
+#### Production (Render)  
+See [render-env-template.md](render-env-template.md) for Render environment variables.
 
 ## 📚 Documentation
 
@@ -128,12 +145,15 @@ See [railway-env-template.md](railway-env-template.md) for production environmen
 - [Stripe Integration](docs/payments.md)
 - [Local Development](docs/deployment.md)
 - **[Railway Deployment Guide](RAILWAY_DEPLOYMENT_COMPLETE.md)** 🚂
-- [Environment Variables Template](railway-env-template.md)
+- **[Render Deployment Guide](RENDER_DEPLOYMENT_GUIDE.md)** 🎨 ⭐
+- [Railway Environment Variables](railway-env-template.md)
+- [Render Environment Variables](render-env-template.md)
 
 ## 🛠️ Deployment Tools
 
+- `render-setup.sh` - **Automated Render deployment preparation** ⭐
 - `railway-quick-setup.sh` - Automated Railway deployment
-- `railway-monitor.sh` - Monitor deployment status
+- `railway-monitor.sh` - Monitor Railway deployment status
 - `railway-network-test.sh` - Test network connectivity
 - `setup.sh` - Local development setup
 

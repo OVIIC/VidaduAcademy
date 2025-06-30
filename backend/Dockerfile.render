@@ -1,4 +1,4 @@
-# Use official PHP image with specific version for stability
+# Render-optimized Dockerfile for VidaduAcademy Backend
 FROM php:8.1.31-apache
 
 # Set environment variables for build optimization
@@ -10,7 +10,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 # Set working directory
 WORKDIR /var/www/html
 
-# Install system dependencies with network retry logic
+# Install system dependencies with PostgreSQL support for Render
 RUN for i in 1 2 3; do \
         apt-get update && break || { \
             echo "apt-get update failed, retry $i/3"; \
@@ -24,13 +24,14 @@ RUN for i in 1 2 3; do \
             libpng-dev \
             libonig-dev \
             libxml2-dev \
+            libpq-dev \
             zip \
             unzip && break || { \
             echo "apt-get install failed, retry $i/3"; \
             sleep 5; \
         } \
     done && \
-    docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd && \
+    docker-php-ext-install pdo_pgsql pgsql mbstring exif pcntl bcmath gd && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
@@ -40,7 +41,7 @@ COPY --from=composer:2.6 /usr/bin/composer /usr/bin/composer
 # Enable Apache mod_rewrite
 RUN a2enmod rewrite
 
-# Configure Apache DocumentRoot
+# Configure Apache DocumentRoot and port for Render
 RUN sed -i 's!/var/www/html!/var/www/html/public!g' /etc/apache2/sites-available/000-default.conf
 
 # Copy composer files first (better caching)
@@ -68,34 +69,24 @@ RUN composer config --global process-timeout 600 && \
 # Copy rest of application
 COPY . /var/www/html
 
-# Set permissions first
-RUN chown -R www-data:www-data /var/www/html \
-    && chmod -R 755 /var/www/html/storage \
-    && chmod -R 755 /var/www/html/bootstrap/cache
-
-# Run composer scripts after setting permissions
-RUN composer dump-autoload --optimize || echo "Autoload dump failed, continuing..."
+# Run composer scripts after copying source
+RUN composer dump-autoload --optimize
 
 # Remove build .env (Render will set proper env vars)
 RUN rm -f /var/www/html/.env
+
+# Set permissions
+RUN chown -R www-data:www-data /var/www/html \
+    && chmod -R 755 /var/www/html/storage \
+    && chmod -R 755 /var/www/html/bootstrap/cache
 
 # Create startup script that creates .env from environment variables
 RUN echo '#!/bin/bash\n\
 set -e\n\
 \n\
-# Network connectivity check\n\
-echo "Checking network connectivity..."\n\
-for i in {1..5}; do\n\
-    if ping -c 1 8.8.8.8 >/dev/null 2>&1; then\n\
-        echo "Network connectivity: OK"\n\
-        break\n\
-    else\n\
-        echo "Network check $i/5 failed, retrying..."\n\
-        sleep 2\n\
-    fi\n\
-done\n\
+echo "🎨 Starting VidaduAcademy Backend on Render..."\n\
 \n\
-# Create .env from environment variables (Render compatible)
+# Create .env from Render environment variables\n\
 echo "Creating .env file from environment variables..."\n\
 echo "APP_NAME=${APP_NAME:-VidaduAcademy}" > /var/www/html/.env\n\
 echo "APP_ENV=${APP_ENV:-production}" >> /var/www/html/.env\n\
@@ -104,20 +95,25 @@ echo "APP_DEBUG=${APP_DEBUG:-false}" >> /var/www/html/.env\n\
 echo "APP_URL=${RENDER_EXTERNAL_URL:-http://localhost}" >> /var/www/html/.env\n\
 echo "LOG_CHANNEL=${LOG_CHANNEL:-stack}" >> /var/www/html/.env\n\
 echo "LOG_LEVEL=${LOG_LEVEL:-error}" >> /var/www/html/.env\n\
-echo "DB_CONNECTION=${DB_CONNECTION:-mysql}" >> /var/www/html/.env\n\
+echo "DB_CONNECTION=${DB_CONNECTION:-pgsql}" >> /var/www/html/.env\n\
 echo "DATABASE_URL=${DATABASE_URL}" >> /var/www/html/.env\n\
 echo "CACHE_DRIVER=${CACHE_DRIVER:-file}" >> /var/www/html/.env\n\
 echo "SESSION_DRIVER=${SESSION_DRIVER:-file}" >> /var/www/html/.env\n\
 echo "QUEUE_CONNECTION=${QUEUE_CONNECTION:-sync}" >> /var/www/html/.env\n\
 \n\
+# Configure Apache to listen on Render PORT\n\
+echo "Configuring Apache for Render port ${PORT:-80}..."\n\
+sed -i "s/Listen 80/Listen ${PORT:-80}/" /etc/apache2/ports.conf\n\
+sed -i "s/:80/:${PORT:-80}/" /etc/apache2/sites-available/000-default.conf\n\
+\n\
 # Wait for database to be ready\n\
 echo "Waiting for database connection..."\n\
 for i in {1..30}; do\n\
     if php artisan migrate:status >/dev/null 2>&1; then\n\
-        echo "Database connection: OK"\n\
+        echo "✅ Database connection: OK"\n\
         break\n\
     else\n\
-        echo "Database not ready, waiting... ($i/30)"\n\
+        echo "⏳ Database not ready, waiting... ($i/30)"\n\
         sleep 2\n\
     fi\n\
 done\n\
@@ -129,12 +125,10 @@ php artisan route:cache || echo "Route cache failed, continuing..."\n\
 php artisan view:cache || echo "View cache failed, continuing..."\n\
 php artisan migrate --force || echo "Migration failed, continuing..."\n\
 \n\
-echo "🎨 Starting Apache server on Render..."\n\
-# Configure Apache for Render dynamic PORT\n\
-sed -i "s/Listen 80/Listen ${PORT:-80}/" /etc/apache2/ports.conf\n\
-sed -i "s/:80/:${PORT:-80}/" /etc/apache2/sites-available/000-default.conf\n\
+echo "🚀 Starting Apache server on port ${PORT:-80}..."\n\
 apache2-foreground' > /start.sh && chmod +x /start.sh
 
+# Expose port (Render provides PORT env var)
 EXPOSE ${PORT:-80}
 
 CMD ["/start.sh"]

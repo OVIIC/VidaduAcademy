@@ -1,0 +1,54 @@
+services:
+  # Backend Laravel API
+  - type: web
+    name: vidaduacademy-backend
+    env: docker
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    healthCheckPath: /api/health
+    region: frankfurt
+    plan: free
+    buildCommand: ""
+    startCommand: ""
+    envVars:
+      - key: APP_NAME
+        value: VidaduAcademy
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: false
+      - key: CACHE_DRIVER
+        value: file
+      - key: SESSION_DRIVER
+        value: file
+      - key: QUEUE_CONNECTION
+        value: sync
+      - key: LOG_CHANNEL
+        value: stack
+      - key: LOG_LEVEL
+        value: error
+      - key: DB_CONNECTION
+        value: pgsql
+    
+  # Frontend Vue.js Static Site
+  - type: web
+    name: vidaduacademy-frontend
+    env: static
+    buildCommand: npm install && npm run build
+    staticPublishPath: ./dist
+    pullRequestPreviewsEnabled: false
+    rootDir: ./frontend
+    region: frankfurt
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: VITE_API_URL
+        value: https://vidaduacademy-backend.onrender.com
+
+# Database
+databases:
+  - name: vidaduacademy-db
+    databaseName: vidaduacademy
+    user: vidaduacademy_user
+    region: frankfurt
+    plan: free

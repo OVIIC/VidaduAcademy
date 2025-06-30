@@ -1,5 +1,5 @@
 # Use official PHP image with specific version for stability
-FROM php:8.1.31-apache
+FROM php:8.3-apache
 
 # Set environment variables for build optimization
 ENV COMPOSER_PROCESS_TIMEOUT=600

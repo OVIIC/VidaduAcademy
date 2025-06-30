@@ -6,9 +6,9 @@ echo "🚀 Starting Render.com build for VidaduAcademy Laravel Backend..."
 # Set PHP version
 export PHP_VERSION="8.3"
 
-# Install dependencies with PHP 8.3 compatibility
+# Install dependencies with platform requirement bypass for deployment compatibility
 echo "📦 Installing Composer dependencies..."
-composer install --no-dev --optimize-autoloader --no-interaction
+composer install --no-dev --optimize-autoloader --no-interaction --ignore-platform-reqs
 
 # Cache Laravel configuration
 echo "⚡ Caching Laravel configuration..."

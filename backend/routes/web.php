@@ -20,10 +20,9 @@ Route::get('/', function () {
 Route::get('/test', function () {
     return response()->json([
         'message' => 'VidaduAcademy Backend is working!',
-        'timestamp' => now(),
-        'environment' => app()->environment(),
-        'courses_count' => \App\Models\Course::count(),
-        'users_count' => \App\Models\User::count(),
+        'timestamp' => date('c'),
+        'php_version' => PHP_VERSION,
+        'laravel_version' => app()->version(),
     ]);
 });
 

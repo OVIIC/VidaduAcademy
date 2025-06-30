@@ -26,13 +26,13 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-// Health check endpoint for Railway
+// Health check endpoint for Railway (simple, no DB dependency)
 Route::get('/health', function () {
     return response()->json([
         'status' => 'healthy',
-        'timestamp' => now()->toISOString(),
-        'app' => config('app.name'),
-        'environment' => config('app.env'),
+        'timestamp' => date('c'),
+        'app' => 'VidaduAcademy',
+        'php_version' => PHP_VERSION,
     ]);
 });
 

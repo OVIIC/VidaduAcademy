@@ -1,11 +1,23 @@
+[variables]
+NODE_VERSION = "18"
+NPM_CONFIG_CACHE = "/tmp/.npm"
+
+[phases.setup]
+nixPkgs = ["nodejs-18_x", "npm-9_x"]
+
+[phases.install]
+cmds = [
+  "npm cache clean --force",
+  "npm install"
+]
+
 [phases.build]
 cmds = [
-  "npm ci",
   "npm run build"
 ]
 
 [phases.start]
 cmd = "npm run preview -- --host 0.0.0.0 --port $PORT"
 
-[variables]
-NODE_VERSION = "18"
+[start]
+cmd = "npm run preview -- --host 0.0.0.0 --port $PORT"

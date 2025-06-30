@@ -45,7 +45,11 @@ services:
       - key: NODE_ENV
         value: production
       - key: VITE_API_URL
-        value: https://vidaduacademy-backend.onrender.com
+        value: https://vidaduacademy-backend.onrender.com/api
+      - key: VITE_APP_NAME
+        value: VidaduAcademy
+      - key: VITE_STRIPE_PUBLISHABLE_KEY
+        value: pk_test_51OSYn3I4LuCKHyS6Y7x2zAmCFm5M8q7yXvfTjr2jdKH3z8pQGqo6oJ4C2QHHFz7J4QGqo6oJ4C2QHHFz7J4QGqo6o
 
 # Database
 databases:

@@ -22,5 +22,16 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     assetsDir: 'assets',
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ['vue', 'vue-router', 'pinia'],
+          ui: ['@headlessui/vue', '@heroicons/vue'],
+        },
+      },
+    },
+  },
+  define: {
+    __VUE_PROD_HYDRATION_MISMATCH_DETAILS__: 'false',
   },
 })

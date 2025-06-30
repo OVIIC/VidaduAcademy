@@ -1,50 +1,50 @@
-FROM php:8.2-fpm-alpine
+# Use official PHP image
+FROM php:8.1-apache
+
+# Set working directory
+WORKDIR /var/www/html
 
 # Install system dependencies
-RUN apk add --no-cache \
+RUN apt-get update && apt-get install -y \
     git \
     curl \
     libpng-dev \
+    libonig-dev \
     libxml2-dev \
     zip \
     unzip \
-    nginx \
-    supervisor
-
-# Install PHP extensions
-RUN docker-php-ext-install pdo pdo_mysql mbstring exif pcntl bcmath gd
+    && docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
 # Install Composer
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+COPY --from=composer:2.0 /usr/bin/composer /usr/bin/composer
 
-# Set working directory
-WORKDIR /var/www
+# Enable Apache mod_rewrite
+RUN a2enmod rewrite
+
+# Configure Apache DocumentRoot
+RUN sed -i 's!/var/www/html!/var/www/html/public!g' /etc/apache2/sites-available/000-default.conf
 
 # Copy application files
-COPY . .
+COPY . /var/www/html
 
-# Install dependencies
+# Install PHP dependencies
 RUN composer install --no-dev --optimize-autoloader --no-interaction
 
 # Set permissions
-RUN chown -R www-data:www-data /var/www
-RUN chmod -R 755 /var/www/storage
+RUN chown -R www-data:www-data /var/www/html \
+    && chmod -R 755 /var/www/html/storage \
+    && chmod -R 755 /var/www/html/bootstrap/cache
 
-# Configure nginx
-COPY docker/nginx.conf /etc/nginx/nginx.conf
+# Create simple startup script
+RUN echo '#!/bin/bash\n\
+php artisan config:cache || echo "Config cache failed"\n\
+php artisan route:cache || echo "Route cache failed"\n\
+php artisan view:cache || echo "View cache failed"\n\
+php artisan migrate --force || echo "Migration failed"\n\
+apache2-foreground' > /start.sh && chmod +x /start.sh
 
-# Configure supervisor
-COPY docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
-
-# Create startup script
-RUN echo '#!/bin/sh' > /start.sh && \
-    echo 'php artisan config:cache' >> /start.sh && \
-    echo 'php artisan route:cache' >> /start.sh && \
-    echo 'php artisan view:cache' >> /start.sh && \
-    echo 'php artisan migrate --force' >> /start.sh && \
-    echo 'supervisord -c /etc/supervisor/conf.d/supervisord.conf' >> /start.sh && \
-    chmod +x /start.sh
-
-EXPOSE 8080
+EXPOSE 80
 
 CMD ["/start.sh"]

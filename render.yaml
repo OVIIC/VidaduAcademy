@@ -11,6 +11,8 @@ services:
     buildCommand: ""
     startCommand: ""
     envVars:
+      - key: PHP_VERSION
+        value: "8.3"
       - key: APP_NAME
         value: VidaduAcademy
       - key: APP_ENV

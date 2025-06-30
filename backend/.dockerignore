@@ -2,6 +2,7 @@ node_modules
 .git
 .DS_Store
 *.log
+.env
 .env.local
 .env.development.local
 .env.test.local
@@ -10,3 +11,7 @@ debug-files
 docs
 frontend
 vendor
+storage/logs/*
+!storage/logs/.gitkeep
+bootstrap/cache/*
+!bootstrap/cache/.gitkeep

@@ -116,15 +116,6 @@ Route::middleware(['auth:sanctum'])->prefix('enrollments')->group(function () {
     Route::get('/course/{course}/students', [EnrollmentController::class, 'getCourseEnrollments']);
 });
 
-// Health check route
-Route::get('/health', function () {
-    return response()->json([
-        'status' => 'ok',
-        'timestamp' => now()->toISOString(),
-        'database' => DB::connection()->getPdo() ? 'connected' : 'disconnected'
-    ]);
-});
-
 // Stripe webhook (must be before auth middleware)
 Route::post('/stripe/webhook', [StripeWebhookController::class, 'handleWebhook'])
     ->name('stripe.webhook');

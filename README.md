@@ -56,7 +56,9 @@ VidaduAcademy/
 - Node.js 18+ & npm
 - Git
 
-### Backend Setup
+### Local Development
+
+#### Backend Setup
 
 ```bash
 cd backend
@@ -65,7 +67,7 @@ cd backend
 ./vendor/bin/sail artisan filament:make-user
 ```
 
-### Frontend Setup
+#### Frontend Setup
 
 ```bash
 cd frontend
@@ -73,8 +75,25 @@ npm install
 npm run dev
 ```
 
+### Railway Deployment
+
+For production deployment on Railway:
+
+```bash
+# Quick setup (requires Railway CLI)
+./railway-quick-setup.sh
+
+# Manual setup
+npm install -g @railway/cli
+railway login
+# Follow the deployment guide
+```
+
+See [RAILWAY_DEPLOYMENT_COMPLETE.md](RAILWAY_DEPLOYMENT_COMPLETE.md) for detailed deployment instructions.
+
 ### Environment Variables
 
+#### Local Development
 Copy `.env.example` to `.env` in the backend directory and configure:
 
 ```env
@@ -98,13 +117,25 @@ SANCTUM_STATEFUL_DOMAINS=localhost:3000,127.0.0.1:3000
 FILESYSTEM_DISK=local
 ```
 
+#### Production (Railway)
+See [railway-env-template.md](railway-env-template.md) for production environment variables.
+
 ## 📚 Documentation
 
 - [Installation Guide](docs/installation.md)
 - [API Documentation](docs/api.md)
 - [Admin Panel Guide](docs/admin.md)
 - [Stripe Integration](docs/payments.md)
-- [Deployment Guide](docs/deployment.md)
+- [Local Development](docs/deployment.md)
+- **[Railway Deployment Guide](RAILWAY_DEPLOYMENT_COMPLETE.md)** 🚂
+- [Environment Variables Template](railway-env-template.md)
+
+## 🛠️ Deployment Tools
+
+- `railway-quick-setup.sh` - Automated Railway deployment
+- `railway-monitor.sh` - Monitor deployment status
+- `railway-network-test.sh` - Test network connectivity
+- `setup.sh` - Local development setup
 
 ## 🔒 Security Features
 

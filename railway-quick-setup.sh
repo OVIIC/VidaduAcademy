@@ -60,9 +60,9 @@ setup_railway_project() {
     railway service create --name vidadu-frontend
     print_success "Frontend service created"
     
-    # Add MySQL database
-    railway add --database mysql
-    print_success "MySQL database added"
+    # Add PostgreSQL database
+    railway add --database postgresql
+    print_success "PostgreSQL database added"
 }
 
 # Deploy backend

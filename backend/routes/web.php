@@ -17,16 +17,6 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-// Simple health check without DB dependencies
-Route::get('/health', function () {
-    return response()->json([
-        'status' => 'healthy',
-        'timestamp' => date('Y-m-d H:i:s'),
-        'app' => 'VidaduAcademy',
-        'environment' => 'production',
-    ]);
-});
-
 Route::get('/test', function () {
     return response()->json([
         'message' => 'VidaduAcademy Backend is working!',

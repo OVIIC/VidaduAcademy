@@ -48,16 +48,16 @@ class SecurityHeaders
         
         $policies = [
             "default-src 'self'",
-            "script-src 'self' 'unsafe-inline' 'unsafe-eval' {$frontendUrl} https://js.stripe.com https://checkout.stripe.com",
-            "style-src 'self' 'unsafe-inline' {$frontendUrl} https://fonts.googleapis.com https://fonts.bunny.net",
-            "font-src 'self' https://fonts.gstatic.com https://fonts.bunny.net",
-            "img-src 'self' data: blob: {$frontendUrl} https:",
-            "media-src 'self' {$frontendUrl}",
-            "connect-src 'self' {$frontendUrl} {$appUrl} https://api.stripe.com",
+            "script-src 'self' 'unsafe-inline' 'unsafe-eval' {$frontendUrl} {$appUrl} https://js.stripe.com https://checkout.stripe.com",
+            "style-src 'self' 'unsafe-inline' {$frontendUrl} {$appUrl} https://fonts.googleapis.com https://fonts.bunny.net",
+            "font-src 'self' https://fonts.gstatic.com https://fonts.bunny.net https://fonts.googleapis.com",
+            "img-src 'self' data: blob: {$frontendUrl} {$appUrl} https:",
+            "media-src 'self' {$frontendUrl} {$appUrl}",
+            "connect-src 'self' {$frontendUrl} {$appUrl} https://api.stripe.com wss: ws:",
             "frame-src 'self' https://checkout.stripe.com https://js.stripe.com",
             "object-src 'none'",
             "base-uri 'self'",
-            "form-action 'self'",
+            "form-action 'self' {$appUrl}",
             "frame-ancestors 'none'",
             "upgrade-insecure-requests"
         ];

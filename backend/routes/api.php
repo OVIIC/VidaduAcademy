@@ -118,4 +118,4 @@ Route::middleware(['auth:sanctum'])->prefix('enrollments')->group(function () {
 
 // Stripe webhook (must be before auth middleware)
 Route::post('/stripe/webhook', [StripeWebhookController::class, 'handleWebhook'])
-    ->name('stripe.webhook');
+    ->name('stripe.webhook.v2');

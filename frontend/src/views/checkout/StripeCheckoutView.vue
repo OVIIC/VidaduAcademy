@@ -84,11 +84,13 @@ import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import { useEnrollmentStore } from '@/stores/enrollment'
+import { useToast } from 'vue-toastification'
 
 const route = useRoute()
 const router = useRouter()
 const authStore = useAuthStore()
 const enrollmentStore = useEnrollmentStore()
+const toast = useToast()
 
 // Generate a mock session ID
 const sessionId = ref(`cs_dev_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`)
@@ -110,12 +112,12 @@ onMounted(() => {
 
 const simulateSuccess = async () => {
   if (!courseInfo.value?.id) {
-    alert('❌ Chyba: ID kurzu nenájdené')
+    toast.error('Chyba: ID kurzu nenájdené')
     return
   }
 
   if (!authStore.user) {
-    alert('❌ Chyba: Užívateľ nie je prihlásený')
+    toast.error('Chyba: Užívateľ nie je prihlásený')
     return
   }
 
@@ -129,7 +131,7 @@ const simulateSuccess = async () => {
     await enrollmentStore.enrollInCourse(parseInt(courseInfo.value.id))
     
     // Show success message for API enrollment
-    alert(`🎉 Úspešná platba! Kurz "${courseInfo.value.title}" bol pridaný do vašich kurzov.`)
+    toast.success(`Úspešná platba! Kurz "${courseInfo.value.title}" bol pridaný do vašich kurzov.`)
     
   } catch (error) {
     console.warn('API enrollment failed, using fallback:', error)
@@ -146,7 +148,7 @@ const simulateSuccess = async () => {
       thumbnail: null,
     })
     
-    alert(`🎉 Simulácia úspešnej platby! Kurz "${courseInfo.value.title}" bol pridaný do vašich kurzov.\n\n(Poznámka: Použité lokálne uloženie - API neúspešné)`)
+    toast.success(`Simulácia úspešnej platby! Kurz "${courseInfo.value.title}" bol pridaný do vašich kurzov. (Poznámka: Použité lokálne uloženie - API neúspešné)`)
   } finally {
     isProcessing.value = false
     // Navigate immediately after success message
@@ -156,7 +158,7 @@ const simulateSuccess = async () => {
 
 const simulateCancel = () => {
   // Simulate cancelled payment
-  alert('❌ Platba bola zrušená.')
+  toast.info('Platba bola zrušená.')
   goBack()
 }
 

@@ -74,7 +74,7 @@ export const useCourseStore = defineStore('course', {
         }
       } catch (error) {
         console.error('Failed to fetch courses:', error)
-        toast.error('Failed to load courses')
+        toast.error('Načítanie kurzov sa nepodarilo')
       } finally {
         this.loading = false
         console.log('Loading set to false')
@@ -96,7 +96,7 @@ export const useCourseStore = defineStore('course', {
         return this.currentCourse
       } catch (error) {
         console.error('Failed to fetch course:', error)
-        toast.error('Course not found')
+        toast.error('Kurz sa nenašiel')
         throw error
       } finally {
         this.loading = false

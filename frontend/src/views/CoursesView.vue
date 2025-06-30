@@ -61,6 +61,7 @@ import { useAuthStore } from '@/stores/auth'
 import { useEnrollmentStore } from '@/stores/enrollment'
 import { useCourseStore } from '@/stores/course'
 import { usePerformance } from '@/utils/performanceMonitor'
+import { useToast } from 'vue-toastification'
 import CourseCard from '@/components/courses/CourseCard.vue'
 import CheckoutLoadingModal from '@/components/ui/CheckoutLoadingModal.vue'
 
@@ -69,6 +70,7 @@ const authStore = useAuthStore()
 const enrollmentStore = useEnrollmentStore()
 const courseStore = useCourseStore()
 const { measureAsync, logMemory } = usePerformance()
+const toast = useToast()
 
 // Use course store instead of local state
 const courses = computed(() => courseStore.courses)
@@ -119,7 +121,7 @@ const handlePurchase = async (course) => {
   const isPurchased = enrollmentStore.hasPurchasedCourse(course.id)
   
   if (isPurchased) {
-    alert('Tento kurz už máte zakúpený a nachádza sa v sekcii "Moje kurzy".')
+    toast.info('Tento kurz už máte zakúpený a nachádza sa v sekcii "Moje kurzy".')
     return
   }
 

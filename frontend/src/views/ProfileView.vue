@@ -517,11 +517,13 @@
 import { ref, reactive, onMounted, computed } from 'vue'
 import { useAuthStore } from '@/stores/auth'
 import { api } from '@/services/api'
+import { useToast } from 'vue-toastification'
 
 export default {
   name: 'ProfileView',
   setup() {
     const authStore = useAuthStore()
+    const toast = useToast()
     const activeTab = ref('personal')
     const loading = ref(false)
     const passwordLoading = ref(false)
@@ -613,27 +615,11 @@ export default {
         const response = await api.put('/user/profile', form)
         authStore.setUser(response.data.user)
         
-        // Show success message
-        const successMessage = document.createElement('div')
-        successMessage.className = 'fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50'
-        successMessage.textContent = 'Profil bol úspešne aktualizovaný!'
-        document.body.appendChild(successMessage)
-        
-        setTimeout(() => {
-          document.body.removeChild(successMessage)
-        }, 3000)
+        toast.success('Profil bol úspešne aktualizovaný!')
       } catch (error) {
         console.error('Error updating profile:', error)
         
-        // Show error message
-        const errorMessage = document.createElement('div')
-        errorMessage.className = 'fixed top-4 right-4 bg-red-500 text-white px-6 py-3 rounded-lg shadow-lg z-50'
-        errorMessage.textContent = 'Chyba pri aktualizácii profilu. Skúste to znovu.'
-        document.body.appendChild(errorMessage)
-        
-        setTimeout(() => {
-          document.body.removeChild(errorMessage)
-        }, 3000)
+        toast.error('Chyba pri aktualizácii profilu. Skúste to znovu.')
       } finally {
         loading.value = false
       }
@@ -645,7 +631,7 @@ export default {
 
     const updatePassword = async () => {
       if (passwordForm.new_password !== passwordForm.confirm_password) {
-        alert('Nové heslá sa nezhodujú!')
+        toast.error('Nové heslá sa nezhodujú!')
         return
       }
 
@@ -663,15 +649,7 @@ export default {
         })
         showPasswordForm.value = false
         
-        // Show success message
-        const successMessage = document.createElement('div')
-        successMessage.className = 'fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50'
-        successMessage.textContent = 'Heslo bolo úspešne aktualizované!'
-        document.body.appendChild(successMessage)
-        
-        setTimeout(() => {
-          document.body.removeChild(successMessage)
-        }, 3000)
+        toast.success('Heslo bolo úspešne aktualizované!')
       } catch (error) {
         console.error('Error updating password:', error)
         
@@ -680,14 +658,7 @@ export default {
           errorText = error.response.data.message
         }
         
-        const errorMessage = document.createElement('div')
-        errorMessage.className = 'fixed top-4 right-4 bg-red-500 text-white px-6 py-3 rounded-lg shadow-lg z-50'
-        errorMessage.textContent = errorText
-        document.body.appendChild(errorMessage)
-        
-        setTimeout(() => {
-          document.body.removeChild(errorMessage)
-        }, 3000)
+        toast.error(errorText)
       } finally {
         passwordLoading.value = false
       }
@@ -698,15 +669,7 @@ export default {
         const response = await api.get(`/user/certificate/${certificateId}/download`)
         console.log('Certificate download:', response.data)
         
-        // Show info message since actual download is not implemented yet
-        const infoMessage = document.createElement('div')
-        infoMessage.className = 'fixed top-4 right-4 bg-blue-500 text-white px-6 py-3 rounded-lg shadow-lg z-50'
-        infoMessage.textContent = 'Funkcia sťahovania certifikátov bude čoskoro implementovaná.'
-        document.body.appendChild(infoMessage)
-        
-        setTimeout(() => {
-          document.body.removeChild(infoMessage)
-        }, 3000)
+        toast.info('Funkcia sťahovania certifikátov bude čoskoro implementovaná.')
       } catch (error) {
         console.error('Error downloading certificate:', error)
       }
@@ -728,15 +691,7 @@ export default {
         document.body.removeChild(link)
         URL.revokeObjectURL(url)
         
-        // Show success message
-        const successMessage = document.createElement('div')
-        successMessage.className = 'fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50'
-        successMessage.textContent = 'Údaje boli úspešne stiahnuté!'
-        document.body.appendChild(successMessage)
-        
-        setTimeout(() => {
-          document.body.removeChild(successMessage)
-        }, 3000)
+        toast.success('Údaje boli úspešne stiahnuté!')
       } catch (error) {
         console.error('Error exporting data:', error)
       }

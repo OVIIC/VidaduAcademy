@@ -364,10 +364,12 @@
 <script setup>
 import { ref, computed, onMounted, nextTick, onUnmounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { useToast } from 'vue-toastification'
 import { learningService } from '@/services'
 
 const route = useRoute()
 const router = useRouter()
+const toast = useToast()
 
 const loading = ref(false)
 const course = ref(null)
@@ -657,7 +659,7 @@ const toggleLessonCompletion = async (lesson) => {
     lesson.completed = !lesson.completed
     
     // Show error message to user
-    alert('Nastala chyba pri aktualizácii pokroku lekcie. Skúste to znovu.')
+    toast.error('Nastala chyba pri aktualizácii pokroku lekcie. Skúste to znovu.')
   }
 }
 

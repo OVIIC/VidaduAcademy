@@ -221,6 +221,7 @@ import { useAuthStore } from '@/stores/auth'
 import { useEnrollmentStore } from '@/stores/enrollment'
 import { api } from '@/services/api'
 import { paymentService } from '@/services'
+import { useToast } from 'vue-toastification'
 import AuthModal from '@/components/auth/AuthModal.vue'
 import CheckoutLoadingModal from '@/components/ui/CheckoutLoadingModal.vue'
 
@@ -236,6 +237,7 @@ export default {
     const courseStore = useCourseStore()
     const authStore = useAuthStore()
     const enrollmentStore = useEnrollmentStore()
+    const toast = useToast()
     
     const loading = ref(false)
     const purchasing = ref(false)
@@ -294,7 +296,7 @@ export default {
 
       // Check if course is already purchased
       if (hasPurchased.value) {
-        alert('Tento kurz už máte zakúpený! Nájdete ho v sekcii "Moje kurzy".')
+        toast.info('Tento kurz už máte zakúpený! Nájdete ho v sekcii "Moje kurzy".')
         return
       }
 

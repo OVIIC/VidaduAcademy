@@ -57,11 +57,11 @@ export const useAuthStore = defineStore('auth', {
         localStorage.setItem('user', JSON.stringify(data.user))
         
         console.log('Auth state updated, localStorage saved')
-        toast.success('Welcome back!')
+        toast.success('Vitajte späť!')
         return data
       } catch (error) {
         console.error('Login failed:', error)
-        const message = error.response?.data?.message || 'Login failed'
+        const message = error.response?.data?.message || 'Prihlásenie sa nepodarilo'
         toast.error(message)
         throw error
       } finally {
@@ -81,10 +81,10 @@ export const useAuthStore = defineStore('auth', {
         localStorage.setItem('token', data.token)
         localStorage.setItem('user', JSON.stringify(data.user))
         
-        toast.success('Account created successfully!')
+        toast.success('Účet bol úspešne vytvorený!')
         return data
       } catch (error) {
-        const message = error.response?.data?.message || 'Registration failed'
+        const message = error.response?.data?.message || 'Registrácia sa nepodarila'
         toast.error(message)
         throw error
       } finally {
@@ -107,7 +107,7 @@ export const useAuthStore = defineStore('auth', {
         localStorage.removeItem('token')
         localStorage.removeItem('user')
         
-        toast.info('You have been logged out')
+        toast.info('Boli ste odhlásený')
       }
     },
 

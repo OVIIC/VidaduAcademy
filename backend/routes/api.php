@@ -26,6 +26,16 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+// Health check endpoint for Railway
+Route::get('/health', function () {
+    return response()->json([
+        'status' => 'healthy',
+        'timestamp' => now()->toISOString(),
+        'app' => config('app.name'),
+        'environment' => config('app.env'),
+    ]);
+});
+
 // Public routes
 Route::prefix('courses')->group(function () {
     Route::get('/', [CourseController::class, 'index']);
@@ -110,8 +120,8 @@ Route::middleware(['auth:sanctum'])->prefix('enrollments')->group(function () {
 Route::get('/health', function () {
     return response()->json([
         'status' => 'ok',
-        'timestamp' => now(),
-        'environment' => app()->environment(),
+        'timestamp' => now()->toISOString(),
+        'database' => DB::connection()->getPdo() ? 'connected' : 'disconnected'
     ]);
 });
 

@@ -7,10 +7,6 @@ ENV COMPOSER_MEMORY_LIMIT=2G
 ENV COMPOSER_CACHE_DIR=/tmp/composer-cache
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Configure DNS for better network reliability
-RUN echo "nameserver 8.8.8.8" > /etc/resolv.conf && \
-    echo "nameserver 8.8.4.4" >> /etc/resolv.conf
-
 # Set working directory
 WORKDIR /var/www/html
 

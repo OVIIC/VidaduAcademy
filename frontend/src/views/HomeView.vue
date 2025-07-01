@@ -3,17 +3,8 @@
     <!-- Hero Section -->
     <section class="relative w-full py-12 sm:py-16 lg:py-20 text-white overflow-hidden min-h-[80vh] flex items-center bg-black">
       
-      <!-- Matrix Rain Animation - Full width hero background -->
-      <canvas ref="matrixCanvas" 
-              class="absolute top-0 left-0 w-full h-full z-0" 
-              style="pointer-events: none;">
-      </canvas>
-      
-      <!-- Dark overlay for better text readability (over Matrix) -->
-      <div class="absolute inset-0 bg-black opacity-40 z-10"></div>
-      
-      <!-- Content - highest z-index -->
-      <div class="relative container-responsive z-20 w-full">
+      <!-- Content -->
+      <div class="relative container-responsive w-full">
         <div class="text-center">
           <div class="melting-text-container mb-16 pb-12">
             <h1 class="melting-text text-4xl sm:text-5xl lg:text-6xl font-bold leading-relaxed drop-shadow-lg mb-2">
@@ -257,88 +248,9 @@ import { useCourseStore } from '@/stores/course'
 import CourseCard from '@/components/courses/CourseCard.vue'
 
 const courseStore = useCourseStore()
-const matrixCanvas = ref(null)
-let animationId = null
-
-const initMatrix = () => {
-  console.log('🎬 Starting Matrix Rain Animation...')
-  const canvas = matrixCanvas.value
-  if (!canvas) {
-    console.error('❌ Canvas not found!')
-    return
-  }
-
-  const ctx = canvas.getContext('2d')
-  
-  const resizeCanvas = () => {
-    const heroSection = canvas.parentElement
-    canvas.width = heroSection.offsetWidth
-    canvas.height = heroSection.offsetHeight
-    console.log(`📐 Canvas resized to full hero section: ${canvas.width}x${canvas.height}`)
-  }
-  
-  resizeCanvas()
-  window.addEventListener('resize', resizeCanvas)
-  
-  const fontSize = 14
-  const columns = canvas.width / fontSize
-  const drops = []
-  
-  // Initialize drops
-  for (let x = 0; x < columns; x++) {
-    drops[x] = Math.random() * canvas.height
-  }
-  
-  console.log(`💧 Created ${drops.length} drops for ${Math.floor(columns)} columns`)
-  
-  const animate = () => {
-    // Create slower fade effect
-    ctx.fillStyle = 'rgba(59, 49, 87, 0.05)'
-    ctx.fillRect(0, 0, canvas.width, canvas.height)
-    
-    // Set text properties
-    ctx.font = `${fontSize}px 'Courier New', monospace`
-    
-    // Draw characters
-    for (let i = 0; i < drops.length; i++) {
-      const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789<>{}[]()+=/*-_|\\:;.,?!@#$%^&*'
-      const text = chars[Math.floor(Math.random() * chars.length)]
-      
-      // Add opacity variation
-      const alpha = Math.random() * 0.4 + 0.6
-      const hexAlpha = Math.floor(alpha * 255).toString(16).padStart(2, '0')
-      ctx.fillStyle = '#7A65B4' + hexAlpha
-      
-      // Draw character
-      ctx.fillText(text, i * fontSize, drops[i] * fontSize)
-      
-      // Move drop down (slower speed)
-      if (drops[i] * fontSize > canvas.height && Math.random() > 0.985) {
-        drops[i] = 0
-      }
-      drops[i] += 0.2 + Math.random() * 0.3
-    }
-    
-    animationId = requestAnimationFrame(animate)
-  }
-  
-  console.log('🎮 Starting animation loop...')
-  animate()
-}
 
 onMounted(() => {
   courseStore.fetchFeaturedCourses()
-  
-  // Start matrix animation
-  setTimeout(() => {
-    initMatrix()
-  }, 100)
-})
-
-onUnmounted(() => {
-  if (animationId) {
-    cancelAnimationFrame(animationId)
-  }
 })
 </script>
 

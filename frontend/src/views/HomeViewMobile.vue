@@ -1,7 +1,7 @@
 <template>
-  <div class="bg-white dark:bg-gray-900 transition-colors duration-200">
+  <div class="bg-black transition-colors duration-200">
     <!-- Hero Section -->
-    <section class="relative bg-gradient-to-br from-secondary-900 via-secondary-800 to-primary-900 text-white overflow-hidden">
+    <section class="relative bg-black text-white overflow-hidden">
       <div class="absolute inset-0 bg-black opacity-20"></div>
       
       <!-- Background Pattern -->
@@ -199,7 +199,7 @@
     </section>
 
     <!-- Stats Section -->
-    <section class="py-12 sm:py-16 bg-primary-600 text-white">
+    <section class="py-12 sm:py-16 bg-black text-white">
       <div class="container-responsive">
         <div class="text-center mb-8 sm:mb-12">
           <h2 class="heading-2 mb-3 sm:mb-4">
@@ -299,7 +299,7 @@
     </section>
 
     <!-- CTA Section -->
-    <section class="py-12 sm:py-16 bg-gradient-to-r from-primary-600 to-secondary-600 text-white">
+    <section class="py-12 sm:py-16 bg-black text-white">
       <div class="container-responsive text-center">
         <h2 class="heading-2 mb-3 sm:mb-4">
           🚀 Pripravení začať svoju YouTube cestu?

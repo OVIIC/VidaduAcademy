@@ -16,6 +16,9 @@ health_response=$(curl -s -w "HTTP_CODE:%{http_code}" "$BACKEND_URL/api/health" 
 HEALTH_STATUS=$(echo "$health_response" | grep "HTTP_CODE:" | cut -d: -f2)
 health_content=$(echo "$health_response" | sed '/HTTP_CODE:/d')
 
+# Clean the status code (remove quotes and extra content)
+HEALTH_STATUS=$(echo "$HEALTH_STATUS" | tr -d '"' | cut -d',' -f1)
+
 if [ "$HEALTH_STATUS" = "200" ]; then
     echo "✅ Backend is responding"
     echo "Response: $health_content"
@@ -34,6 +37,9 @@ echo "2️⃣ Database Debug Check:"
 debug_response=$(curl -s -w "HTTP_CODE:%{http_code}" "$BACKEND_URL/debug-db" 2>/dev/null)
 DEBUG_STATUS=$(echo "$debug_response" | grep "HTTP_CODE:" | cut -d: -f2)
 debug_content=$(echo "$debug_response" | sed '/HTTP_CODE:/d')
+
+# Clean the status code
+DEBUG_STATUS=$(echo "$DEBUG_STATUS" | tr -d '"' | cut -d',' -f1)
 
 if [ "$DEBUG_STATUS" = "200" ]; then
     echo "✅ Debug endpoint accessible"
@@ -63,7 +69,7 @@ echo ""
 
 echo "🎯 CRITICAL DIAGNOSIS:"
 echo "====================="
-if [[ $HEALTH_STATUS -eq 404 && $DEBUG_STATUS -eq 404 ]]; then
+if [ "$HEALTH_STATUS" = "404" ] && [ "$DEBUG_STATUS" = "404" ]; then
     echo "❌ DEPLOYMENT FAILURE: Laravel application not running"
     echo ""
     echo "🚨 IMMEDIATE ACTION REQUIRED:"
@@ -76,7 +82,7 @@ if [[ $HEALTH_STATUS -eq 404 && $DEBUG_STATUS -eq 404 ]]; then
     echo "   APP_KEY=base64:z0a3Q3u2vGAZ0dYflkfr2ELJ/CR7A6HjH44IMcpzjGo="
     echo ""
     echo "📋 Run './deployment-fix-summary.sh' for complete fix guide"
-elif [[ $HEALTH_STATUS -eq 200 && $DEBUG_STATUS -eq 500 ]]; then
+elif [ "$HEALTH_STATUS" = "200" ] && [ "$DEBUG_STATUS" = "500" ]; then
     echo "⚠️  PARTIAL SUCCESS: App running but database issues"
     echo "✅ Laravel is responding"
     echo "❌ Database connection failing"
@@ -85,7 +91,7 @@ elif [[ $HEALTH_STATUS -eq 200 && $DEBUG_STATUS -eq 500 ]]; then
     echo "- Check DATABASE_URL format"
     echo "- Verify PostgreSQL service is connected"
     echo "- Review database connection logs"
-elif [[ $HEALTH_STATUS -eq 200 && $DEBUG_STATUS -eq 200 ]]; then
+elif [ "$HEALTH_STATUS" = "200" ] && [ "$DEBUG_STATUS" = "200" ]; then
     echo "✅ DEPLOYMENT SUCCESS: All systems operational"
     echo "✅ Laravel application: Running"
     echo "✅ Database connection: Working"
@@ -122,12 +128,12 @@ echo "DATABASE_URL should be automatically populated"
 echo ""
 
 echo "🔧 NEXT STEPS:"
-if [[ $HEALTH_STATUS -eq 404 ]]; then
+if [ "$HEALTH_STATUS" = "404" ]; then
     echo "PRIORITY 1: Fix deployment failure"
     echo "- Set APP_KEY in Render environment"
     echo "- Trigger manual redeploy"
     echo "- Wait 2-3 minutes and rerun this script"
-elif [[ $HEALTH_STATUS -eq 200 && $DEBUG_STATUS -eq 500 ]]; then
+elif [ "$HEALTH_STATUS" = "200" ] && [ "$DEBUG_STATUS" = "500" ]; then
     echo "PRIORITY 2: Fix database connection"
     echo "- Verify PostgreSQL service is running"
     echo "- Check DATABASE_URL format"

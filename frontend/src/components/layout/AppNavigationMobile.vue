@@ -1,15 +1,25 @@
 <template>
+  <!-- Scroll detector area -->
+  <div 
+    ref="scrollDetector"
+    class="fixed top-0 left-0 right-0 h-20 z-40 pointer-events-none"
+    @mouseenter="showNavigation"
+  ></div>
+  
   <nav 
-    class="fixed top-0 left-0 right-0 z-50 bg-white/95 dark:bg-gray-900/95 backdrop-blur-md border-b border-gray-200 dark:border-gray-700 safe-area-inset-top transition-colors duration-200"
+    ref="navigation"
+    class="fixed top-0 left-0 right-0 z-50 safe-area-inset-top transition-all duration-300 ease-in-out"
+    :class="{ 'nav-hidden': isNavHidden, 'nav-visible': !isNavHidden }"
     role="navigation"
     aria-label="Hlavná navigácia"
+    @mouseenter="showNavigation"
   >
     <div class="container-responsive">
       <div class="flex items-center justify-between h-16 px-4">
         <!-- Logo -->
         <router-link 
           to="/" 
-          class="flex items-center space-x-2 text-xl font-bold text-gray-900 hover:text-primary-600 transition-colors"
+          class="flex items-center space-x-2 text-xl font-bold text-white hover:text-primary-500 transition-colors"
           aria-label="VidaduAcademy domov"
         >
           <div class="w-8 h-8 bg-gradient-to-br from-primary-600 to-secondary-600 rounded-lg flex items-center justify-center">
@@ -37,9 +47,6 @@
         </div>
         <!-- Auth Section - Desktop -->
         <div class="hidden md:flex items-center space-x-4">
-          <!-- Theme Toggle -->
-          <ThemeToggle />
-          
           <template v-if="authStore.isAuthenticated">
             <router-link 
               to="/dashboard" 
@@ -73,7 +80,7 @@
         <!-- Mobile Menu Button -->
         <button 
           @click="toggleMobileMenu"
-          class="md:hidden relative w-10 h-10 flex items-center justify-center rounded-lg hover:bg-gray-100 transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500"
+          class="md:hidden relative w-10 h-10 flex items-center justify-center rounded-lg hover:bg-gray-800 transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500"
           :aria-expanded="isMobileMenuOpen"
           aria-controls="mobile-menu"
           aria-label="Otvoriť hlavné menu"
@@ -101,12 +108,11 @@
       name="mobile-menu"
       @enter="onMobileMenuEnter"
       @leave="onMobileMenuLeave"
-    >
-      <div 
-        v-if="isMobileMenuOpen"
-        id="mobile-menu"
-        class="md:hidden bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700 shadow-lg transition-colors duration-200"
-      >
+    >        <div 
+          v-if="isMobileMenuOpen"
+          id="mobile-menu"
+          class="md:hidden bg-black border-t border-gray-700 shadow-lg transition-colors duration-200"
+        >
         <div class="container-responsive px-4 py-4 space-y-2">
           <!-- Main Navigation -->
           <router-link 
@@ -128,15 +134,9 @@
             <AcademicCapIcon class="w-5 h-5" />
             <span>Kurzy</span>
           </router-link>
-          
-          <router-link 
-          </router-link>
-          
-          <router-link 
-          </router-link>
 
           <!-- Divider -->
-          <div class="border-t border-gray-200 my-4"></div>
+          <div class="border-t border-gray-600 my-4"></div>
 
           <!-- Auth Section -->
           <template v-if="authStore.isAuthenticated">
@@ -160,7 +160,7 @@
             
             <button 
               @click="handleLogout"
-              class="mobile-nav-link text-red-600 hover:bg-red-50"
+              class="mobile-nav-link text-red-400 hover:bg-red-900/20 hover:text-red-300"
             >
               <ArrowRightOnRectangleIcon class="w-5 h-5" />
               <span>Odhlásiť sa</span>
@@ -185,11 +185,6 @@
               Zaregistrovať sa
             </router-link>
           </template>
-          
-          <!-- Theme Toggle Section -->
-          <div class="border-t border-gray-200 dark:border-gray-700 mt-4 pt-4">
-            <ThemeToggle :in-navigation="true" />
-          </div>
         </div>
       </div>
     </transition>
@@ -211,7 +206,6 @@
 import { ref, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
-import ThemeToggle from '@/components/ui/ThemeToggle.vue'
 import {
   HomeIcon,
   AcademicCapIcon,
@@ -225,10 +219,43 @@ import {
 const router = useRouter()
 const authStore = useAuthStore()
 
+// Navigation state
+const navigation = ref(null)
+const scrollDetector = ref(null)
+const isNavHidden = ref(false)
+const lastScrollY = ref(0)
+const scrollThreshold = 100
+
 // Mobile menu state
 const isMobileMenuOpen = ref(false)
 
-// Methods
+// Navigation Methods
+const showNavigation = () => {
+  isNavHidden.value = false
+}
+
+const hideNavigation = () => {
+  if (!isMobileMenuOpen.value) {
+    isNavHidden.value = true
+  }
+}
+
+const handleScroll = () => {
+  const currentScrollY = window.scrollY
+  
+  // Show navigation if scrolling up or at top
+  if (currentScrollY < lastScrollY.value || currentScrollY < scrollThreshold) {
+    showNavigation()
+  } 
+  // Hide navigation if scrolling down and past threshold
+  else if (currentScrollY > scrollThreshold && currentScrollY > lastScrollY.value) {
+    hideNavigation()
+  }
+  
+  lastScrollY.value = currentScrollY
+}
+
+// Mobile menu methods
 const toggleMobileMenu = () => {
   isMobileMenuOpen.value = !isMobileMenuOpen.value
   
@@ -278,10 +305,13 @@ const handleKeydown = (event) => {
 // Lifecycle
 onMounted(() => {
   document.addEventListener('keydown', handleKeydown)
+  window.addEventListener('scroll', handleScroll, { passive: true })
+  lastScrollY.value = window.scrollY
 })
 
 onUnmounted(() => {
   document.removeEventListener('keydown', handleKeydown)
+  window.removeEventListener('scroll', handleScroll)
   document.body.style.overflow = '' // Cleanup
 })
 
@@ -292,34 +322,39 @@ router.afterEach(() => {
 </script>
 
 <style scoped>
+/* Navigation Fade Animation */
+.nav-visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.nav-hidden {
+  opacity: 0;
+  transform: translateY(-100%);
+  pointer-events: none;
+}
+
+/* Navigation gradient fade effect */
+nav {
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.8) 40%, rgba(0, 0, 0, 0.6) 60%, rgba(0, 0, 0, 0.3) 80%, rgba(0, 0, 0, 0) 100%);
+}
+
 /* Navigation Links */
 .nav-link {
-  color: rgb(55 65 81);
+  color: rgb(229 231 235);
   font-weight: 500;
   transition: color 0.2s;
   padding: 0.5rem 0;
 }
 
 .nav-link:hover {
-  color: rgb(79 70 229);
+  color: #ED6F55;
 }
 
 .nav-link-active {
-  color: rgb(79 70 229);
+  color: #ED6F55;
   font-weight: 600;
-}
-
-/* Dark mode nav-link styles */
-.dark .nav-link {
-  color: rgb(209 213 219);
-}
-
-.dark .nav-link:hover {
-  color: rgb(129 140 248);
-}
-
-.dark .nav-link-active {
-  color: rgb(129 140 248);
 }
 
 .mobile-nav-link {
@@ -327,36 +362,21 @@ router.afterEach(() => {
   align-items: center;
   gap: 0.75rem;
   padding: 0.75rem 1rem;
-  color: rgb(55 65 81);
+  color: rgb(229 231 235);
   font-weight: 500;
   border-radius: 0.5rem;
   transition: all 0.2s;
 }
 
 .mobile-nav-link:hover {
-  color: rgb(79 70 229);
-  background-color: rgb(249 250 251);
+  color: #ED6F55;
+  background-color: rgba(59, 49, 87, 0.3);
 }
 
 .mobile-nav-link-active {
-  color: rgb(79 70 229);
-  background-color: rgb(238 242 255);
+  color: #ED6F55;
+  background-color: #3B3157;
   font-weight: 600;
-}
-
-/* Dark mode mobile-nav-link styles */
-.dark .mobile-nav-link {
-  color: rgb(209 213 219);
-}
-
-.dark .mobile-nav-link:hover {
-  color: rgb(129 140 248);
-  background-color: rgb(55 65 81);
-}
-
-.dark .mobile-nav-link-active {
-  color: rgb(129 140 248);
-  background-color: rgb(30 27 75);
 }
 
 /* Hamburger Menu Animation */
@@ -374,7 +394,7 @@ router.afterEach(() => {
   display: block;
   width: 1.5rem;
   height: 0.125rem;
-  background-color: rgb(17 24 39);
+  background-color: rgb(255 255 255);
   transition: all 0.3s ease-in-out;
 }
 
@@ -437,7 +457,7 @@ router.afterEach(() => {
   display: inline-flex;
   align-items: center;
   padding: 0.5rem 1rem;
-  background-color: rgb(79 70 229);
+  background-color: #ED6F55;
   color: white;
   font-size: 0.875rem;
   font-weight: 500;
@@ -446,20 +466,20 @@ router.afterEach(() => {
 }
 
 .btn-primary-sm:hover {
-  background-color: rgb(67 56 202);
+  background-color: #e55a3f;
 }
 
 .btn-primary-sm:focus {
   outline: none;
-  box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.5);
+  box-shadow: 0 0 0 2px rgba(237, 111, 85, 0.5);
 }
 
 .btn-outline-sm {
   display: inline-flex;
   align-items: center;
   padding: 0.5rem 1rem;
-  border: 1px solid rgb(209 213 219);
-  color: rgb(55 65 81);
+  border: 1px solid rgb(75 85 99);
+  color: rgb(229 231 235);
   font-size: 0.875rem;
   font-weight: 500;
   border-radius: 0.5rem;
@@ -467,19 +487,19 @@ router.afterEach(() => {
 }
 
 .btn-outline-sm:hover {
-  background-color: rgb(249 250 251);
+  background-color: rgb(55 65 81);
 }
 
 .btn-outline-sm:focus {
   outline: none;
-  box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.5);
+  box-shadow: 0 0 0 2px rgba(237, 111, 85, 0.5);
 }
 
 .btn-primary {
   display: inline-flex;
   align-items: center;
   padding: 0.75rem 1.5rem;
-  background-color: rgb(79 70 229);
+  background-color: #ED6F55;
   color: white;
   font-weight: 500;
   border-radius: 0.5rem;
@@ -487,12 +507,12 @@ router.afterEach(() => {
 }
 
 .btn-primary:hover {
-  background-color: rgb(67 56 202);
+  background-color: #e55a3f;
 }
 
 .btn-primary:focus {
   outline: none;
-  box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.5);
+  box-shadow: 0 0 0 2px rgba(237, 111, 85, 0.5);
 }
 
 /* Responsive Container */

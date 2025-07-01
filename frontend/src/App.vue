@@ -10,8 +10,8 @@
     
     <AppNavigationMobile />
     
-    <main id="main-content" class="flex-1 pt-16 pb-safe-bottom">
-      <!-- pt-16 compenzuje fixed navigation výšku -->
+    <main id="main-content" class="flex-1 pb-safe-bottom">
+      <!-- Content starts from top with transparent navigation overlay -->
       <router-view v-slot="{ Component, route }">
         <transition 
           name="page-transition" 
@@ -46,14 +46,12 @@
 import { onMounted, computed, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
-import { useThemeStore } from '@/stores/theme'
 import AppNavigationMobile from '@/components/layout/AppNavigationMobile.vue'
 import AppFooter from '@/components/layout/AppFooter.vue'
 import PerformanceDashboard from '@/components/debug/PerformanceDashboard.vue'
 
 const route = useRoute()
 const authStore = useAuthStore()
-const themeStore = useThemeStore()
 
 // Global loading state
 const isGlobalLoading = ref(false)
@@ -87,23 +85,12 @@ onMounted(() => {
   // Initialize auth state from localStorage
   authStore.initializeAuth()
   
-  // Initialize theme system
-  themeStore.initializeTheme()
-  
   // Add viewport meta tag for mobile optimization
   if (!document.querySelector('meta[name="viewport"]')) {
     const viewport = document.createElement('meta')
     viewport.name = 'viewport'
     viewport.content = 'width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes'
     document.head.appendChild(viewport)
-  }
-  
-  // Add theme color for mobile browsers (will be updated by theme store)
-  if (!document.querySelector('meta[name="theme-color"]')) {
-    const themeColor = document.createElement('meta')
-    themeColor.name = 'theme-color'
-    themeColor.content = '#6366f1' // Initial color, updated by theme
-    document.head.appendChild(themeColor)
   }
 })
 </script>

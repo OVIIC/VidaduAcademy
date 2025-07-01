@@ -13,7 +13,7 @@ const router = createRouter({
     {
       path: '/courses',
       name: 'Courses',
-      component: () => import('@/views/CoursesViewMobile.vue'),
+      component: () => import('@/views/CoursesView.vue'),
     },
     {
       path: '/course/:slug',

@@ -86,12 +86,10 @@ RUN composer dump-autoload --optimize || echo "Autoload dump failed, continuing.
 # Remove build .env (start-render.sh will create proper one)
 RUN rm -f /var/www/html/.env
 
-# Copy and prepare start script
-COPY start-render.sh /var/www/html/start-render.sh
-# Make start script executable
+# Make start script executable (already copied by COPY . /var/www/html)
 RUN chmod +x /var/www/html/start-render.sh
 
-# Expose port (Render will set PORT environment variable)
+# Expose port (Render will set PORT environment variable)  
 EXPOSE ${PORT:-80}
 
 # Use our optimized start script

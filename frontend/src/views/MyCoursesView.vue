@@ -1,16 +1,16 @@
 <template>
-  <div class="min-h-screen bg-white py-8">
+  <div class="min-h-screen bg-black text-white py-8">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <!-- Header -->
       <div class="mb-8">
-        <h1 class="text-3xl font-bold text-gray-900">Moje kurzy</h1>
-        <p class="mt-2 text-gray-600">Pokračujte vo svojom vzdelávaní</p>
+        <h1 class="text-3xl font-bold text-white">Moje kurzy</h1>
+        <p class="mt-2 text-gray-300">Pokračujte vo svojom vzdelávaní</p>
       </div>
 
       <!-- Success Message -->
       <div 
         v-if="showSuccessMessage" 
-        class="mb-8 bg-green-50 border border-green-200 rounded-lg p-4"
+        class="mb-8 bg-gradient-to-br from-green-500/20 via-green-600/20 to-green-500/20 backdrop-blur-xl border border-green-500/50 rounded-2xl p-4"
       >
         <div class="flex items-center">
           <div class="flex-shrink-0">
@@ -19,10 +19,10 @@
             </svg>
           </div>
           <div class="ml-3">
-            <h3 class="text-sm font-medium text-green-800">
+            <h3 class="text-sm font-medium text-green-300">
               Platba úspešná!
             </h3>
-            <div class="mt-2 text-sm text-green-700">
+            <div class="mt-2 text-sm text-green-200">
               <p>Kurz bol úspešne zakúpený a pridaný do vašich kurzov. Môžete začať s učením hneď teraz!</p>
             </div>
           </div>
@@ -30,7 +30,7 @@
             <div class="-mx-1.5 -my-1.5">
               <button
                 @click="showSuccessMessage = false"
-                class="inline-flex bg-green-50 rounded-md p-1.5 text-green-500 hover:bg-green-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-green-50 focus:ring-green-600"
+                class="inline-flex bg-green-500/20 rounded-md p-1.5 text-green-400 hover:bg-green-500/30 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-black focus:ring-green-500"
               >
                 <span class="sr-only">Dismiss</span>
                 <svg class="h-3 w-3" fill="currentColor" viewBox="0 0 20 20">

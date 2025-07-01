@@ -1,27 +1,27 @@
 <template>
-  <div class="min-h-screen bg-white flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+  <div class="min-h-screen bg-black text-white flex flex-col justify-center py-12 sm:px-6 lg:px-8">
     <div class="sm:mx-auto sm:w-full sm:max-w-md">
       <div class="flex justify-center">
-        <div class="w-12 h-12 bg-gradient-to-r from-primary-600 to-secondary-600 rounded-lg flex items-center justify-center">
+        <div class="w-12 h-12 bg-gradient-to-r from-primary-500 to-secondary-500 rounded-lg flex items-center justify-center">
           <span class="text-white font-bold text-lg">V</span>
         </div>
       </div>
-      <h2 class="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">
+      <h2 class="mt-6 text-center text-3xl font-bold tracking-tight text-white">
         Prihláste sa do svojho účtu
       </h2>
-      <p class="mt-2 text-center text-sm text-gray-600">
+      <p class="mt-2 text-center text-sm text-gray-300">
         Alebo
-        <router-link to="/register" class="font-medium text-primary-600 hover:text-primary-500">
+        <router-link to="/register" class="font-medium text-primary-500 hover:text-primary-400">
           si vytvorte nový účet
         </router-link>
       </p>
     </div>
 
     <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-      <div class="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+      <div class="bg-gradient-to-br from-gray-900/30 via-secondary-900/20 to-gray-900/40 backdrop-blur-xl border border-gray-700/50 rounded-2xl py-8 px-4 shadow-xl sm:px-10">
         <form class="space-y-6" @submit.prevent="handleSubmit">
           <!-- Security Notice -->
-          <div v-if="securityNotice" class="bg-yellow-50 border border-yellow-200 rounded-md p-4">
+          <div v-if="securityNotice" class="bg-gradient-to-br from-yellow-500/20 via-yellow-600/20 to-yellow-500/20 backdrop-blur-xl border border-yellow-500/50 rounded-2xl p-4">
             <div class="flex">
               <div class="flex-shrink-0">
                 <svg class="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
@@ -29,13 +29,13 @@
                 </svg>
               </div>
               <div class="ml-3">
-                <p class="text-sm text-yellow-700">{{ securityNotice }}</p>
+                <p class="text-sm text-yellow-200">{{ securityNotice }}</p>
               </div>
             </div>
           </div>
 
           <div>
-            <label for="email" class="block text-sm font-medium text-gray-700">
+            <label for="email" class="block text-sm font-medium text-gray-200">
               Emailová adresa
             </label>
             <div class="mt-1">
@@ -47,7 +47,7 @@
                 autocomplete="email"
                 required
                 :disabled="loading"
-                class="input-field"
+                class="block w-full rounded-2xl border-gray-600 bg-gray-800/50 text-white shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm backdrop-blur-sm"
                 @input="clearSecurityNotice"
               />
             </div>

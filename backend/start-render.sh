@@ -15,6 +15,14 @@ chown -R www-data:www-data storage bootstrap/cache 2>/dev/null || true
 mkdir -p storage/logs storage/framework/cache storage/framework/sessions storage/framework/views
 chmod -R 775 storage bootstrap/cache
 
+# Generate APP_KEY if not set or invalid
+echo "🔑 Checking/generating APP_KEY..."
+if [ -z "$APP_KEY" ] || [ "$APP_KEY" = "base64:YOUR_APP_KEY_HERE" ]; then
+    echo "Generating new APP_KEY..."
+    export APP_KEY=$(php artisan key:generate --show)
+    echo "Generated APP_KEY: $APP_KEY"
+fi
+
 # Create .env file from environment variables
 echo "📝 Creating .env file from environment variables..."
 cat > .env << EOF
@@ -56,7 +64,20 @@ echo "⚡ Running Laravel setup..."
 php artisan config:cache || echo "Config cache failed, continuing..."
 php artisan route:cache || echo "Route cache failed, continuing..."
 php artisan view:cache || echo "View cache failed, continuing..."
-php artisan migrate --force || echo "Migration failed, continuing..."
+
+# Critical: Run migrations and ensure they succeed
+echo "📊 Running database migrations..."
+if php artisan migrate --force; then
+    echo "✅ Migrations completed successfully"
+else
+    echo "❌ Migrations failed! Checking database..."
+    php artisan migrate:status || true
+    exit 1
+fi
+
+# Create admin user if needed
+echo "👤 Creating admin user..."
+php create_admin.php || echo "Admin user creation failed, continuing..."
 
 echo "🎨 Starting Apache server on Render..."
 # Start Apache on dynamic port

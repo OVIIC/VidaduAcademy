@@ -1,12 +1,21 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
+/* Custom font - SetupSans */
+@font-face {
+  font-family: 'SetupSans';
+  src: url('@/assets/fonts/SetupSansVariable.ttf') format('truetype');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   html {
-    font-family: 'Inter', system-ui, sans-serif;
+    font-family: 'SetupSans', 'Inter', system-ui, sans-serif;
   }
   
   body {

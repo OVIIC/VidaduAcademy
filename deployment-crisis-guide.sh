@@ -1,0 +1,110 @@
+#!/bin/bash
+
+echo "🚨 VidaduAcademy Deployment Crisis Analysis"
+echo "============================================"
+echo ""
+
+echo "🔍 SYMPTOM: All endpoints returning 404"
+echo "This indicates the Laravel application is not serving requests properly."
+echo ""
+
+echo "📋 CRITICAL CHECKLIST - Verify these in Render Dashboard:"
+echo ""
+echo "1. 🔧 SERVICE STATUS:"
+echo "   - Is the service 'Running' (green) or 'Failed' (red)?"
+echo "   - Check the 'Events' tab for deployment errors"
+echo "   - Look at 'Logs' tab for startup errors"
+echo ""
+
+echo "2. 🌍 ENVIRONMENT VARIABLES:"
+echo "   Required variables that MUST be set:"
+echo "   ✓ DATABASE_URL (from PostgreSQL add-on)"
+echo "   ✓ APP_KEY (generate with: php artisan key:generate --show)"
+echo "   ✓ APP_ENV=production"
+echo "   ✓ APP_DEBUG=false"
+echo "   ✓ STRIPE_KEY, STRIPE_SECRET, STRIPE_WEBHOOK_SECRET"
+echo ""
+
+echo "3. 📦 BUILD PROCESS:"
+echo "   Check if these build steps completed successfully:"
+echo "   ✓ Composer install"
+echo "   ✓ NPM install (if frontend assets)"
+echo "   ✓ Laravel setup (config cache, route cache)"
+echo "   ✓ Apache/PHP configuration"
+echo ""
+
+echo "4. 🗄️  DATABASE CONNECTION:"
+echo "   ✓ PostgreSQL add-on is created and 'Available'"
+echo "   ✓ DATABASE_URL is automatically populated"
+echo "   ✓ Database migrations can run"
+echo ""
+
+echo "5. 🔒 FILE PERMISSIONS:"
+echo "   Laravel requires write access to:"
+echo "   ✓ storage/ directory (logs, cache, sessions)"
+echo "   ✓ bootstrap/cache/ directory"
+echo ""
+
+echo "🛠️  IMMEDIATE ACTIONS TO TAKE:"
+echo ""
+echo "A. CHECK RENDER DASHBOARD:"
+echo "   1. Go to https://dashboard.render.com"
+echo "   2. Find 'vidaduacademy-backend' service"
+echo "   3. Check 'Events' tab for deployment errors"
+echo "   4. Check 'Logs' tab for runtime errors"
+echo "   5. Verify 'Environment' tab has all required variables"
+echo ""
+
+echo "B. IF BUILD FAILED:"
+echo "   - Look for errors in build logs"
+echo "   - Common issues: missing dependencies, permission errors, invalid PHP"
+echo "   - Check nixpacks.toml configuration"
+echo ""
+
+echo "C. IF BUILD SUCCEEDED BUT SERVICE WON'T START:"
+echo "   - Check runtime logs for PHP/Apache errors"
+echo "   - Verify DATABASE_URL format and connectivity"
+echo "   - Check if start-render.sh script is executing properly"
+echo ""
+
+echo "📞 EMERGENCY FIXES:"
+echo ""
+echo "1. QUICK APP_KEY GENERATION:"
+echo "   Run locally: cd backend && php artisan key:generate --show"
+echo "   Copy the output (starts with 'base64:') to Render environment"
+echo ""
+
+echo "2. DATABASE_URL FORMAT:"
+echo "   Should look like: postgresql://username:password@host:port/database"
+echo "   Render auto-populates this when PostgreSQL add-on is connected"
+echo ""
+
+echo "3. MANUAL REDEPLOY:"
+echo "   In Render Dashboard → Service → 'Manual Deploy' → Deploy latest commit"
+echo ""
+
+echo "🔄 FALLBACK DIAGNOSTIC:"
+echo "If the issue persists, the start-render.sh script includes SQLite fallback."
+echo "Check logs to see if it's falling back to SQLite due to DB connection issues."
+echo ""
+
+echo "📱 CURRENT DEPLOYMENT STATUS CHECK:"
+deployment_time=$(curl -s -I "https://vidaduacademy-backend.onrender.com/" | grep -i date | cut -d' ' -f2-)
+if [ -n "$deployment_time" ]; then
+    echo "   Server last responded: $deployment_time"
+    echo "   ✅ Service is reachable but not serving Laravel"
+else
+    echo "   ❌ Service is completely unreachable"
+fi
+
+echo ""
+echo "🚀 After making changes in Render Dashboard:"
+echo "   Wait 2-3 minutes for deployment to complete"
+echo "   Then run: ./database-check.sh"
+echo ""
+echo "💡 If you need immediate help debugging:"
+echo "   1. Share the Render build/deployment logs"
+echo "   2. Confirm all environment variables are set"
+echo "   3. Check PostgreSQL add-on status"
+echo ""
+echo "🏁 Crisis analysis complete - $(date)"

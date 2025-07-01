@@ -120,9 +120,14 @@ php artisan view:cache >/dev/null 2>&1 || echo "View cache failed"
             echo "❌ Migrations failed, but continuing with server start"
         fi
         
-        # Create admin user
-        echo "👤 Creating admin user..."
-        php create_admin.php >/dev/null 2>&1 || echo "Admin user creation failed"
+        # Create admin users with enhanced script
+        echo "👥 Creating admin users..."
+        if php setup_admin_users.php >/dev/null 2>&1; then
+            echo "✅ Admin users created successfully"
+        else
+            echo "⚠️  Admin users creation failed, trying fallback..."
+            php create_admin.php >/dev/null 2>&1 || echo "❌ All admin creation methods failed"
+        fi
     fi
 ) &
 

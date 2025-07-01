@@ -4,8 +4,8 @@ echo "=== VidaduAcademy Database Connection Check ==="
 echo "Date: $(date)"
 echo ""
 
-# Updated backend URL
-BACKEND_URL="https://vidaduacademy-backend.onrender.com"
+# Updated backend URL - WORKING URL FOUND!
+BACKEND_URL="https://vidaduacademy.onrender.com"
 
 echo "🔍 CURRENT DEPLOYMENT STATUS:"
 echo "Backend URL: $BACKEND_URL"

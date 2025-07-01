@@ -15,14 +15,11 @@ nixPkgs = [
     "php83Extensions.openssl", 
     "php83Extensions.pcre", 
     "php83Extensions.pdo", 
-    "php83Extensions.pdo_mysql", 
-    "php83Extensions.pdo_pgsql", 
     "php83Extensions.pdo_sqlite", 
     "php83Extensions.session", 
     "php83Extensions.tokenizer", 
     "php83Extensions.xml", 
-    "php83Extensions.zip",
-    "postgresql"
+    "php83Extensions.zip"
 ]
 
 [phases.install]
@@ -32,8 +29,12 @@ cmds = [
 
 [phases.build]
 cmds = [
-  "php create-env.php",
+  "php create-env-sqlite.php",
+  "mkdir -p database",
+  "touch database/database.sqlite",
+  "chmod 664 database/database.sqlite",
   "php artisan key:generate --force || true",
+  "php artisan migrate --force || true",
   "php artisan config:cache || true",
   "php artisan route:cache || true",
   "php artisan view:cache || true"

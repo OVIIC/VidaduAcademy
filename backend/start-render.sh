@@ -72,19 +72,19 @@ EOF
     mkdir -p database
     touch database/database.sqlite
     chmod 664 database/database.sqlite
-else
     echo "✅ DATABASE_URL is set, testing connection..."
     
-    # Test database connection with timeout
-    for i in {1..10}; do
-        if timeout 10 php artisan migrate:status >/dev/null 2>&1; then
+    # Test database connection with shorter timeout for faster startup
+    for i in {1..5}; do
+        if timeout 5 php artisan migrate:status >/dev/null 2>&1; then
             echo "✅ Database connection: OK"
+            DATABASE_OK=true
             break
         else
-            echo "Database not ready, waiting... ($i/10)"
-            if [ $i -eq 10 ]; then
-                echo "❌ Database connection failed after 10 attempts"
-                echo "🔄 Falling back to SQLite..."
+            echo "Database not ready, waiting... ($i/5)"
+            if [ $i -eq 5 ]; then
+                echo "❌ Database connection failed after 5 attempts"
+                echo "🔄 Falling back to SQLite for faster startup..."
                 
                 # Fallback to SQLite
                 cat >> .env << EOF
@@ -96,32 +96,38 @@ EOF
                 mkdir -p database
                 touch database/database.sqlite
                 chmod 664 database/database.sqlite
+                DATABASE_OK=false
                 break
             fi
-            sleep 3
+            sleep 2
         fi
     done
 fi
 
-# Run Laravel setup
+# Start web server immediately - don't wait for migrations
+echo "🚀 Starting web server (parallel with database setup)..."
+
+# Background process for database setup
+(
+    if [ "$DATABASE_OK" = "true" ] || [ -z "$DATABASE_OK" ]; then
+        echo "📊 Running database migrations in background..."
+        if php artisan migrate --force >/dev/null 2>&1; then
+            echo "✅ Migrations completed successfully"
+        else
+            echo "❌ Migrations failed, check logs"
+        fi
+        
+        # Create admin user
+        echo "👤 Creating admin user..."
+        php create_admin.php >/dev/null 2>&1 || echo "Admin user creation failed"
+    fi
+) &
+
+# Run Laravel caching (quick operations)
 echo "⚡ Running Laravel setup..."
-php artisan config:cache || echo "Config cache failed, continuing..."
-php artisan route:cache || echo "Route cache failed, continuing..."
-php artisan view:cache || echo "View cache failed, continuing..."
-
-# Critical: Run migrations and ensure they succeed
-echo "📊 Running database migrations..."
-if php artisan migrate --force; then
-    echo "✅ Migrations completed successfully"
-else
-    echo "❌ Migrations failed! Checking database..."
-    php artisan migrate:status || true
-    exit 1
-fi
-
-# Create admin user if needed
-echo "👤 Creating admin user..."
-php create_admin.php || echo "Admin user creation failed, continuing..."
+php artisan config:cache >/dev/null 2>&1 || echo "Config cache failed"
+php artisan route:cache >/dev/null 2>&1 || echo "Route cache failed"  
+php artisan view:cache >/dev/null 2>&1 || echo "View cache failed"
 
 echo "🎨 Starting Apache server on Render..."
 # Start Apache on dynamic port

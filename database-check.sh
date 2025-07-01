@@ -36,6 +36,16 @@ echo "   - DATABASE_URL not set in environment"
 echo "   - Services in different regions"
 echo ""
 
+echo "4️⃣ Port Check:"
+echo "Render needs to detect an open port. Checking if service is listening..."
+if curl -s -I https://vidaduacademy.onrender.com/ >/dev/null 2>&1; then
+    echo "✅ Service is responding on HTTPS"
+else
+    echo "❌ Service not responding - port binding issue"
+    echo "   Check if Apache is configured for PORT environment variable"
+fi
+echo ""
+
 echo "📋 RENDER ENVIRONMENT CHECKLIST:"
 echo "✅ Check these variables are set in Render Dashboard:"
 echo "   - DATABASE_URL (from PostgreSQL service)"

@@ -24,13 +24,14 @@ RUN for i in 1 2 3; do \
             libpng-dev \
             libonig-dev \
             libxml2-dev \
+            libpq-dev \
             zip \
             unzip && break || { \
             echo "apt-get install failed, retry $i/3"; \
             sleep 5; \
         } \
     done && \
-    docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd && \
+    docker-php-ext-install pdo_mysql pdo_pgsql mbstring exif pcntl bcmath gd && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
@@ -82,71 +83,16 @@ RUN chown -R www-data:www-data /var/www/html \
 # Run composer scripts after setting permissions
 RUN composer dump-autoload --optimize || echo "Autoload dump failed, continuing..."
 
-# Remove build .env (Render will set proper env vars)
+# Remove build .env (start-render.sh will create proper one)
 RUN rm -f /var/www/html/.env
 
-# Create startup script that creates .env from environment variables
-RUN echo '#!/bin/bash\n\
-set -e\n\
-\n\
-# Network connectivity check\n\
-echo "Checking network connectivity..."\n\
-for i in {1..5}; do\n\
-    if ping -c 1 8.8.8.8 >/dev/null 2>&1; then\n\
-        echo "Network connectivity: OK"\n\
-        break\n\
-    else\n\
-        echo "Network check $i/5 failed, retrying..."\n\
-        sleep 2\n\
-    fi\n\
-done\n\
-\n\
-# Create .env from environment variables (Render compatible)
-echo "Creating .env file from environment variables..."\n\
-\n\
-# Fix permissions at runtime\n\
-echo "Setting Laravel permissions..."\n\
-chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache\n\
-chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache\n\
-\n\
-echo "APP_NAME=${APP_NAME:-VidaduAcademy}" > /var/www/html/.env\n\
-echo "APP_ENV=${APP_ENV:-production}" >> /var/www/html/.env\n\
-echo "APP_KEY=${APP_KEY}" >> /var/www/html/.env\n\
-echo "APP_DEBUG=${APP_DEBUG:-false}" >> /var/www/html/.env\n\
-echo "APP_URL=${RENDER_EXTERNAL_URL:-http://localhost}" >> /var/www/html/.env\n\
-echo "LOG_CHANNEL=${LOG_CHANNEL:-stack}" >> /var/www/html/.env\n\
-echo "LOG_LEVEL=${LOG_LEVEL:-error}" >> /var/www/html/.env\n\
-echo "DB_CONNECTION=${DB_CONNECTION:-mysql}" >> /var/www/html/.env\n\
-echo "DATABASE_URL=${DATABASE_URL}" >> /var/www/html/.env\n\
-echo "CACHE_DRIVER=${CACHE_DRIVER:-file}" >> /var/www/html/.env\n\
-echo "SESSION_DRIVER=${SESSION_DRIVER:-file}" >> /var/www/html/.env\n\
-echo "QUEUE_CONNECTION=${QUEUE_CONNECTION:-sync}" >> /var/www/html/.env\n\
-\n\
-# Wait for database to be ready\n\
-echo "Waiting for database connection..."\n\
-for i in {1..30}; do\n\
-    if php artisan migrate:status >/dev/null 2>&1; then\n\
-        echo "Database connection: OK"\n\
-        break\n\
-    else\n\
-        echo "Database not ready, waiting... ($i/30)"\n\
-        sleep 2\n\
-    fi\n\
-done\n\
-\n\
-# Run Laravel setup with error handling\n\
-echo "Running Laravel setup..."\n\
-php artisan config:cache || echo "Config cache failed, continuing..."\n\
-php artisan route:cache || echo "Route cache failed, continuing..."\n\
-php artisan view:cache || echo "View cache failed, continuing..."\n\
-php artisan migrate --force || echo "Migration failed, continuing..."\n\
-\n\
-echo "🎨 Starting Apache server on Render..."\n\
-# Configure Apache for Render dynamic PORT\n\
-sed -i "s/Listen 80/Listen ${PORT:-80}/" /etc/apache2/ports.conf\n\
-sed -i "s/:80/:${PORT:-80}/" /etc/apache2/sites-available/000-default.conf\n\
-apache2-foreground' > /start.sh && chmod +x /start.sh
+# Copy and prepare start script
+COPY start-render.sh /var/www/html/start-render.sh
+# Make start script executable
+RUN chmod +x /var/www/html/start-render.sh
 
+# Expose port (Render will set PORT environment variable)
 EXPOSE ${PORT:-80}
 
-CMD ["/start.sh"]
+# Use our optimized start script
+CMD ["/var/www/html/start-render.sh"]

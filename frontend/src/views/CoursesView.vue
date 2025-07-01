@@ -107,7 +107,7 @@
         <div v-else-if="courses && courses.length > 0" class="relative group">
           <div 
             ref="scrollContainer"
-            class="flex space-x-6 overflow-x-auto scrollbar-hide pb-6"
+            class="flex space-x-6 overflow-x-auto scrollbar-hide py-6"
             style="scroll-behavior: smooth; scrollbar-width: none; -ms-overflow-style: none;"
             @scroll="updateScrollButtons"
           >
@@ -117,11 +117,16 @@
               @click="selectCourse(course)"
               :class="[
                 'flex-shrink-0 w-80 cursor-pointer transition-all duration-500 ease-out transform hover:scale-105',
-                selectedCourse?.id === course.id ? 'scale-105 ring-4 ring-white/50 shadow-2xl' : 'hover:scale-105'
+                selectedCourse?.id === course.id ? 'scale-105' : 'hover:scale-105'
               ]"
             >
               <!-- Course Card (Disney+ style) -->
-              <div class="bg-gradient-to-br from-gray-900/30 via-secondary-900/20 to-gray-900/40 backdrop-blur-xl border border-gray-700/50 rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300 hover:from-gray-900/40 hover:via-secondary-900/30 hover:to-gray-900/50 hover:border-gray-600/60">
+              <div :class="[
+                'backdrop-blur-xl border rounded-2xl overflow-hidden shadow-xl transition-all duration-300',
+                selectedCourse?.id === course.id 
+                  ? 'bg-gradient-to-br from-gray-900/40 via-secondary-900/30 to-gray-900/50 border-gray-600/60 hover:shadow-2xl' 
+                  : 'bg-gradient-to-br from-gray-900/30 via-secondary-900/20 to-gray-900/40 border-gray-700/50 hover:shadow-2xl hover:from-gray-900/40 hover:via-secondary-900/30 hover:to-gray-900/50 hover:border-gray-600/60'
+              ]">
                 <!-- Course Thumbnail -->
                 <div class="aspect-video overflow-hidden relative">
                   <img 

@@ -4,19 +4,36 @@ echo "=== VidaduAcademy Database Connection Check ==="
 echo "Date: $(date)"
 echo ""
 
-echo "🔍 TESTING DATABASE CONNECTIONS:"
+echo "🔍 CURRENT DEPLOYMENT STATUS:"
 echo ""
 
-echo "1️⃣ Testing local SQLite connection..."
-curl -s https://vidaduacademy.onrender.com/api/health 2>/dev/null | head -5 || echo "❌ Health endpoint failed"
+echo "1️⃣ Health Check:"
+health_response=$(curl -s https://vidaduacademy.onrender.com/api/health 2>/dev/null)
+if [ $? -eq 0 ] && [ ! -z "$health_response" ]; then
+    echo "✅ Backend is responding"
+    echo "Response: $health_response"
+else
+    echo "❌ Backend not responding or deployment failed"
+fi
 echo ""
 
-echo "2️⃣ Testing backend /test endpoint..."
-curl -s https://vidaduacademy.onrender.com/test 2>/dev/null | jq . || echo "❌ Test endpoint failed"
+echo "2️⃣ Database Debug Check:"
+debug_response=$(curl -s https://vidaduacademy.onrender.com/debug-db 2>/dev/null)
+if [ $? -eq 0 ] && [ ! -z "$debug_response" ]; then
+    echo "✅ Debug endpoint accessible"
+    echo "Database Status:"
+    echo "$debug_response" | head -20
+else
+    echo "❌ Debug endpoint not accessible"
+fi
 echo ""
 
-echo "3️⃣ Checking if DATABASE_URL is set in Render..."
-echo "Expected format: postgresql://username:password@host:port/database"
+echo "3️⃣ Network Issues Analysis:"
+echo "From your deployment logs, network checks are failing."
+echo "This usually means:"
+echo "   - PostgreSQL service not created/connected"
+echo "   - DATABASE_URL not set in environment"
+echo "   - Services in different regions"
 echo ""
 
 echo "📋 RENDER ENVIRONMENT CHECKLIST:"

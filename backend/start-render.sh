@@ -47,17 +47,61 @@ STRIPE_SECRET=${STRIPE_SECRET}
 STRIPE_WEBHOOK_SECRET=${STRIPE_WEBHOOK_SECRET}
 EOF
 
-# Wait for database connection
-echo "⏳ Waiting for database connection..."
-for i in {1..30}; do
-    if php artisan migrate:status >/dev/null 2>&1; then
-        echo "✅ Database connection: OK"
-        break
-    else
-        echo "Database not ready, waiting... ($i/30)"
-        sleep 2
-    fi
-done
+# Wait for database connection with better error handling
+echo "⏳ Checking database connection..."
+
+# Check if DATABASE_URL is properly set
+if [ -z "$DATABASE_URL" ] || [ "$DATABASE_URL" = "postgresql://username:password@host:port/database" ]; then
+    echo "⚠️  DATABASE_URL not properly set!"
+    echo "📋 Please set DATABASE_URL in Render Dashboard:"
+    echo "   1. Go to Render Dashboard"
+    echo "   2. Connect PostgreSQL service to your web service"
+    echo "   3. DATABASE_URL will be automatically set"
+    echo ""
+    echo "🔄 Using SQLite as fallback for now..."
+    
+    # Fallback to SQLite if PostgreSQL not available
+    cat >> .env << EOF
+
+# Fallback database configuration
+DB_CONNECTION=sqlite
+DB_DATABASE=/opt/render/project/src/backend/database/database.sqlite
+EOF
+    
+    # Create SQLite database
+    mkdir -p database
+    touch database/database.sqlite
+    chmod 664 database/database.sqlite
+else
+    echo "✅ DATABASE_URL is set, testing connection..."
+    
+    # Test database connection with timeout
+    for i in {1..10}; do
+        if timeout 10 php artisan migrate:status >/dev/null 2>&1; then
+            echo "✅ Database connection: OK"
+            break
+        else
+            echo "Database not ready, waiting... ($i/10)"
+            if [ $i -eq 10 ]; then
+                echo "❌ Database connection failed after 10 attempts"
+                echo "🔄 Falling back to SQLite..."
+                
+                # Fallback to SQLite
+                cat >> .env << EOF
+
+# Fallback database configuration
+DB_CONNECTION=sqlite
+DB_DATABASE=/opt/render/project/src/backend/database/database.sqlite
+EOF
+                mkdir -p database
+                touch database/database.sqlite
+                chmod 664 database/database.sqlite
+                break
+            fi
+            sleep 3
+        fi
+    done
+fi
 
 # Run Laravel setup
 echo "⚡ Running Laravel setup..."

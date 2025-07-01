@@ -28,13 +28,18 @@ Route::get('/test', function () {
 
 // Temporary debug route - remove after fixing
 Route::get('/debug-db', function () {
-    if (app()->environment('production')) {
-        ob_start();
-        include base_path('debug_database.php');
-        $output = ob_get_clean();
-        return response($output)->header('Content-Type', 'text/plain');
-    }
-    return 'Debug only available in production';
+    ob_start();
+    include base_path('debug_database.php');
+    $output = ob_get_clean();
+    return response($output)->header('Content-Type', 'text/plain');
+});
+
+// Standalone debug route - no Laravel dependencies
+Route::get('/debug-standalone', function () {
+    ob_start();
+    include base_path('standalone_debug.php');
+    $output = ob_get_clean();
+    return response($output)->header('Content-Type', 'text/plain');
 });
 
 Route::get('/admin', function () {

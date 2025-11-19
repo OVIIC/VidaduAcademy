@@ -13,60 +13,52 @@ return new class extends Migration
     {
         Schema::table('courses', function (Blueprint $table) {
             // Check if indexes don't exist before creating
-            if (!$this->indexExists('courses', 'courses_status_created_at_index')) {
-                $table->index(['status', 'created_at']);
+            if (!Schema::hasIndex('courses', 'courses_status_created_at_index')) {
+                $table->index(['status', 'created_at'], 'courses_status_created_at_index');
             }
-            if (!$this->indexExists('courses', 'courses_status_featured_index')) {
-                $table->index(['status', 'featured']);
+            if (!Schema::hasIndex('courses', 'courses_status_featured_index')) {
+                $table->index(['status', 'featured'], 'courses_status_featured_index');
             }
-            if (!$this->indexExists('courses', 'courses_instructor_id_status_index')) {
-                $table->index(['instructor_id', 'status']);
+            if (!Schema::hasIndex('courses', 'courses_instructor_id_status_index')) {
+                $table->index(['instructor_id', 'status'], 'courses_instructor_id_status_index');
             }
-            if (!$this->indexExists('courses', 'courses_difficulty_level_status_index')) {
-                $table->index(['difficulty_level', 'status']);
+            if (!Schema::hasIndex('courses', 'courses_difficulty_level_status_index')) {
+                $table->index(['difficulty_level', 'status'], 'courses_difficulty_level_status_index');
             }
         });
 
         Schema::table('enrollments', function (Blueprint $table) {
-            if (!$this->indexExists('enrollments', 'enrollments_user_id_created_at_index')) {
-                $table->index(['user_id', 'created_at']);
+            if (!Schema::hasIndex('enrollments', 'enrollments_user_id_created_at_index')) {
+                $table->index(['user_id', 'created_at'], 'enrollments_user_id_created_at_index');
             }
         });
 
         Schema::table('purchases', function (Blueprint $table) {
-            if (!$this->indexExists('purchases', 'purchases_user_id_course_id_status_index')) {
-                $table->index(['user_id', 'course_id', 'status']);
+            if (!Schema::hasIndex('purchases', 'purchases_user_id_course_id_status_index')) {
+                $table->index(['user_id', 'course_id', 'status'], 'purchases_user_id_course_id_status_index');
             }
-            if (!$this->indexExists('purchases', 'purchases_user_id_created_at_index')) {
-                $table->index(['user_id', 'created_at']);
+            if (!Schema::hasIndex('purchases', 'purchases_user_id_created_at_index')) {
+                $table->index(['user_id', 'created_at'], 'purchases_user_id_created_at_index');
             }
-            if (!$this->indexExists('purchases', 'purchases_status_created_at_index')) {
-                $table->index(['status', 'created_at']);
+            if (!Schema::hasIndex('purchases', 'purchases_status_created_at_index')) {
+                $table->index(['status', 'created_at'], 'purchases_status_created_at_index');
             }
         });
 
         Schema::table('lessons', function (Blueprint $table) {
-            if (!$this->indexExists('lessons', 'lessons_course_id_status_index')) {
-                $table->index(['course_id', 'status']);
+            if (!Schema::hasIndex('lessons', 'lessons_course_id_status_index')) {
+                $table->index(['course_id', 'status'], 'lessons_course_id_status_index');
             }
         });
 
         Schema::table('users', function (Blueprint $table) {
-            if (!$this->indexExists('users', 'users_is_instructor_index')) {
-                $table->index('is_instructor');
+            if (!Schema::hasIndex('users', 'users_is_instructor_index')) {
+                $table->index('is_instructor', 'users_is_instructor_index');
             }
-            if (!$this->indexExists('users', 'users_is_active_created_at_index')) {
-                $table->index(['is_active', 'created_at']);
+            if (!Schema::hasIndex('users', 'users_is_active_created_at_index')) {
+                $table->index(['is_active', 'created_at'], 'users_is_active_created_at_index');
             }
         });
-    }
-
-    private function indexExists($table, $index)
-    {
-        $connection = Schema::getConnection();
-        $dbSchemaManager = $connection->getDoctrineSchemaManager();
-        $indexes = $dbSchemaManager->listTableIndexes($table);
-        return array_key_exists($index, $indexes);
     }
 
     /**

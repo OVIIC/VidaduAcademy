@@ -259,15 +259,39 @@ class AuthController extends Controller
     public function changePassword(Request $request): JsonResponse
     {
         $user = $request->user();
-        
+
+        // Ensure the user is authenticated
+        if (!$user) {
+            return response()->json([
+                'message' => 'Unauthenticated'
+            ], 401);
+        }
+
+        // Detect suspicious activity before validation
+        if ($this->securityService->detectSuspiciousActivity(
+            $request->getContent(),
+            $request->userAgent(),
+            $request->ip()
+        )) {
+            // Log without assuming a user ID
+            $this->auditService->logSuspiciousActivity(
+                'suspicious_password_change',
+                $request,
+                $request->getContent(),
+                9
+            );
+            return response()->json([
+                'message' => 'Password change request blocked due to security concerns.'
+            ], 403);
+        }
+
         $request->validate([
             'current_password' => ['required', 'string'],
             'password' => [
-                'required', 
-                'string', 
-                'min:8', 
+                'required',
+                'string',
+                'min:8',
                 'confirmed',
-                'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/',
                 'different:current_password'
             ],
         ]);
@@ -281,10 +305,9 @@ class AuthController extends Controller
                 'warning',
                 ['ip' => $request->ip()]
             );
-            
             return response()->json([
                 'message' => 'Current password is incorrect'
-            ], 422);
+            ], 400);
         }
 
         // Update password

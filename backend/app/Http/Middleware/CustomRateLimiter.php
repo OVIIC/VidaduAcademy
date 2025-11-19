@@ -37,11 +37,9 @@ class CustomRateLimiter
      */
     protected function resolveRequestSignature(Request $request): string
     {
-        $userId = $request->user()?->id ?? 'guest';
-        $ip = $request->ip();
-        $route = $request->route()?->getName() ?? $request->path();
+        $route = $request->route()?->getName() ?? str_replace('/', '_', $request->path());
         
-        return "rate_limit:{$route}:{$userId}:{$ip}";
+        return "rate_limit:{$route}";
     }
 
     /**

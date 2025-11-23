@@ -1,7 +1,7 @@
 <template>
   <div class="min-h-screen bg-black text-white">
     <!-- Hero Section -->
-    <section class="relative w-full py-12 sm:py-16 lg:py-20 text-white overflow-hidden min-h-[80vh] flex items-center bg-black">
+    <section class="relative w-full py-12 sm:py-16 lg:py-20 text-white overflow-hidden min-h-[80vh] flex items-center bg-dark-950">
       
       <!-- Content -->
       <div class="relative container-responsive w-full">
@@ -21,17 +21,17 @@
           
           <!-- Stats Section in Hero -->
           <div class="grid grid-cols-3 gap-4 max-w-2xl mx-auto mb-8 text-center">
-            <div class="bg-gradient-to-br from-gray-900/30 via-secondary-900/20 to-gray-900/40 backdrop-blur-xl border border-gray-700/50 rounded-2xl p-4">
+            <div class="bg-dark-900/50 backdrop-blur-xl border border-dark-700 rounded-2xl p-4 shadow-lg shadow-primary-900/10">
               <div class="text-2xl font-bold text-white drop-shadow-md">1000+</div>
-              <div class="text-sm text-gray-300">spokojných študentov</div>
+              <div class="text-sm text-dark-300">spokojných študentov</div>
             </div>
-            <div class="bg-gradient-to-br from-gray-900/30 via-secondary-900/20 to-gray-900/40 backdrop-blur-xl border border-gray-700/50 rounded-2xl p-4">
+            <div class="bg-dark-900/50 backdrop-blur-xl border border-dark-700 rounded-2xl p-4 shadow-lg shadow-primary-900/10">
               <div class="text-2xl font-bold text-white drop-shadow-md">50+</div>
-              <div class="text-sm text-gray-300">hodín obsahu</div>
+              <div class="text-sm text-dark-300">hodín obsahu</div>
             </div>
-            <div class="bg-gradient-to-br from-gray-900/30 via-secondary-900/20 to-gray-900/40 backdrop-blur-xl border border-gray-700/50 rounded-2xl p-4">
+            <div class="bg-dark-900/50 backdrop-blur-xl border border-dark-700 rounded-2xl p-4 shadow-lg shadow-primary-900/10">
               <div class="text-2xl font-bold text-white drop-shadow-md">4.8⭐</div>
-              <div class="text-sm text-gray-300">priemerné hodnotenie</div>
+              <div class="text-sm text-dark-300">priemerné hodnotenie</div>
             </div>
           </div>
           
@@ -39,7 +39,7 @@
             <router-link to="/courses" class="bg-primary-500 hover:bg-primary-600 text-white font-medium py-4 px-8 rounded-2xl transition-colors text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-1">
               🚀 Preskúmajte kurzy
             </router-link>
-            <router-link to="/register" class="bg-transparent border-2 border-white text-white hover:bg-white hover:text-black font-medium py-4 px-8 rounded-2xl transition-all text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-1">
+            <router-link to="/register" class="btn-outline text-lg py-4 px-8 border-2">
               ✨ Zaregistrovať sa
             </router-link>
           </div>
@@ -48,24 +48,24 @@
     </section>
 
     <!-- Featured Courses -->
-    <section class="py-16 bg-black">
+    <section class="py-16 bg-dark-950">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-12">
           <h2 class="text-3xl lg:text-4xl font-bold text-white mb-4">
             Odporúčané kurzy
           </h2>
-          <p class="text-xl text-gray-300 max-w-2xl mx-auto">
+          <p class="text-xl text-dark-300 max-w-2xl mx-auto">
             Starostlivo vybrané kurzy od našich najlepších inštruktorov na urýchlenie vašej YouTube cesty
           </p>
         </div>
 
         <div v-if="courseStore.loading" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          <div v-for="i in 6" :key="i" class="bg-gradient-to-br from-gray-900/30 via-secondary-900/20 to-gray-900/40 backdrop-blur-xl border border-gray-700/50 rounded-2xl animate-pulse">
-            <div class="h-48 bg-gray-800 rounded-t-2xl"></div>
+          <div v-for="i in 6" :key="i" class="bg-dark-900/50 border border-dark-800 rounded-2xl animate-pulse">
+            <div class="h-48 bg-dark-800 rounded-t-2xl"></div>
             <div class="p-6 space-y-4">
-              <div class="h-4 bg-gray-700 rounded w-3/4"></div>
-              <div class="h-3 bg-gray-700 rounded w-1/2"></div>
-              <div class="h-8 bg-gray-700 rounded w-1/4"></div>
+              <div class="h-4 bg-dark-800 rounded w-3/4"></div>
+              <div class="h-3 bg-dark-800 rounded w-1/2"></div>
+              <div class="h-8 bg-dark-800 rounded w-1/4"></div>
             </div>
           </div>
         </div>
@@ -80,7 +80,7 @@
         </div>
 
         <div class="text-center mt-12">
-          <router-link to="/courses" class="bg-primary-500 hover:bg-primary-600 text-white font-medium py-3 px-8 rounded-2xl transition-colors text-lg shadow-lg hover:shadow-xl">
+          <router-link to="/courses" class="btn-primary text-lg py-3 px-8">
             Zobraziť všetky kurzy
           </router-link>
         </div>
@@ -88,13 +88,13 @@
     </section>
 
     <!-- Features Section -->
-    <section class="py-16 bg-black">
+    <section class="py-16 bg-dark-900">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-16">
           <h2 class="text-3xl lg:text-4xl font-bold text-white mb-4">
             Prečo si vybrať VidaduAcademy?
           </h2>
-          <p class="text-xl text-gray-300 max-w-2xl mx-auto">
+          <p class="text-xl text-dark-300 max-w-2xl mx-auto">
             Všetko, co potrebujete na vybudovanie úspešného YouTube kanála na jednom mieste
           </p>
         </div>
@@ -105,7 +105,7 @@
               <AcademicCapIcon class="h-8 w-8 text-primary-500" />
             </div>
             <h3 class="text-xl font-semibold mb-4 text-white">Experti inštruktori</h3>
-            <p class="text-gray-300">
+            <p class="text-dark-400">
               Učte sa od YouTube tvorcov s miliónmi odberateľov a overenou históriou úspechov.
             </p>
           </div>
@@ -115,7 +115,7 @@
               <PlayIcon class="h-8 w-8 text-primary-500" />
             </div>
             <h3 class="text-xl font-semibold mb-4 text-white">Praktický obsah</h3>
-            <p class="text-gray-300">
+            <p class="text-dark-400">
               Návody krok za krokom a príklady z reálneho sveta, ktoré môžete okamžite implementovať.
             </p>
           </div>
@@ -125,7 +125,7 @@
               <ChartBarIcon class="h-8 w-8 text-primary-500" />
             </div>
             <h3 class="text-xl font-semibold mb-4 text-white">Sledovanie pokroku</h3>
-            <p class="text-gray-300">
+            <p class="text-dark-400">
               Monitorujte svoju vzdelávaciu cestu s podrobným sledovaním pokroku a certifikátmi o dokončení.
             </p>
           </div>
@@ -135,7 +135,7 @@
               <UsersIcon class="h-8 w-8 text-primary-500" />
             </div>
             <h3 class="text-xl font-semibold mb-4 text-white">Komunitná podpora</h3>
-            <p class="text-gray-300">
+            <p class="text-dark-400">
               Spojte sa s ostatnými tvorcami a získajte podporu od našej aktívnej komunity študentov.
             </p>
           </div>
@@ -145,7 +145,7 @@
               <DevicePhoneMobileIcon class="h-8 w-8 text-primary-500" />
             </div>
             <h3 class="text-xl font-semibold mb-4 text-white">Učte sa kdekoľvek</h3>
-            <p class="text-gray-300">
+            <p class="text-dark-400">
               Pristupujte k svojim kurzom na akomkoľvek zariadení, kedykoľvek. Stiahnite si lekcie na offline sledovanie.
             </p>
           </div>
@@ -155,7 +155,7 @@
               <StarIcon class="h-8 w-8 text-primary-500" />
             </div>
             <h3 class="text-xl font-semibold mb-4 text-white">Garantovaná kvalita</h3>
-            <p class="text-gray-300">
+            <p class="text-dark-400">
               Všetky kurzy sú starostlivo vyberané a pravidelne aktualizované pre zaručenie najvyššej kvality.
             </p>
           </div>
@@ -164,56 +164,56 @@
     </section>
 
     <!-- Testimonials -->
-    <section class="py-16 bg-black">
+    <section class="py-16 bg-dark-950">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-16">
           <h2 class="text-3xl lg:text-4xl font-bold text-white mb-4">
             Príbehy úspechov
           </h2>
-          <p class="text-xl text-gray-300">
+          <p class="text-xl text-dark-300">
             Počujte od študentov, ktorí transformovali svoje YouTube kanály
           </p>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          <div class="bg-gradient-to-br from-gray-900/30 via-secondary-900/20 to-gray-900/40 backdrop-blur-xl border border-gray-700/50 rounded-2xl p-8 text-center animate-fade-in">
+          <div class="card p-8 text-center animate-fade-in">
             <div class="flex justify-center mb-4">
               <StarIcon v-for="i in 5" :key="i" class="h-5 w-5 text-yellow-400 fill-current" />
             </div>
-            <p class="text-gray-300 mb-6">
+            <p class="text-dark-300 mb-6">
               "VidaduAcademy mi pomohla narásť z 1 tisíc na 100 tisíc odberateľov za pouhých 6 mesiacov. Stratégie skutočne fungujú!"
             </p>
             <div class="font-semibold text-white">Sarah M.</div>
-            <div class="text-sm text-gray-400">Gaming Creator</div>
-          </div>
-
-          <div class="bg-gradient-to-br from-gray-900/30 via-secondary-900/20 to-gray-900/40 backdrop-blur-xl border border-gray-700/50 rounded-2xl p-8 text-center animate-fade-in">
-            <div class="flex justify-center mb-4">
-              <StarIcon v-for="i in 5" :key="i" class="h-5 w-5 text-yellow-400 fill-current" />
-            </div>
-            <p class="text-gray-600 mb-6">
-              "Kurz o monetizácii zmenil všetko. Teraz zarábam viac ako 5 tisíc dolárov mesačne zo svojho kanála."
-            </p>
-            <div class="font-semibold text-gray-900">Michael R.</div>
-            <div class="text-sm text-gray-500">Tech Reviewer</div>
+            <div class="text-sm text-dark-400">Gaming Creator</div>
           </div>
 
           <div class="card p-8 text-center animate-fade-in">
             <div class="flex justify-center mb-4">
               <StarIcon v-for="i in 5" :key="i" class="h-5 w-5 text-yellow-400 fill-current" />
             </div>
-            <p class="text-gray-600 mb-6">
+            <p class="text-dark-300 mb-6">
+              "Kurz o monetizácii zmenil všetko. Teraz zarábam viac ako 5 tisíc dolárov mesačne zo svojho kanála."
+            </p>
+            <div class="font-semibold text-white">Michael R.</div>
+            <div class="text-sm text-dark-400">Tech Reviewer</div>
+          </div>
+
+          <div class="card p-8 text-center animate-fade-in">
+            <div class="flex justify-center mb-4">
+              <StarIcon v-for="i in 5" :key="i" class="h-5 w-5 text-yellow-400 fill-current" />
+            </div>
+            <p class="text-dark-300 mb-6">
               "Jasné, realizovateľné rady od skutočných expertov. Najlepšia investícia, ktorú som urobila pre svoju YouTube cestu."
             </p>
-            <div class="font-semibold text-gray-900">Emma L.</div>
-            <div class="text-sm text-gray-500">Lifestyle Vlogger</div>
+            <div class="font-semibold text-white">Emma L.</div>
+            <div class="text-sm text-dark-400">Lifestyle Vlogger</div>
           </div>
         </div>
       </div>
     </section>
 
     <!-- CTA Section -->
-    <section class="py-16 bg-gradient-to-r from-primary-600 to-secondary-600 text-white">
+    <section class="py-16 bg-gradient-to-r from-primary-600 to-secondary-800 text-white">
       <div class="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
         <h2 class="text-3xl lg:text-4xl font-bold mb-6">
           Pripravení transformovať svoj YouTube kanál?
@@ -225,7 +225,7 @@
           <router-link to="/register" class="btn-outline border-white text-white hover:bg-white hover:text-primary-600 text-lg px-8 py-4">
             Zaregistrovať sa
           </router-link>
-          <router-link to="/courses" class="bg-white text-primary-600 hover:bg-gray-100 font-medium py-4 px-8 rounded-lg transition-colors text-lg">
+          <router-link to="/courses" class="bg-white text-primary-600 hover:bg-gray-100 font-bold py-4 px-8 rounded-xl transition-colors text-lg shadow-lg">
             Prehliadnuť kurzy
           </router-link>
         </div>
@@ -235,7 +235,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref, onUnmounted } from 'vue'
+import { onMounted } from 'vue'
 import {
   AcademicCapIcon,
   PlayIcon,

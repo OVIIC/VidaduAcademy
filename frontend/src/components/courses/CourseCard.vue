@@ -16,31 +16,31 @@
     <div class="p-6">
       <!-- Instructor -->
       <div v-if="course.instructor" class="flex items-center mb-3">
-        <div class="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center mr-3">
-          <span class="text-xs font-medium text-gray-600">
+        <div class="w-8 h-8 bg-dark-700 rounded-full flex items-center justify-center mr-3">
+          <span class="text-xs font-medium text-dark-300">
             {{ getInstructorInitials(course.instructor?.name) }}
           </span>
         </div>
         <div>
-          <p class="text-sm font-medium text-gray-900">{{ course.instructor?.name }}</p>
-          <p v-if="course.instructor?.subscribers_count" class="text-xs text-gray-500">
+          <p class="text-sm font-medium text-white">{{ course.instructor?.name }}</p>
+          <p v-if="course.instructor?.subscribers_count" class="text-xs text-dark-400">
             {{ formatSubscribers(course.instructor?.subscribers_count) }} odberateľov
           </p>
         </div>
       </div>
 
       <!-- Course Title -->
-      <h3 class="text-lg font-semibold text-gray-900 mb-2 line-clamp-2 group-hover:text-primary-600 transition-colors">
+      <h3 class="text-lg font-semibold text-white mb-2 line-clamp-2 group-hover:text-primary-500 transition-colors">
         {{ course.title }}
       </h3>
 
       <!-- Short Description -->
-      <p class="text-gray-600 text-sm mb-4 line-clamp-2">
+      <p class="text-dark-300 text-sm mb-4 line-clamp-2">
         {{ course.short_description }}
       </p>
 
       <!-- Course Meta -->
-      <div class="flex items-center justify-between text-sm text-gray-500 mb-4">
+      <div class="flex items-center justify-between text-sm text-dark-400 mb-4">
         <div class="flex items-center space-x-4">
           <div class="flex items-center">
             <ClockIcon class="h-4 w-4 mr-1" />
@@ -64,15 +64,15 @@
       <!-- Price and Action -->
       <div class="flex items-center justify-between">
         <div>
-          <span class="text-2xl font-bold text-gray-900">
+          <span class="text-2xl font-bold text-white">
             {{ formatPrice(course.price) }}
           </span>
-          <span class="text-sm text-gray-500 ml-1">{{ course.currency }}</span>
+          <span class="text-sm text-dark-400 ml-1">{{ course.currency }}</span>
         </div>
         
         <div class="flex flex-col items-end space-y-2">
           <!-- Purchase status -->
-          <div v-if="isPurchased" class="text-sm font-medium text-green-600 bg-green-100 px-2 py-1 rounded">
+          <div v-if="isPurchased" class="text-sm font-medium text-green-400 bg-green-900/30 px-2 py-1 rounded">
             Kurz je zakúpený
           </div>
           
@@ -176,11 +176,11 @@ const formatDuration = (minutes) => {
 
 const getDifficultyBadgeClass = (level) => {
   const classes = {
-    beginner: 'bg-green-100 text-green-800',
-    intermediate: 'bg-yellow-100 text-yellow-800',
-    advanced: 'bg-red-100 text-red-800',
+    beginner: 'bg-green-900/30 text-green-400',
+    intermediate: 'bg-yellow-900/30 text-yellow-400',
+    advanced: 'bg-red-900/30 text-red-400',
   }
-  return classes[level] || 'bg-gray-100 text-gray-800'
+  return classes[level] || 'bg-dark-700 text-dark-200'
 }
 
 const translateDifficulty = (level) => {

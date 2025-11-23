@@ -8,7 +8,7 @@
       Preskočiť na hlavný obsah
     </a>
     
-    <AppNavigationMobile />
+    <AppNavigation />
     
     <main id="main-content" class="flex-1 pb-safe-bottom">
       <!-- Content starts from top with transparent navigation overlay -->
@@ -46,7 +46,7 @@
 import { onMounted, computed, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
-import AppNavigationMobile from '@/components/layout/AppNavigationMobile.vue'
+import AppNavigation from '@/components/layout/AppNavigation.vue'
 import AppFooter from '@/components/layout/AppFooter.vue'
 import PerformanceDashboard from '@/components/debug/PerformanceDashboard.vue'
 
@@ -62,16 +62,16 @@ const isDevelopment = computed(() => {
 })
 
 // Page transition handlers
-const onPageEnter = (el) => {
+const onPageEnter = () => {
   // Trigger any enter animations
 }
 
-const onPageLeave = (el) => {
+const onPageLeave = () => {
   // Cleanup any leaving page resources
 }
 
 // Watch for route changes to handle loading states
-watch(route, (to, from) => {
+watch(route, (to) => {
   // Optional: Show loading for certain route transitions
   if (to.meta?.requiresLoading) {
     isGlobalLoading.value = true

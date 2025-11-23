@@ -1,9 +1,9 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap");
 
 /* Custom font - SetupSans */
 @font-face {
-  font-family: 'SetupSans';
-  src: url('@/assets/fonts/SetupSansVariable.ttf') format('truetype');
+  font-family: "SetupSans";
+  src: url("@/assets/fonts/SetupSansVariable.ttf") format("truetype");
   font-weight: 100 900;
   font-style: normal;
   font-display: swap;
@@ -15,40 +15,41 @@
 
 @layer base {
   html {
-    font-family: 'SetupSans', 'Inter', system-ui, sans-serif;
+    font-family: "SetupSans", "Inter", system-ui, sans-serif;
+    @apply antialiased scroll-smooth;
   }
-  
+
   body {
-    @apply bg-black text-white;
+    @apply bg-dark-950 text-white selection:bg-primary-500 selection:text-white;
   }
 }
 
 @layer components {
   .btn-primary {
-    @apply bg-primary-500 hover:bg-primary-600 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 focus:ring-offset-black;
+    @apply bg-primary-600 hover:bg-primary-500 text-white font-semibold py-2.5 px-5 rounded-xl transition-all duration-300 shadow-lg shadow-primary-900/20 hover:shadow-primary-900/40 hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 focus:ring-offset-dark-950;
   }
-  
+
   .btn-secondary {
-    @apply bg-secondary-900 hover:bg-secondary-800 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-secondary-700 focus:ring-offset-2 focus:ring-offset-black;
+    @apply bg-secondary-800 hover:bg-secondary-700 text-white font-semibold py-2.5 px-5 rounded-xl transition-all duration-300 shadow-lg shadow-secondary-900/20 hover:shadow-secondary-900/40 hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-secondary-500 focus:ring-offset-2 focus:ring-offset-dark-950;
   }
-  
+
   .btn-outline {
-    @apply border border-primary-500 text-primary-500 hover:bg-primary-500 hover:text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 focus:ring-offset-black;
+    @apply border-2 border-primary-600 text-primary-500 hover:bg-primary-600 hover:text-white font-semibold py-2.5 px-5 rounded-xl transition-all duration-300 hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 focus:ring-offset-dark-950;
   }
-  
+
   .input-field {
-    @apply block w-full rounded-lg border-gray-600 bg-gray-800 text-white shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm;
+    @apply block w-full rounded-xl border-dark-700 bg-dark-800/50 text-white placeholder-dark-400 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm transition-colors duration-200;
   }
-  
+
   .card {
-    @apply bg-gray-900 rounded-xl shadow-sm border border-gray-700 overflow-hidden;
+    @apply bg-dark-900/50 backdrop-blur-sm rounded-2xl shadow-xl border border-dark-800/50 overflow-hidden transition-all duration-300 hover:border-dark-700 hover:shadow-2xl hover:shadow-dark-950/50;
   }
-  
+
   .progress-bar {
-    @apply w-full bg-gray-700 rounded-full h-2 overflow-hidden;
+    @apply w-full bg-dark-800 rounded-full h-2 overflow-hidden;
   }
-  
+
   .progress-fill {
-    @apply h-full bg-primary-500 rounded-full transition-all duration-300 ease-out;
+    @apply h-full bg-gradient-to-r from-primary-600 to-primary-400 rounded-full transition-all duration-500 ease-out;
   }
 }

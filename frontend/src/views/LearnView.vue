@@ -221,7 +221,6 @@
 <script>
 import { ref, computed, onMounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { useAuthStore } from '@/stores/auth'
 import { api } from '@/services/api'
 
 export default {
@@ -229,7 +228,7 @@ export default {
   setup() {
     const route = useRoute()
     const router = useRouter()
-    const authStore = useAuthStore()
+    // const authStore = useAuthStore()
     
     const loading = ref(false)
     const course = ref(null)

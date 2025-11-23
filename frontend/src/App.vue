@@ -1,5 +1,5 @@
 <template>
-  <div id="app" class="min-h-screen flex flex-col">
+  <div id="app">
     <!-- Skip to main content link for accessibility -->
     <a 
       href="#main-content" 
@@ -8,10 +8,7 @@
       Preskočiť na hlavný obsah
     </a>
     
-    <AppNavigation />
-    
-    <main id="main-content" class="flex-1 pb-safe-bottom">
-      <!-- Content starts from top with transparent navigation overlay -->
+    <component :is="layout">
       <router-view v-slot="{ Component, route }">
         <transition 
           name="page-transition" 
@@ -22,9 +19,7 @@
           <component :is="Component" :key="route.path" />
         </transition>
       </router-view>
-    </main>
-    
-    <AppFooter />
+    </component>
     
     <!-- Performance Dashboard (development only) -->
     <PerformanceDashboard v-if="isDevelopment" />
@@ -46,12 +41,24 @@
 import { onMounted, computed, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
-import AppNavigation from '@/components/layout/AppNavigation.vue'
-import AppFooter from '@/components/layout/AppFooter.vue'
 import PerformanceDashboard from '@/components/debug/PerformanceDashboard.vue'
+import DefaultLayout from '@/layouts/DefaultLayout.vue'
+import DashboardLayout from '@/layouts/DashboardLayout.vue'
 
 const route = useRoute()
 const authStore = useAuthStore()
+
+// Layout resolution
+const layout = computed(() => {
+  const layoutName = route.meta.layout || 'default'
+  
+  switch (layoutName) {
+    case 'dashboard':
+      return DashboardLayout
+    default:
+      return DefaultLayout
+  }
+})
 
 // Global loading state
 const isGlobalLoading = ref(false)

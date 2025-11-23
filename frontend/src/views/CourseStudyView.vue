@@ -232,37 +232,37 @@
           </div>
 
           <!-- Course Overview (when no lesson selected) -->
-          <div v-if="!selectedLesson" class="bg-white rounded-lg shadow-sm p-6">
-            <h2 class="text-xl font-semibold text-gray-900 mb-4">Prehľad kurzu</h2>
-            <p class="text-gray-700 mb-6">{{ course.description }}</p>
+          <div v-if="!selectedLesson" class="bg-gray-900 border border-gray-700 rounded-lg shadow-sm p-6">
+            <h2 class="text-xl font-semibold text-white mb-4">Prehľad kurzu</h2>
+            <p class="text-gray-300 mb-6">{{ course.description }}</p>
             
             <!-- What you will learn -->
             <div v-if="course.what_you_will_learn && course.what_you_will_learn.length > 0" class="mb-6">
-              <h3 class="text-lg font-semibold text-gray-900 mb-3">Čo sa naučíte</h3>
+              <h3 class="text-lg font-semibold text-white mb-3">Čo sa naučíte</h3>
               <ul class="space-y-2">
                 <li v-for="item in course.what_you_will_learn" :key="item" class="flex items-start">
                   <svg class="w-5 h-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
                   </svg>
-                  <span class="text-gray-700">{{ item }}</span>
+                  <span class="text-gray-300">{{ item }}</span>
                 </li>
               </ul>
             </div>
           </div>
 
           <!-- Course Lessons List -->
-          <div class="bg-white rounded-lg shadow-sm p-6">
-            <h2 class="text-xl font-semibold text-gray-900 mb-4">Obsah kurzu</h2>
+          <div class="bg-gray-900 border border-gray-700 rounded-lg shadow-sm p-6">
+            <h2 class="text-xl font-semibold text-white mb-4">Obsah kurzu</h2>
             
             <div v-if="lessons && lessons.length > 0" class="space-y-4">
               <div
                 v-for="(lesson, index) in lessons"
                 :key="lesson.id"
-                class="border rounded-lg p-4 hover:bg-gray-50 transition duration-200 cursor-pointer relative"
+                class="border rounded-lg p-4 hover:bg-gray-800 transition duration-200 cursor-pointer relative"
                 @click="selectLesson(lesson)"
                 :class="{
-                  'border-primary-500 bg-primary-50': selectedLesson?.id === lesson.id,
-                  'border-gray-200': selectedLesson?.id !== lesson.id,
+                  'border-primary-500 bg-primary-900/20': selectedLesson?.id === lesson.id,
+                  'border-gray-700 bg-gray-800/50': selectedLesson?.id !== lesson.id,
                   'opacity-50 pointer-events-none': lessonSwitching
                 }"
               >
@@ -273,12 +273,12 @@
                 
                 <div class="flex items-center justify-between">
                   <div class="flex items-center">
-                    <div class="flex-shrink-0 w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center mr-3">
-                      <span class="text-sm font-medium text-gray-600">{{ index + 1 }}</span>
+                    <div class="flex-shrink-0 w-8 h-8 bg-gray-700 rounded-full flex items-center justify-center mr-3">
+                      <span class="text-sm font-medium text-gray-300">{{ index + 1 }}</span>
                     </div>
                     <div>
-                      <h3 class="font-medium text-gray-900">{{ lesson.title }}</h3>
-                      <p class="text-sm text-gray-500">{{ lesson.description || 'Popis lekcie' }}</p>
+                      <h3 class="font-medium text-white">{{ lesson.title }}</h3>
+                      <p class="text-sm text-gray-400">{{ lesson.description || 'Popis lekcie' }}</p>
                     </div>
                   </div>
                   <div class="flex items-center space-x-2">
@@ -304,31 +304,31 @@
         <!-- Sidebar (Right Column) -->
         <div class="lg:col-span-1">
           <!-- Course Stats -->
-          <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
-            <h3 class="text-lg font-semibold text-gray-900 mb-4">Štatistiky kurzu</h3>
+          <div class="bg-gray-900 border border-gray-700 rounded-lg shadow-sm p-6 mb-6">
+            <h3 class="text-lg font-semibold text-white mb-4">Štatistiky kurzu</h3>
             <div class="space-y-4">
               <div class="flex justify-between">
-                <span class="text-gray-600">Pokrok:</span>
-                <span class="font-medium">{{ Math.round(progressPercentage) }}%</span>
+                <span class="text-gray-400">Pokrok:</span>
+                <span class="font-medium text-white">{{ Math.round(progressPercentage) }}%</span>
               </div>
               <div class="flex justify-between">
-                <span class="text-gray-600">Dokončené lekcie:</span>
-                <span class="font-medium">{{ completedLessons }}/{{ totalLessons }}</span>
+                <span class="text-gray-400">Dokončené lekcie:</span>
+                <span class="font-medium text-white">{{ completedLessons }}/{{ totalLessons }}</span>
               </div>
               <div class="flex justify-between">
-                <span class="text-gray-600">Zostávajúci čas:</span>
-                <span class="font-medium">{{ formatDuration(remainingTime) }}</span>
+                <span class="text-gray-400">Zostávajúci čas:</span>
+                <span class="font-medium text-white">{{ formatDuration(remainingTime) }}</span>
               </div>
               <div class="flex justify-between">
-                <span class="text-gray-600">Zapísaný:</span>
-                <span class="font-medium">{{ formatEnrollmentDate(enrollmentDate) }}</span>
+                <span class="text-gray-400">Zapísaný:</span>
+                <span class="font-medium text-white">{{ formatEnrollmentDate(enrollmentDate) }}</span>
               </div>
             </div>
           </div>
 
           <!-- Continue Learning Button -->
-          <div class="bg-white rounded-lg shadow-sm p-6">
-            <h3 class="text-lg font-semibold text-gray-900 mb-4">Pokračovať v učení</h3>
+          <div class="bg-gray-900 border border-gray-700 rounded-lg shadow-sm p-6">
+            <h3 class="text-lg font-semibold text-white mb-4">Pokračovať v učení</h3>
             <button
               v-if="nextLesson"
               @click="startLesson(nextLesson)"

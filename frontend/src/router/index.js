@@ -37,19 +37,19 @@ const router = createRouter({
       path: '/dashboard',
       name: 'Dashboard',
       component: () => import('@/views/DashboardView.vue'),
-      meta: { requiresAuth: true },
+      meta: { requiresAuth: true, layout: 'dashboard' },
     },
     {
       path: '/my-courses',
       name: 'MyCourses',
       component: () => import('@/views/MyCoursesView.vue'),
-      meta: { requiresAuth: true },
+      meta: { requiresAuth: true, layout: 'dashboard' },
     },
     {
       path: '/study/:slug',
       name: 'CourseStudy',
       component: () => import('@/views/CourseStudyView.vue'),
-      meta: { requiresAuth: true },
+      meta: { requiresAuth: true, layout: 'dashboard' },
       props: true,
     },
     {
@@ -62,14 +62,14 @@ const router = createRouter({
       path: '/learn/:courseSlug',
       name: 'Learn',
       component: () => import('@/views/LearnView.vue'),
-      meta: { requiresAuth: true },
+      meta: { requiresAuth: true, layout: 'dashboard' },
       props: true,
     },
     {
       path: '/learn/:courseSlug/:lessonSlug',
       name: 'Lesson',
       component: () => import('@/views/LessonView.vue'),
-      meta: { requiresAuth: true },
+      meta: { requiresAuth: true, layout: 'dashboard' },
       props: true,
     },
     {
@@ -83,7 +83,7 @@ const router = createRouter({
       path: '/profile',
       name: 'Profile',
       component: () => import('@/views/ProfileView.vue'),
-      meta: { requiresAuth: true },
+      meta: { requiresAuth: true, layout: 'dashboard' },
     },
     {
       path: '/:pathMatch(.*)*',

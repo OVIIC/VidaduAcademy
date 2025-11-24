@@ -24,43 +24,49 @@ export default {
     extend: {
       colors: {
         primary: {
-          50: '#fff1f0',
-          100: '#ffe0dd',
-          200: '#ffc5bf',
-          300: '#ff9d94',
-          400: '#ff6b5e',
-          500: '#f04632', // More vibrant red-orange
-          600: '#dd2e1b',
-          700: '#ba2112',
-          800: '#991f13',
-          900: '#7f2016',
-          950: '#450d08',
+          50: '#fff5f4',
+          100: '#ffe8e5',
+          200: '#ffd4ce',
+          300: '#ffb3a8',
+          400: '#ff8575',
+          500: '#f26b55', // Brand Orange
+          600: '#df4c34',
+          700: '#ba321d',
+          800: '#992b1b',
+          900: '#7f281c',
+          950: '#45110a',
         },
         secondary: {
-          50: '#f5f3ff',
-          100: '#ede9fe',
-          200: '#ddd6fe',
-          300: '#c4b5fd',
-          400: '#a78bfa',
-          500: '#8b5cf6',
-          600: '#7c3aed',
-          700: '#6d28d9',
-          800: '#5b21b6',
-          900: '#2e1065', // Deep rich purple
-          950: '#170538',
+          50: '#f4f3ff',
+          100: '#ebe9fe',
+          200: '#d9d6fe',
+          300: '#bdb4fe',
+          400: '#9d8bfd',
+          500: '#6c5dd3', // Brand Purple
+          600: '#5a49c4',
+          700: '#4c3ba5',
+          800: '#3f3285',
+          900: '#1e1b2e', // Brand Dark Background
+          950: '#12101c',
         },
         dark: {
-          50: '#f9fafb',
-          100: '#f3f4f6',
-          200: '#e5e7eb',
-          300: '#d1d5db',
-          400: '#9ca3af',
-          500: '#6b7280',
-          600: '#4b5563',
-          700: '#374151',
-          800: '#1f2937',
-          900: '#111827', // Dark blue-gray instead of pure black
-          950: '#030712',
+          50: '#f6f6f7',
+          100: '#eef0f2',
+          200: '#dce0e5',
+          300: '#c0c6d0',
+          400: '#9fa8b8',
+          500: '#7e899f',
+          600: '#606a7f',
+          700: '#495162',
+          800: '#1e1b2e', // Match Brand Dark
+          900: '#13111c', // Deepest Dark
+          950: '#0a090f',
+        },
+        brand: {
+          yellow: '#f9c851',
+          green: '#90e0c4',
+          blue: '#5d9cec',
+          pink: '#ff8fb1',
         },
         youtube: {
           red: '#FF0000',

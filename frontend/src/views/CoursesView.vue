@@ -33,7 +33,7 @@
                 <svg class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
                   <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
                 </svg>
-                <span class="text-white">{{ selectedCourse.instructor }}</span>
+                <span class="text-white">{{ selectedCourse.instructor?.name || selectedCourse.instructor }}</span>
               </div>
               <div class="flex items-center space-x-2">
                 <div class="w-3 h-3 rounded-full" :class="getDifficultyColor(selectedCourse.difficulty)"></div>
@@ -45,7 +45,7 @@
 
             <!-- Course Description -->
             <p class="text-xl md:text-2xl leading-relaxed mb-8 text-gray-200 max-w-2xl font-light">
-              {{ selectedCourse?.description || 'Vyberte kurz pre zobrazenie detailov.' }}
+              {{ selectedCourse?.short_description || 'Vyberte kurz pre zobrazenie detailov.' }}
             </p>
 
             <!-- Action Buttons (Disney+ style) -->
@@ -65,17 +65,117 @@
                 <span>{{ showCheckoutLoading && checkoutCourse?.id === selectedCourse.id ? 'Spracováva sa...' : 'Kúpiť kurz' }}</span>
               </button>
               
-              <button class="bg-gray-600/70 hover:bg-gray-600/90 text-white px-8 py-4 rounded-2xl font-bold text-xl transition-all duration-200 flex items-center space-x-3">
+              <button 
+                @click="toggleCourseDetails"
+                class="bg-gray-600/70 hover:bg-gray-600/90 text-white px-8 py-4 rounded-2xl font-bold text-xl transition-all duration-200 flex items-center space-x-3"
+              >
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                 </svg>
-                <span>Viac info</span>
+                <span>{{ showCourseDetails ? 'Skryť info' : 'Viac info' }}</span>
               </button>
             </div>
           </div>
         </div>
       </div>
     </div>
+
+    <!-- Expandable Course Details Section -->
+    <transition name="slide-down">
+      <div v-if="showCourseDetails && selectedCourse" class="bg-black border-t border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Main Content -->
+            <div class="lg:col-span-2 space-y-8">
+              <!-- Full Description -->
+              <div>
+                <h3 class="text-2xl font-bold text-white mb-4">O kurze</h3>
+                <p class="text-gray-300 text-lg leading-relaxed">{{ selectedCourse.description }}</p>
+              </div>
+
+              <!-- What You'll Learn -->
+              <div v-if="selectedCourse.what_you_will_learn && selectedCourse.what_you_will_learn.length > 0">
+                <h3 class="text-2xl font-bold text-white mb-4">Čo sa naučíte</h3>
+                <ul class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  <li 
+                    v-for="(item, index) in selectedCourse.what_you_will_learn" 
+                    :key="index"
+                    class="flex items-start space-x-3"
+                  >
+                    <svg class="w-6 h-6 text-green-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                      <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                    </svg>
+                    <span class="text-gray-300">{{ item }}</span>
+                  </li>
+                </ul>
+              </div>
+
+              <!-- Requirements -->
+              <div v-if="selectedCourse.requirements && selectedCourse.requirements.length > 0">
+                <h3 class="text-2xl font-bold text-white mb-4">Požiadavky</h3>
+                <ul class="space-y-2">
+                  <li 
+                    v-for="(req, index) in selectedCourse.requirements" 
+                    :key="index"
+                    class="flex items-start space-x-3"
+                  >
+                    <svg class="w-6 h-6 text-gray-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                    </svg>
+                    <span class="text-gray-300">{{ req }}</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="lg:col-span-1">
+              <div class="bg-gray-900 rounded-2xl p-6 border border-gray-800 sticky top-4">
+                <!-- Course Stats -->
+                <div class="space-y-4 mb-6">
+                  <div class="flex items-center justify-between">
+                    <span class="text-gray-400">Úroveň</span>
+                    <span class="text-white capitalize font-medium">{{ selectedCourse.difficulty_level }}</span>
+                  </div>
+                  <div class="flex items-center justify-between">
+                    <span class="text-gray-400">Dĺžka</span>
+                    <span class="text-white font-medium">{{ selectedCourse.duration }}</span>
+                  </div>
+                  <div class="flex items-center justify-between">
+                    <span class="text-gray-400">Cena</span>
+                    <span class="text-green-400 font-bold text-xl">€{{ selectedCourse.price }}</span>
+                  </div>
+                </div>
+
+                <div class="border-t border-gray-800 pt-6">
+                  <!-- Instructor Info -->
+                  <div class="mb-6">
+                    <h4 class="text-sm font-medium text-gray-400 mb-3">Inštruktor</h4>
+                    <div class="flex items-center space-x-3">
+                      <div class="w-12 h-12 rounded-full bg-gray-800 flex items-center justify-center text-primary-400 font-bold text-lg">
+                        {{ (selectedCourse.instructor?.name || selectedCourse.instructor || '').charAt(0) }}
+                      </div>
+                      <div>
+                        <p class="text-white font-medium">{{ selectedCourse.instructor?.name || selectedCourse.instructor }}</p>
+                        <p class="text-gray-400 text-sm">{{ selectedCourse.instructor?.email || '' }}</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Purchase Button -->
+                  <button
+                    @click="handlePurchase(selectedCourse)"
+                    class="w-full bg-primary-500 hover:bg-primary-600 text-white px-6 py-3 rounded-xl font-bold transition-all duration-200"
+                  >
+                    Kúpiť kurz
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </transition>
 
     <!-- Fade Transition Section -->
     <div class="h-8 bg-gradient-to-b from-black to-black"></div>
@@ -207,9 +307,9 @@
                   <div class="flex items-center justify-between mt-auto pt-4 border-t border-gray-800">
                     <div class="flex items-center space-x-2">
                       <div class="w-6 h-6 rounded-full bg-gray-700 flex items-center justify-center text-xs font-bold text-gray-300">
-                        {{ course.instructor.charAt(0) }}
+                        {{ (course.instructor?.name || course.instructor || '').charAt(0) }}
                       </div>
-                      <span class="text-xs text-gray-300 truncate max-w-[100px]">{{ course.instructor }}</span>
+                      <span class="text-xs text-gray-300 truncate max-w-[100px]">{{ course.instructor?.name || course.instructor }}</span>
                     </div>
                     <button 
                       @click.stop="handlePurchase(course)"
@@ -309,11 +409,51 @@ const hasActiveFilters = computed(() => {
 
 // Selected course for hero section (Disney+ style)
 const selectedCourse = ref(null)
+const showCourseDetails = ref(false)
+
+// Toggle course details
+const toggleCourseDetails = async () => {
+  if (!showCourseDetails.value && selectedCourse.value) {
+    // Fetch full course details before showing
+    try {
+      const fullCourse = await courseStore.fetchCourse(selectedCourse.value.slug)
+      // Merge full details with selected course
+      selectedCourse.value = {
+        ...selectedCourse.value,
+        ...fullCourse,
+        // Parse JSON strings if needed
+        what_you_will_learn: typeof fullCourse.what_you_will_learn === 'string' 
+          ? JSON.parse(fullCourse.what_you_will_learn) 
+          : fullCourse.what_you_will_learn,
+        requirements: typeof fullCourse.requirements === 'string'
+          ? JSON.parse(fullCourse.requirements)
+          : fullCourse.requirements
+      }
+    } catch (error) {
+      console.error('Error fetching course details:', error)
+    }
+  }
+  
+  showCourseDetails.value = !showCourseDetails.value
+  
+  // Smooth scroll to details section if opening
+  if (showCourseDetails.value) {
+    setTimeout(() => {
+      const detailsSection = document.querySelector('.slide-down-enter-active')
+      if (detailsSection) {
+        detailsSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
+      }
+    }, 100)
+  }
+}
 
 // Course selection (smooth transition to hero)
 const selectCourse = async (course) => {
   console.log('Selecting course:', course.title)
   selectedCourse.value = course
+  
+  // Close details when selecting a new course
+  showCourseDetails.value = false
   
   // Smooth scroll to top to show the new hero
   window.scrollTo({
@@ -526,5 +666,27 @@ onMounted(() => {
 /* Disney+ style backdrop blur */
 .backdrop-blur-sm {
   backdrop-filter: blur(8px);
+}
+
+/* Slide down animation for course details */
+.slide-down-enter-active,
+.slide-down-leave-active {
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  max-height: 2000px;
+  overflow: hidden;
+}
+
+.slide-down-enter-from,
+.slide-down-leave-to {
+  max-height: 0;
+  opacity: 0;
+  transform: translateY(-20px);
+}
+
+.slide-down-enter-to,
+.slide-down-leave-from {
+  max-height: 2000px;
+  opacity: 1;
+  transform: translateY(0);
 }
 </style>

@@ -15,6 +15,31 @@
           <div class="absolute inset-0 bg-gradient-to-r from-black/90 via-black/50 to-transparent"></div>
           <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
           <div class="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-black to-transparent"></div>
+          
+          <!-- Navigation Arrows -->
+          <button
+            v-if="courses.length > 1"
+            @click="navigateCourse('prev')"
+            class="absolute left-4 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-xl bg-black/20 hover:bg-black/40 backdrop-blur-sm border border-white/30 hover:border-white text-white flex items-center justify-center transition-all duration-200 hover:scale-110 shadow-lg"
+            :disabled="currentCourseIndex === 0"
+            :class="{ 'opacity-30 cursor-not-allowed': currentCourseIndex === 0 }"
+          >
+            <svg class="w-6 h-6 drop-shadow-lg" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+            </svg>
+          </button>
+          
+          <button
+            v-if="courses.length > 1"
+            @click="navigateCourse('next')"
+            class="absolute right-4 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-xl bg-black/20 hover:bg-black/40 backdrop-blur-sm border border-white/30 hover:border-white text-white flex items-center justify-center transition-all duration-200 hover:scale-110 shadow-lg"
+            :disabled="currentCourseIndex === courses.length - 1"
+            :class="{ 'opacity-30 cursor-not-allowed': currentCourseIndex === courses.length - 1 }"
+          >
+            <svg class="w-6 h-6 drop-shadow-lg" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+            </svg>
+          </button>
         </div>
       </div>
 
@@ -410,6 +435,29 @@ const hasActiveFilters = computed(() => {
 // Selected course for hero section (Disney+ style)
 const selectedCourse = ref(null)
 const showCourseDetails = ref(false)
+
+// Computed current course index
+const currentCourseIndex = computed(() => {
+  if (!selectedCourse.value || !courses.value.length) return -1
+  return courses.value.findIndex(c => c.id === selectedCourse.value.id)
+})
+
+// Navigate to previous/next course
+const navigateCourse = (direction) => {
+  const currentIndex = currentCourseIndex.value
+  if (currentIndex === -1) return
+  
+  let newIndex
+  if (direction === 'prev') {
+    newIndex = Math.max(0, currentIndex - 1)
+  } else {
+    newIndex = Math.min(courses.value.length - 1, currentIndex + 1)
+  }
+  
+  if (newIndex !== currentIndex) {
+    selectCourse(courses.value[newIndex])
+  }
+}
 
 // Toggle course details
 const toggleCourseDetails = async () => {

@@ -12,9 +12,7 @@
         <div class="bg-gradient-to-br from-gray-900/30 via-secondary-900/20 to-gray-900/40 backdrop-blur-xl border border-gray-700/50 rounded-2xl p-6">
           <div class="flex items-center">
             <div class="p-3 bg-gradient-to-br from-primary-500/20 via-secondary-500/20 to-primary-500/20 backdrop-blur-xl border border-primary-500/30 rounded-xl">
-              <svg class="w-6 h-6 text-primary-500" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-              </svg>
+              <img src="/images/zapisane_kurzy_icon.png" alt="Zapísané kurzy" class="w-6 h-6 object-contain" />
             </div>
             <div class="ml-4">
               <p class="text-sm text-gray-300">Zapísané kurzy</p>

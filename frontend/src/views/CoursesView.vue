@@ -80,22 +80,78 @@
     <!-- Fade Transition Section -->
     <div class="h-8 bg-gradient-to-b from-black to-black"></div>
 
-    <!-- Course Gallery Section (Disney+ horizontal scroll) -->
-    <div class="bg-black py-4">
+    <!-- Course Gallery Section -->
+    <div class="bg-black py-4 min-h-screen">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <!-- Section Header -->
-        <div class="flex items-center justify-between mb-8">
-          <h2 class="text-2xl md:text-3xl font-bold text-white">Všetky kurzy</h2>
-          <button
-            @click="refreshCourses"
-            :disabled="refreshing"
-            class="bg-gray-700 hover:bg-gray-600 disabled:opacity-50 text-white px-6 py-3 rounded-lg transition-colors flex items-center space-x-2 font-medium"
-          >
-            <svg class="w-5 h-5" :class="{ 'animate-spin': refreshing }" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
-            </svg>
-            <span>{{ refreshing ? 'Obnovuje...' : 'Obnoviť' }}</span>
-          </button>
+        <!-- Filter Bar -->
+        <div class="mb-8 space-y-4">
+          <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <h2 class="text-2xl md:text-3xl font-bold text-white">Všetky kurzy</h2>
+            
+            <!-- Search Input -->
+            <div class="relative flex-grow md:max-w-md">
+              <input 
+                v-model="searchQuery"
+                @input="handleSearch"
+                type="text" 
+                placeholder="Hľadať kurzy..." 
+                class="w-full bg-gray-900 text-white border border-gray-700 rounded-xl py-3 px-4 pl-10 focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
+              >
+              <svg class="w-5 h-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+              </svg>
+            </div>
+          </div>
+
+          <!-- Filters & Sort -->
+          <div class="flex flex-col md:flex-row gap-4 items-center justify-between bg-gray-900/50 p-4 rounded-xl border border-gray-800">
+            <div class="flex flex-wrap gap-3 w-full md:w-auto">
+              <!-- Difficulty Filter -->
+              <select 
+                v-model="selectedDifficulty"
+                @change="handleFilterChange"
+                class="bg-gray-800 text-white border border-gray-700 rounded-lg py-2 px-3 text-sm focus:ring-primary-500 focus:border-primary-500"
+              >
+                <option value="">Všetky úrovne</option>
+                <option value="beginner">Začiatočník</option>
+                <option value="intermediate">Pokročilý</option>
+                <option value="advanced">Expert</option>
+              </select>
+
+              <!-- Price Filter -->
+              <select 
+                v-model="selectedPrice"
+                @change="handleFilterChange"
+                class="bg-gray-800 text-white border border-gray-700 rounded-lg py-2 px-3 text-sm focus:ring-primary-500 focus:border-primary-500"
+              >
+                <option value="">Všetky ceny</option>
+                <option value="free">Zadarmo</option>
+                <option value="paid">Platené</option>
+              </select>
+            </div>
+
+            <div class="flex items-center gap-3 w-full md:w-auto justify-end">
+              <span class="text-gray-400 text-sm">Zoradiť podľa:</span>
+              <select 
+                v-model="selectedSort"
+                @change="handleFilterChange"
+                class="bg-gray-800 text-white border border-gray-700 rounded-lg py-2 px-3 text-sm focus:ring-primary-500 focus:border-primary-500"
+              >
+                <option value="created_at_desc">Najnovšie</option>
+                <option value="price_asc">Cena: Najnižšia</option>
+                <option value="price_desc">Cena: Najvyššia</option>
+                <option value="title_asc">Názov: A-Z</option>
+              </select>
+
+              <button
+                @click="resetFilters"
+                class="text-gray-400 hover:text-white text-sm underline ml-2"
+                v-if="hasActiveFilters"
+              >
+                Resetovať
+              </button>
+            </div>
+          </div>
         </div>
 
         <!-- Loading State -->
@@ -103,30 +159,20 @@
           <div class="animate-spin rounded-full h-12 w-12 border-b-4 border-white"></div>
         </div>
 
-        <!-- Disney+ Style Horizontal Scroll Gallery -->
-        <div v-else-if="courses && courses.length > 0" class="relative group">
-          <div 
-            ref="scrollContainer"
-            class="flex space-x-6 overflow-x-auto scrollbar-hide py-6"
-            style="scroll-behavior: smooth; scrollbar-width: none; -ms-overflow-style: none;"
-            @scroll="updateScrollButtons"
-          >
+        <!-- Course Grid -->
+        <div v-else-if="courses && courses.length > 0">
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             <div
               v-for="course in courses"
               :key="`course-${course.id}`"
               @click="selectCourse(course)"
               :class="[
-                'flex-shrink-0 w-80 cursor-pointer transition-all duration-500 ease-out transform hover:scale-105',
-                selectedCourse?.id === course.id ? 'scale-105' : 'hover:scale-105'
+                'cursor-pointer transition-all duration-300 transform hover:-translate-y-1',
+                selectedCourse?.id === course.id ? 'ring-2 ring-primary-500 rounded-2xl' : ''
               ]"
             >
-              <!-- Course Card (Disney+ style) -->
-              <div :class="[
-                'backdrop-blur-xl border rounded-2xl overflow-hidden shadow-xl transition-all duration-300',
-                selectedCourse?.id === course.id 
-                  ? 'bg-gradient-to-br from-gray-900/40 via-secondary-900/30 to-gray-900/50 border-gray-600/60 hover:shadow-2xl' 
-                  : 'bg-gradient-to-br from-gray-900/30 via-secondary-900/20 to-gray-900/40 border-gray-700/50 hover:shadow-2xl hover:from-gray-900/40 hover:via-secondary-900/30 hover:to-gray-900/50 hover:border-gray-600/60'
-              ]">
+              <!-- Course Card -->
+              <div class="bg-gray-900 rounded-2xl overflow-hidden shadow-lg border border-gray-800 hover:border-gray-700 h-full flex flex-col">
                 <!-- Course Thumbnail -->
                 <div class="aspect-video overflow-hidden relative">
                   <img 
@@ -135,40 +181,39 @@
                     class="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
                   />
                   <!-- Price Badge -->
-                  <div class="absolute top-4 right-4 bg-green-500/80 backdrop-blur-sm border border-green-400/50 text-white px-3 py-1 rounded-full text-sm font-bold">
-                    €{{ course.price }}
-                  </div>
-                  <!-- Selected Indicator -->
-                  <div v-if="selectedCourse?.id === course.id" class="absolute inset-0 bg-gradient-to-br from-white/5 via-secondary-500/10 to-white/5 backdrop-blur-sm flex items-center justify-center border border-white/20">
-                    <div class="bg-gradient-to-br from-white/10 via-secondary-500/20 to-white/10 backdrop-blur-md rounded-full p-4 border border-white/30">
-                      <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-                      </svg>
-                    </div>
+                  <div class="absolute top-3 right-3 bg-black/70 backdrop-blur-sm text-white px-2 py-1 rounded-md text-xs font-bold border border-gray-700">
+                    {{ course.price > 0 ? `€${course.price}` : 'Zadarmo' }}
                   </div>
                 </div>
                 
                 <!-- Course Info -->
-                <div class="p-6">
-                  <h3 class="font-bold text-xl mb-3 text-white line-clamp-2">{{ course.title }}</h3>
-                  <div class="flex items-center justify-between text-sm text-gray-300 mb-3">
-                    <div class="flex items-center space-x-2">
-                      <svg class="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                <div class="p-5 flex-grow flex flex-col">
+                  <div class="flex items-center justify-between mb-2">
+                    <span class="text-xs font-medium px-2 py-1 rounded-full bg-gray-800 text-gray-300 border border-gray-700 capitalize">
+                      {{ course.difficulty }}
+                    </span>
+                    <div class="flex items-center text-xs text-gray-400">
+                      <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
                       </svg>
-                      <span class="font-medium">{{ course.instructor }}</span>
-                    </div>
-                    <div class="flex items-center space-x-2">
-                      <div class="w-2 h-2 rounded-full" :class="getDifficultyColor(course.difficulty)"></div>
-                      <span class="capitalize font-medium">{{ course.difficulty }}</span>
+                      {{ course.duration }}
                     </div>
                   </div>
-                  <p class="text-gray-400 text-sm line-clamp-3 mb-4">{{ course.description }}</p>
-                  <div class="flex items-center justify-between">
-                    <span class="text-gray-400 text-sm">{{ course.duration }}</span>
+
+                  <h3 class="font-bold text-lg mb-2 text-white line-clamp-2 group-hover:text-primary-400 transition-colors">{{ course.title }}</h3>
+                  
+                  <p class="text-gray-400 text-sm line-clamp-2 mb-4 flex-grow">{{ course.short_description || course.description }}</p>
+                  
+                  <div class="flex items-center justify-between mt-auto pt-4 border-t border-gray-800">
+                    <div class="flex items-center space-x-2">
+                      <div class="w-6 h-6 rounded-full bg-gray-700 flex items-center justify-center text-xs font-bold text-gray-300">
+                        {{ course.instructor.charAt(0) }}
+                      </div>
+                      <span class="text-xs text-gray-300 truncate max-w-[100px]">{{ course.instructor }}</span>
+                    </div>
                     <button 
                       @click.stop="handlePurchase(course)"
-                      class="bg-primary-500 hover:bg-primary-600 text-white px-4 py-2 rounded-xl text-sm font-medium transition-colors"
+                      class="text-primary-400 hover:text-primary-300 text-sm font-medium transition-colors"
                     >
                       Kúpiť
                     </button>
@@ -178,32 +223,41 @@
             </div>
           </div>
 
-          <!-- Scroll Navigation Buttons -->
-          <button
-            v-if="canScrollLeft"
-            @click="scrollLeft"
-            class="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-6 bg-black/80 hover:bg-black text-white p-4 rounded-full transition-all duration-200 hover:scale-110 opacity-0 group-hover:opacity-100 z-10"
-          >
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
-            </svg>
-          </button>
-          
-          <button
-            v-if="canScrollRight"
-            @click="scrollRight"
-            class="absolute right-0 top-1/2 transform -translate-y-1/2 translate-x-6 bg-black/80 hover:bg-black text-white p-4 rounded-full transition-all duration-200 hover:scale-110 opacity-0 group-hover:opacity-100 z-10"
-          >
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-            </svg>
-          </button>
+          <!-- Pagination -->
+          <div v-if="pagination.last_page > 1" class="mt-12 flex justify-center space-x-2">
+            <button 
+              @click="changePage(pagination.current_page - 1)"
+              :disabled="pagination.current_page === 1"
+              class="px-4 py-2 rounded-lg bg-gray-800 text-white disabled:opacity-50 hover:bg-gray-700 transition-colors"
+            >
+              Predchádzajúca
+            </button>
+            <span class="px-4 py-2 text-gray-400">
+              Strana {{ pagination.current_page }} z {{ pagination.last_page }}
+            </span>
+            <button 
+              @click="changePage(pagination.current_page + 1)"
+              :disabled="pagination.current_page === pagination.last_page"
+              class="px-4 py-2 rounded-lg bg-gray-800 text-white disabled:opacity-50 hover:bg-gray-700 transition-colors"
+            >
+              Ďalšia
+            </button>
+          </div>
         </div>
 
         <!-- No courses found -->
-        <div v-else class="text-center py-20">
-          <div class="text-gray-400 text-2xl mb-4">Žiadne kurzy sa nenašli</div>
-          <p class="text-gray-500 text-lg">Skúste sa neskôr vrátiť pre nové kurzy.</p>
+        <div v-else class="text-center py-20 bg-gray-900/30 rounded-2xl border border-gray-800 mt-8">
+          <svg class="mx-auto h-16 w-16 text-gray-600 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+          </svg>
+          <div class="text-gray-300 text-xl font-medium mb-2">Nenašli sa žiadne kurzy</div>
+          <p class="text-gray-500">Skúste zmeniť kritériá vyhľadávania alebo filtre.</p>
+          <button 
+            @click="resetFilters"
+            class="mt-6 px-6 py-2 bg-gray-800 hover:bg-gray-700 text-white rounded-lg transition-colors"
+          >
+            Vymazať filtre
+          </button>
         </div>
       </div>
     </div>
@@ -217,15 +271,16 @@
   </div>
 </template>
 <script setup>
-import { ref, onMounted, computed, nextTick } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
-import { courseService, paymentService } from '@/services'
+import { paymentService } from '@/services'
 import { useAuthStore } from '@/stores/auth'
 import { useEnrollmentStore } from '@/stores/enrollment'
 import { useCourseStore } from '@/stores/course'
 import { usePerformance } from '@/utils/performanceMonitor'
 import { useToast } from 'vue-toastification'
 import CheckoutLoadingModal from '@/components/ui/CheckoutLoadingModal.vue'
+import { debounce } from 'lodash'
 
 const router = useRouter()
 const authStore = useAuthStore()
@@ -237,17 +292,23 @@ const toast = useToast()
 // Use course store instead of local state
 const courses = computed(() => courseStore.courses)
 const loading = computed(() => courseStore.loading)
-const refreshing = ref(false)
+const pagination = computed(() => courseStore.pagination)
 const showCheckoutLoading = ref(false)
 const checkoutCourse = ref(null)
 
+// Filters state
+const searchQuery = ref('')
+const selectedDifficulty = ref('')
+const selectedPrice = ref('')
+const selectedSort = ref('created_at_desc')
+
+// Computed property to check if any filters are active
+const hasActiveFilters = computed(() => {
+  return searchQuery.value || selectedDifficulty.value || selectedPrice.value || selectedSort.value !== 'created_at_desc'
+})
+
 // Selected course for hero section (Disney+ style)
 const selectedCourse = ref(null)
-
-// Scroll container reference and scroll state
-const scrollContainer = ref(null)
-const canScrollLeft = ref(false)
-const canScrollRight = ref(false)
 
 // Course selection (smooth transition to hero)
 const selectCourse = async (course) => {
@@ -261,36 +322,6 @@ const selectCourse = async (course) => {
   })
 }
 
-// Scroll functionality
-const scrollLeft = () => {
-  if (scrollContainer.value) {
-    const scrollAmount = scrollContainer.value.clientWidth * 0.8
-    scrollContainer.value.scrollBy({
-      left: -scrollAmount,
-      behavior: 'smooth'
-    })
-  }
-}
-
-const scrollRight = () => {
-  if (scrollContainer.value) {
-    const scrollAmount = scrollContainer.value.clientWidth * 0.8
-    scrollContainer.value.scrollBy({
-      left: scrollAmount,
-      behavior: 'smooth'
-    })
-  }
-}
-
-// Update scroll button visibility
-const updateScrollButtons = () => {
-  if (scrollContainer.value) {
-    const container = scrollContainer.value
-    canScrollLeft.value = container.scrollLeft > 0
-    canScrollRight.value = container.scrollLeft < (container.scrollWidth - container.clientWidth)
-  }
-}
-
 // Difficulty color mapping
 const getDifficultyColor = (difficulty) => {
   const colors = {
@@ -300,6 +331,72 @@ const getDifficultyColor = (difficulty) => {
     expert: 'bg-purple-500'
   }
   return colors[difficulty?.toLowerCase()] || 'bg-gray-500'
+}
+
+// Search handler with debounce
+const handleSearch = debounce(() => {
+  applyFilters()
+}, 500)
+
+// Filter change handler
+const handleFilterChange = () => {
+  applyFilters()
+}
+
+// Apply all filters
+const applyFilters = () => {
+  const filters = {
+    search: searchQuery.value,
+    difficulty: selectedDifficulty.value,
+    sort_by: 'created_at', // Default
+    sort_order: 'desc' // Default
+  }
+
+  // Handle price filter
+  if (selectedPrice.value === 'free') {
+    filters.max_price = 0
+  } else if (selectedPrice.value === 'paid') {
+    filters.min_price = 0.01
+  }
+
+  // Handle sort
+  if (selectedSort.value) {
+    // eslint-disable-next-line no-unused-vars
+    const [field, direction] = selectedSort.value.split('_')
+    
+    if (selectedSort.value === 'created_at_desc') {
+      filters.sort_by = 'created_at'
+      filters.sort_order = 'desc'
+    } else if (selectedSort.value === 'price_asc') {
+      filters.sort_by = 'price'
+      filters.sort_order = 'asc'
+    } else if (selectedSort.value === 'price_desc') {
+      filters.sort_by = 'price'
+      filters.sort_order = 'desc'
+    } else if (selectedSort.value === 'title_asc') {
+      filters.sort_by = 'title'
+      filters.sort_order = 'asc'
+    }
+  }
+
+  courseStore.updateFilters(filters)
+}
+
+// Reset filters
+const resetFilters = () => {
+  searchQuery.value = ''
+  selectedDifficulty.value = ''
+  selectedPrice.value = ''
+  selectedSort.value = 'created_at_desc'
+  courseStore.clearFilters()
+}
+
+// Pagination handler
+const changePage = (page) => {
+  courseStore.fetchCourses({ page })
+  // Scroll to top of grid (not top of page to keep hero visible)
+  const gridTop = document.querySelector('.bg-black.py-4')?.offsetTop || 0
+  window.scrollTo({ top: gridTop - 100, behavior: 'smooth' })
 }
 
 const loadCourses = async () => {
@@ -322,10 +419,6 @@ const loadCourses = async () => {
         await loadPurchaseStatus()
       })
     }
-    
-    // Update scroll buttons after courses load
-    await nextTick()
-    updateScrollButtons()
     
     // Log memory usage after loading
     logMemory('After loading courses')
@@ -392,43 +485,8 @@ const handlePurchase = async (course) => {
   }
 }
 
-const refreshCourses = async () => {
-  refreshing.value = true
-  try {
-    console.log('Refreshing courses via course store...')
-    
-    // Use course store refresh method
-    await courseStore.refreshCourses()
-    
-    // Set first course as selected if no course is selected
-    if (courses.value.length > 0 && !selectedCourse.value) {
-      selectedCourse.value = courses.value[0]
-    }
-    
-    // Reload purchase status if user is authenticated
-    if (authStore.user && courses.value.length > 0) {
-      await loadPurchaseStatus()
-    }
-    
-    // Update scroll buttons
-    await nextTick()
-    updateScrollButtons()
-    
-    console.log('Courses refreshed successfully, total:', courses.value.length)
-  } catch (error) {
-    console.error('Error refreshing courses:', error)
-  } finally {
-    refreshing.value = false
-  }
-}
-
 onMounted(() => {
   loadCourses()
-  
-  // Add scroll listener to update scroll buttons
-  if (scrollContainer.value) {
-    scrollContainer.value.addEventListener('scroll', updateScrollButtons)
-  }
 })
 </script>
 

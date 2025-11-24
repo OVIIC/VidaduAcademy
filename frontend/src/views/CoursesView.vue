@@ -5,12 +5,14 @@
       <!-- Background Image with Smooth Transition -->
       <div class="absolute inset-0">
         <div class="relative w-full h-full">
-          <img 
-            :key="selectedCourse?.id || 'default'"
-            :src="selectedCourse?.thumbnail || '/api/placeholder/1920/1080'"
-            :alt="selectedCourse?.title || 'Course'"
-            class="w-full h-full object-cover transition-all duration-1000 ease-in-out"
-          />
+          <transition name="hero-fade" mode="out-in">
+            <img 
+              :key="selectedCourse?.id || 'default'"
+              :src="selectedCourse?.thumbnail || '/api/placeholder/1920/1080'"
+              :alt="selectedCourse?.title || 'Course'"
+              class="w-full h-full object-cover"
+            />
+          </transition>
           <!-- Disney+ style gradient overlays -->
           <div class="absolute inset-0 bg-gradient-to-r from-black/90 via-black/50 to-transparent"></div>
           <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
@@ -46,61 +48,63 @@
       <!-- Hero Content -->
       <div class="relative z-10 h-full flex items-center">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
-          <div class="max-w-3xl mt-16">
-            <!-- Course Title (Large Disney+ style) -->
-            <h1 class="text-3xl md:text-5xl lg:text-6xl font-bold mb-6 leading-none tracking-tight">
-              {{ selectedCourse?.title || 'Načítavajú sa kurzy...' }}
-            </h1>
+          <transition name="hero-content-fade" mode="out-in">
+            <div :key="selectedCourse?.id || 'default'" class="max-w-3xl mt-16">
+              <!-- Course Title (Large Disney+ style) -->
+              <h1 class="text-3xl md:text-5xl lg:text-6xl font-bold mb-6 leading-none tracking-tight">
+                {{ selectedCourse?.title || 'Načítavajú sa kurzy...' }}
+              </h1>
 
-            <!-- Course Info Bar (Disney+ style) -->
-            <div v-if="selectedCourse" class="flex items-center space-x-6 mb-6 text-lg font-medium">
-              <div class="flex items-center space-x-2">
-                <svg class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
-                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
-                </svg>
-                <span class="text-white">{{ selectedCourse.instructor?.name || selectedCourse.instructor }}</span>
+              <!-- Course Info Bar (Disney+ style) -->
+              <div v-if="selectedCourse" class="flex items-center space-x-6 mb-6 text-lg font-medium">
+                <div class="flex items-center space-x-2">
+                  <svg class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                  </svg>
+                  <span class="text-white">{{ selectedCourse.instructor?.name || selectedCourse.instructor }}</span>
+                </div>
+                <div class="flex items-center space-x-2">
+                  <div class="w-3 h-3 rounded-full" :class="getDifficultyColor(selectedCourse.difficulty)"></div>
+                  <span class="capitalize text-white">{{ selectedCourse.difficulty }}</span>
+                </div>
+                <div class="text-gray-200">{{ selectedCourse.duration }}</div>
+                <div class="text-green-400 font-bold">€{{ selectedCourse.price }}</div>
               </div>
-              <div class="flex items-center space-x-2">
-                <div class="w-3 h-3 rounded-full" :class="getDifficultyColor(selectedCourse.difficulty)"></div>
-                <span class="capitalize text-white">{{ selectedCourse.difficulty }}</span>
+
+              <!-- Course Description -->
+              <p class="text-xl md:text-2xl leading-relaxed mb-8 text-gray-200 max-w-2xl font-light">
+                {{ selectedCourse?.short_description || 'Vyberte kurz pre zobrazenie detailov.' }}
+              </p>
+
+              <!-- Action Buttons (Disney+ style) -->
+              <div class="flex items-center space-x-4">
+                <button
+                  v-if="selectedCourse"
+                  @click="handlePurchase(selectedCourse)"
+                  :disabled="showCheckoutLoading && checkoutCourse?.id === selectedCourse.id"
+                  class="bg-primary-500 hover:bg-primary-600 text-white disabled:opacity-50 px-10 py-4 rounded-2xl font-bold text-xl transition-all duration-200 flex items-center space-x-3 shadow-lg hover:shadow-xl"
+                >
+                  <svg v-if="showCheckoutLoading && checkoutCourse?.id === selectedCourse.id" class="animate-spin w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                  </svg>
+                  <svg v-else class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1m4 0h1m-6 4h6m2 5H7a2 2 0 01-2-2V9a2 2 0 012-2h10a2 2 0 012 2v8a2 2 0 01-2 2z"/>
+                  </svg>
+                  <span>{{ showCheckoutLoading && checkoutCourse?.id === selectedCourse.id ? 'Spracováva sa...' : 'Kúpiť kurz' }}</span>
+                </button>
+                
+                <button 
+                  @click="toggleCourseDetails"
+                  class="bg-gray-600/70 hover:bg-gray-600/90 text-white px-8 py-4 rounded-2xl font-bold text-xl transition-all duration-200 flex items-center space-x-3"
+                >
+                  <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                  </svg>
+                  <span>{{ showCourseDetails ? 'Skryť info' : 'Viac info' }}</span>
+                </button>
               </div>
-              <div class="text-gray-200">{{ selectedCourse.duration }}</div>
-              <div class="text-green-400 font-bold">€{{ selectedCourse.price }}</div>
             </div>
-
-            <!-- Course Description -->
-            <p class="text-xl md:text-2xl leading-relaxed mb-8 text-gray-200 max-w-2xl font-light">
-              {{ selectedCourse?.short_description || 'Vyberte kurz pre zobrazenie detailov.' }}
-            </p>
-
-            <!-- Action Buttons (Disney+ style) -->
-            <div class="flex items-center space-x-4">
-              <button
-                v-if="selectedCourse"
-                @click="handlePurchase(selectedCourse)"
-                :disabled="showCheckoutLoading && checkoutCourse?.id === selectedCourse.id"
-                class="bg-primary-500 hover:bg-primary-600 text-white disabled:opacity-50 px-10 py-4 rounded-2xl font-bold text-xl transition-all duration-200 flex items-center space-x-3 shadow-lg hover:shadow-xl"
-              >
-                <svg v-if="showCheckoutLoading && checkoutCourse?.id === selectedCourse.id" class="animate-spin w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
-                </svg>
-                <svg v-else class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1m4 0h1m-6 4h6m2 5H7a2 2 0 01-2-2V9a2 2 0 012-2h10a2 2 0 012 2v8a2 2 0 01-2 2z"/>
-                </svg>
-                <span>{{ showCheckoutLoading && checkoutCourse?.id === selectedCourse.id ? 'Spracováva sa...' : 'Kúpiť kurz' }}</span>
-              </button>
-              
-              <button 
-                @click="toggleCourseDetails"
-                class="bg-gray-600/70 hover:bg-gray-600/90 text-white px-8 py-4 rounded-2xl font-bold text-xl transition-all duration-200 flex items-center space-x-3"
-              >
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                </svg>
-                <span>{{ showCourseDetails ? 'Skryť info' : 'Viac info' }}</span>
-              </button>
-            </div>
-          </div>
+          </transition>
         </div>
       </div>
     </div>
@@ -736,5 +740,43 @@ onMounted(() => {
   max-height: 2000px;
   opacity: 1;
   transform: translateY(0);
+}
+
+/* Hero image crossfade animation */
+.hero-fade-enter-active,
+.hero-fade-leave-active {
+  transition: opacity 0.3s ease-in-out;
+}
+
+.hero-fade-enter-from {
+  opacity: 0;
+}
+
+.hero-fade-leave-to {
+  opacity: 0;
+}
+
+.hero-fade-enter-to,
+.hero-fade-leave-from {
+  opacity: 1;
+}
+
+/* Hero content fade animation */
+.hero-content-fade-enter-active,
+.hero-content-fade-leave-active {
+  transition: opacity 0.3s ease-in-out;
+}
+
+.hero-content-fade-enter-from {
+  opacity: 0;
+}
+
+.hero-content-fade-leave-to {
+  opacity: 0;
+}
+
+.hero-content-fade-enter-to,
+.hero-content-fade-leave-from {
+  opacity: 1;
 }
 </style>

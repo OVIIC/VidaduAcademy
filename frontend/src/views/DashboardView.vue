@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-black text-white py-8">
+  <div class="min-h-screen bg-secondary-800 text-white py-8">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <!-- Header -->
       <div class="mb-8">
@@ -9,7 +9,7 @@
 
       <!-- Stats Cards -->
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <div class="bg-gradient-to-br from-gray-900/30 via-secondary-900/20 to-gray-900/40 backdrop-blur-xl border border-gray-700/50 rounded-2xl p-6">
+        <div class="bg-secondary-surface shadow-highlight backdrop-blur-xl border border-gray-700/50 rounded-2xl p-6">
           <div class="flex items-center">
             <div class="p-3 bg-gradient-to-br from-primary-500/20 via-secondary-500/20 to-primary-500/20 backdrop-blur-xl border border-primary-500/30 rounded-xl">
               <img src="/images/zapisane_kurzy_icon.png" alt="Zapísané kurzy" class="w-6 h-6 object-contain" />
@@ -20,8 +20,7 @@
             </div>
           </div>
         </div>
-
-        <div class="bg-gradient-to-br from-gray-900/30 via-secondary-900/20 to-gray-900/40 backdrop-blur-xl border border-gray-700/50 rounded-2xl p-6">
+        <div class="bg-secondary-surface shadow-highlight backdrop-blur-xl border border-gray-700/50 rounded-2xl p-6">
           <div class="flex items-center">
             <div class="p-3 bg-gradient-to-br from-green-500/20 via-green-600/20 to-green-500/20 backdrop-blur-xl border border-green-500/30 rounded-xl">
               <svg class="w-6 h-6 text-green-500" fill="currentColor" viewBox="0 0 20 20">
@@ -34,8 +33,7 @@
             </div>
           </div>
         </div>
-
-        <div class="bg-gradient-to-br from-gray-900/30 via-secondary-900/20 to-gray-900/40 backdrop-blur-xl border border-gray-700/50 rounded-2xl p-6">
+        <div class="bg-secondary-surface shadow-highlight backdrop-blur-xl border border-gray-700/50 rounded-2xl p-6">
           <div class="flex items-center">
             <div class="p-3 bg-gradient-to-br from-secondary-500/20 via-purple-500/20 to-secondary-500/20 backdrop-blur-xl border border-secondary-500/30 rounded-xl">
               <svg class="w-6 h-6 text-secondary-500" fill="currentColor" viewBox="0 0 20 20">
@@ -55,7 +53,7 @@
         <!-- Main Content -->
         <div class="lg:col-span-2">
           <!-- Continue Learning -->
-          <div class="bg-gradient-to-br from-gray-900/30 via-secondary-900/20 to-gray-900/40 backdrop-blur-xl border border-gray-700/50 rounded-2xl p-6">
+          <div class="bg-secondary-surface shadow-highlight backdrop-blur-xl border border-gray-700/50 rounded-2xl p-6">
             <h2 class="text-xl font-bold text-white mb-4">Pokračovať v učení</h2>
             
             <!-- Loading -->
@@ -84,7 +82,7 @@
                     <router-link
                       v-if="course.progress < 100"
                       :to="{ name: 'CourseStudy', params: { slug: course.slug } }"
-                      class="bg-gradient-to-r from-primary-500 to-secondary-500 hover:from-primary-600 hover:to-secondary-600 text-white px-4 py-2 rounded-xl text-sm font-medium transition duration-200"
+                      class="bg-gradient-to-r from-primary-500 to-secondary-500 hover:from-primary-600 hover:to-secondary-600 text-white px-4 py-2 rounded-xl text-sm font-medium transition duration-200 shadow-highlight"
                     >
                       Pokračovať
                     </router-link>
@@ -108,7 +106,7 @@
               <div class="mt-6">
                 <router-link
                   to="/courses"
-                  class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-primary-500 to-secondary-500 hover:from-primary-600 hover:to-secondary-600 text-white rounded-xl text-sm font-medium transition duration-200"
+                  class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-primary-500 to-secondary-500 hover:from-primary-600 hover:to-secondary-600 text-white rounded-xl text-sm font-medium transition duration-200 shadow-highlight"
                 >
                   Prehliadať kurzy
                 </router-link>
@@ -117,7 +115,7 @@
           </div>
 
           <!-- Your Courses Section -->
-          <div class="bg-gradient-to-br from-gray-900/30 via-secondary-900/20 to-gray-900/40 backdrop-blur-xl border border-gray-700/50 rounded-2xl p-6 mt-8">
+          <div class="bg-secondary-surface shadow-highlight backdrop-blur-xl border border-gray-700/50 rounded-2xl p-6 mt-8">
             <div class="flex items-center justify-between mb-6">
               <h2 class="text-xl font-bold text-white">Tvoje kurzy</h2>
               <router-link
@@ -198,7 +196,7 @@
               <div class="mt-6">
                 <router-link
                   to="/courses"
-                  class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-primary-500 to-secondary-500 hover:from-primary-600 hover:to-secondary-600 text-white rounded-xl text-sm font-medium transition duration-200"
+                  class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-primary-500 to-secondary-500 hover:from-primary-600 hover:to-secondary-600 text-white rounded-xl text-sm font-medium transition duration-200 shadow-highlight"
                 >
                   Prehliadať kurzy
                 </router-link>
@@ -210,24 +208,24 @@
         <!-- Sidebar -->
         <div class="lg:col-span-1">
           <!-- Quick Actions -->
-          <div class="bg-gradient-to-br from-gray-900/30 via-secondary-900/20 to-gray-900/40 backdrop-blur-xl border border-gray-700/50 rounded-2xl p-6">
+          <div class="bg-secondary-surface shadow-highlight backdrop-blur-xl border border-gray-700/50 rounded-2xl p-6">
             <h3 class="text-lg font-semibold text-white mb-4">Rýchle akcie</h3>
             <div class="space-y-3">
               <router-link
                 to="/courses"
-                class="w-full bg-gradient-to-r from-primary-500 to-secondary-500 hover:from-primary-600 hover:to-secondary-600 text-white px-4 py-2 rounded-xl text-sm font-medium transition duration-200 block text-center"
+                class="w-full bg-gradient-to-r from-primary-500 to-secondary-500 hover:from-primary-600 hover:to-secondary-600 text-white px-4 py-2 rounded-xl text-sm font-medium transition duration-200 block text-center shadow-highlight"
               >
                 Prehliadať kurzy
               </router-link>
               <router-link
                 to="/my-courses"
-                class="w-full bg-gradient-to-br from-gray-800/40 via-secondary-900/30 to-gray-800/50 backdrop-blur-xl border border-gray-700/50 hover:border-primary-500/50 text-gray-200 px-4 py-2 rounded-xl text-sm font-medium transition duration-200 block text-center"
+                class="w-full bg-gradient-to-br from-gray-800/40 via-secondary-900/30 to-gray-800/50 backdrop-blur-xl border border-gray-700/50 hover:border-primary-500/50 text-gray-200 px-4 py-2 rounded-xl text-sm font-medium transition duration-200 block text-center shadow-highlight"
               >
                 Moje kurzy
               </router-link>
               <router-link
                 to="/profile"
-                class="w-full bg-gradient-to-br from-gray-800/40 via-secondary-900/30 to-gray-800/50 backdrop-blur-xl border border-gray-700/50 hover:border-primary-500/50 text-gray-200 px-4 py-2 rounded-xl text-sm font-medium transition duration-200 block text-center"
+                class="w-full bg-gradient-to-br from-gray-800/40 via-secondary-900/30 to-gray-800/50 backdrop-blur-xl border border-gray-700/50 hover:border-primary-500/50 text-gray-200 px-4 py-2 rounded-xl text-sm font-medium transition duration-200 block text-center shadow-highlight"
               >
                 Upraviť profil
               </router-link>

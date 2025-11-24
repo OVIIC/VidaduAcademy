@@ -128,7 +128,7 @@
     >        <div 
           v-if="isMobileMenuOpen"
           id="mobile-menu"
-          class="md:hidden bg-black border-t border-gray-700 shadow-lg transition-colors duration-200"
+          class="md:hidden bg-secondary-800 border-t border-secondary-700 shadow-lg transition-colors duration-200"
         >
         <div class="container-responsive px-4 py-4 space-y-2">
           <!-- Main Navigation -->

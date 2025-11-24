@@ -22,32 +22,36 @@ export default {
       'desktop': {'min': '1024px'},   // Desktop and up
     },
     extend: {
+      boxShadow: {
+        'highlight': 'inset 0 1px 2px #ffffff30, 0 1px 2px #00000030, 0 2px 4px #00000015',
+      },
       colors: {
         primary: {
-          50: '#fff5f4',
-          100: '#ffe8e5',
-          200: '#ffd4ce',
-          300: '#ffb3a8',
-          400: '#ff8575',
-          500: '#f26b55', // Brand Orange
-          600: '#df4c34',
-          700: '#ba321d',
-          800: '#992b1b',
-          900: '#7f281c',
-          950: '#45110a',
+          50: '#fff2f0',
+          100: '#ffe1dd',
+          200: '#ffc5bf',
+          300: '#ff9d94',
+          400: '#ff6b5e',
+          500: '#f05a45', // Vibrant Orange from button
+          600: '#dd3e2b',
+          700: '#ba2d1d',
+          800: '#992518',
+          900: '#7f2016',
+          950: '#450d08',
         },
         secondary: {
-          50: '#f4f3ff',
-          100: '#ebe9fe',
-          200: '#d9d6fe',
-          300: '#bdb4fe',
-          400: '#9d8bfd',
-          500: '#6c5dd3', // Brand Purple
-          600: '#5a49c4',
-          700: '#4c3ba5',
-          800: '#3f3285',
-          900: '#1e1b2e', // Brand Dark Background
-          950: '#12101c',
+          50: '#f5f4f7',
+          100: '#e8e6eb',
+          200: '#d0cdd9',
+          300: '#aba6bf',
+          400: '#837da1',
+          500: '#645d85',
+          600: '#4e4869',
+          700: '#3e3954', // Card background
+          800: '#322e4b', // Main background
+          900: '#252238', // Darker background
+          950: '#151321',
+          surface: '#585070', // Custom surface color
         },
         dark: {
           50: '#f6f6f7',
@@ -58,9 +62,9 @@ export default {
           500: '#7e899f',
           600: '#606a7f',
           700: '#495162',
-          800: '#1e1b2e', // Match Brand Dark
-          900: '#13111c', // Deepest Dark
-          950: '#0a090f',
+          800: '#322e4b', // Match Main Background
+          900: '#252238', // Match Darker Background
+          950: '#151321',
         },
         brand: {
           yellow: '#f9c851',

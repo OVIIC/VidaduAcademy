@@ -1,6 +1,6 @@
 <template>
   <aside 
-    class="bg-black border-r border-gray-800 min-h-screen hidden md:flex flex-col shrink-0 transition-all duration-300 ease-in-out"
+    class="bg-secondary-800 border-r border-secondary-700 min-h-screen hidden md:flex flex-col shrink-0 transition-all duration-300 ease-in-out"
     :class="[isCollapsed ? 'w-20' : 'w-64']"
   >
     <div class="p-6 flex items-center justify-between">
@@ -12,7 +12,7 @@
       
       <button 
         @click="toggleCollapse" 
-        class="text-gray-500 hover:text-white transition-colors focus:outline-none"
+        class="text-gray-400 hover:text-white transition-colors focus:outline-none"
         :class="{ 'mx-auto': isCollapsed }"
       >
         <component :is="isCollapsed ? ChevronRightIcon : ChevronLeftIcon" class="h-5 w-5" />
@@ -27,8 +27,8 @@
         class="group flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors whitespace-nowrap"
         :class="[
           $route.path === item.href
-            ? 'bg-gray-800 text-white'
-            : 'text-gray-400 hover:bg-gray-900 hover:text-white',
+            ? 'bg-secondary-700 text-white'
+            : 'text-gray-400 hover:bg-secondary-700/50 hover:text-white',
           isCollapsed ? 'justify-center' : ''
         ]"
         :title="isCollapsed ? item.name : ''"

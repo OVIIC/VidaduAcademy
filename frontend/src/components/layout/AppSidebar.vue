@@ -50,7 +50,7 @@
       </router-link>
     </nav>
     
-    <div class="p-4 border-t border-gray-800 mt-auto relative">
+    <div ref="userMenuRef" class="p-4 border-t border-gray-800 mt-auto relative">
       <button 
         @click="showUserMenu = !showUserMenu"
         class="w-full flex items-center gap-3 hover:bg-secondary-700 rounded-lg p-2 transition-colors"
@@ -103,7 +103,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import { 
@@ -118,6 +118,7 @@ const router = useRouter()
 const authStore = useAuthStore()
 const isCollapsed = ref(false)
 const showUserMenu = ref(false)
+const userMenuRef = ref(null)
 
 const toggleCollapse = () => {
   isCollapsed.value = !isCollapsed.value
@@ -144,4 +145,19 @@ const handleLogout = async () => {
   await authStore.logout()
   router.push('/login')
 }
+
+// Close dropdown when clicking outside
+const handleClickOutside = (event) => {
+  if (userMenuRef.value && !userMenuRef.value.contains(event.target)) {
+    showUserMenu.value = false
+  }
+}
+
+onMounted(() => {
+  document.addEventListener('click', handleClickOutside)
+})
+
+onUnmounted(() => {
+  document.removeEventListener('click', handleClickOutside)
+})
 </script>

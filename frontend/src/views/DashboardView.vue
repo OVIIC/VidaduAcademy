@@ -84,7 +84,7 @@
                   </div>
                   <div class="ml-4">
                     <router-link
-                      v-if="course.slug"
+                      v-if="course.progress < 100"
                       :to="{ name: 'CourseStudy', params: { slug: course.slug } }"
                       class="bg-gradient-to-r from-primary-500 to-secondary-500 hover:from-primary-600 hover:to-secondary-600 text-white px-4 py-2 rounded-xl text-sm font-medium transition duration-200"
                     >

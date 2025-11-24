@@ -84,6 +84,7 @@ import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import { useEnrollmentStore } from '@/stores/enrollment'
+import { paymentService } from '@/services'
 import { useToast } from 'vue-toastification'
 
 const route = useRoute()
@@ -125,24 +126,23 @@ const simulateSuccess = async () => {
   
   try {
     // Simulate successful payment and enroll user in course
-    console.log('Enrolling user in course:', courseInfo.value.id)
+    console.log('Simulating purchase for course:', courseInfo.value.id)
     
-    // Try to enroll via API first
-    await enrollmentStore.enrollInCourse(parseInt(courseInfo.value.id))
+    // Call the simulate purchase endpoint
+    await paymentService.simulatePurchase(parseInt(courseInfo.value.id))
     
-    // Show success message for API enrollment
+    // Show success message
     toast.success(`Úspešná platba! Kurz "${courseInfo.value.title}" bol pridaný do vašich kurzov.`)
     
   } catch (error) {
-    console.warn('API enrollment failed, using fallback:', error)
+    console.warn('API simulation failed, using fallback:', error)
     
-    // Fallback: Add course to local state for development testing
+    // Fallback: Add course to local state for development testing (legacy behavior)
     enrollmentStore.addCourseToMyCourses({
       id: parseInt(courseInfo.value.id),
       title: courseInfo.value.title,
       price: courseInfo.value.price,
-      slug: route.query.courseSlug || `course-${courseInfo.value.id}`, // Add slug
-      // Mock additional course data
+      slug: route.query.courseSlug || `course-${courseInfo.value.id}`,
       description: 'Mock course added after simulated purchase',
       duration_minutes: 120,
       thumbnail: null,

@@ -44,6 +44,8 @@ import { useAuthStore } from '@/stores/auth'
 import PerformanceDashboard from '@/components/debug/PerformanceDashboard.vue'
 import DefaultLayout from '@/layouts/DefaultLayout.vue'
 import DashboardLayout from '@/layouts/DashboardLayout.vue'
+import AdminLayout from '@/layouts/AdminLayout.vue'
+import InstructorLayout from '@/layouts/InstructorLayout.vue'
 
 const route = useRoute()
 const authStore = useAuthStore()
@@ -55,6 +57,10 @@ const layout = computed(() => {
   switch (layoutName) {
     case 'dashboard':
       return DashboardLayout
+    case 'admin':
+      return AdminLayout
+    case 'instructor':
+      return InstructorLayout
     default:
       return DefaultLayout
   }

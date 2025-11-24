@@ -64,12 +64,9 @@
         <router-link
           v-if="course.slug"
           :to="{ name: 'CourseStudy', params: { slug: course.slug } }"
-          :class="[
-            'flex-1 text-center px-4 py-2 rounded-lg text-sm font-medium transition duration-200',
-            actionButtonClass
-          ]"
+          class="flex-1 inline-flex justify-center items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700"
         >
-          {{ actionText }}
+          Pokračovať
         </router-link>
         
         <div
@@ -112,37 +109,9 @@ const isCompleted = computed(() => {
   return progressPercentage.value >= 100
 })
 
-const isInProgress = computed(() => {
-  return progressPercentage.value > 0 && progressPercentage.value < 100
-})
 
-const isNotStarted = computed(() => {
-  return progressPercentage.value === 0
-})
 
-const statusText = computed(() => {
-  if (isCompleted.value) return 'Dokončené'
-  if (isInProgress.value) return 'Prebiehajúce'
-  return 'Nezačaté'
-})
 
-const statusBadgeClass = computed(() => {
-  if (isCompleted.value) return 'bg-green-100 text-green-800'
-  if (isInProgress.value) return 'bg-blue-100 text-blue-800'
-  return 'bg-gray-100 text-gray-800'
-})
-
-const actionText = computed(() => {
-  if (isCompleted.value) return 'Opakovať'
-  if (isInProgress.value) return 'Pokračovať'
-  return 'Začať'
-})
-
-const actionButtonClass = computed(() => {
-  if (isCompleted.value) return 'bg-green-600 hover:bg-green-700 text-white'
-  if (isInProgress.value) return 'bg-primary-600 hover:bg-primary-700 text-white'
-  return 'bg-primary-600 hover:bg-primary-700 text-white'
-})
 
 const formatDate = (dateString) => {
   if (!dateString) return ''
@@ -156,8 +125,37 @@ const formatDate = (dateString) => {
 }
 
 const viewCertificate = () => {
-  // TODO: Implement certificate viewing
-  console.log('Viewing certificate for course:', props.course.title)
+  if (!props.course.enrollment_data?.id) return
+  
+  // Use the direct URL approach to open in new tab
+  // We need to append the auth token if using Sanctum via headers, but since we are opening in new tab, 
+  // we might need a different approach or rely on cookie auth if it was set up that way.
+  // However, since we are using token based auth in headers, opening a new tab directly won't send headers.
+  // A better approach for SPA is to fetch the blob and create a local URL, OR use a download token.
+  // For this simple implementation, let's try fetching the HTML blob and showing it.
+  
+  // Actually, let's use the service to get the blob/text and open a window
+  // But wait, the backend returns HTML.
+  
+  // Let's try to fetch it using our authenticated api client, then open a window with the content.
+  import('@/services').then(({ authService }) => {
+    // We can construct the URL but we need to pass the token. 
+    // Since we can't easily pass headers in a simple link, we will fetch the content and display it.
+    // Or simpler: just assume the user is logged in (cookies) if we were using cookies.
+    // But we are using Sanctum tokens in headers likely.
+    
+    // Let's go with: fetch content -> open window -> write content
+    const enrollmentId = props.course.enrollment_data.id
+    authService.getCertificate(enrollmentId).then(response => {
+      const win = window.open('', '_blank')
+      if (win) {
+        win.document.write(response)
+        win.document.close()
+      }
+    }).catch(err => {
+      console.error('Error fetching certificate', err)
+    })
+  })
 }
 </script>
 

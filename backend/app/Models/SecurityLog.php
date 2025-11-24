@@ -11,44 +11,19 @@ class SecurityLog extends Model
 
     protected $fillable = [
         'event_type',
-        'severity',
-        'user_id',
+        'description',
         'ip_address',
         'user_agent',
-        'action',
-        'metadata',
-        'resource_type',
-        'resource_id',
-        'is_suspicious',
-        'notes',
-        'created_at'
+        'user_id',
+        'payload',
     ];
 
     protected $casts = [
-        'metadata' => 'array',
-        'is_suspicious' => 'boolean',
-        'created_at' => 'datetime'
+        'payload' => 'array',
     ];
-
-    public $timestamps = false;
 
     public function user()
     {
         return $this->belongsTo(User::class);
-    }
-
-    public function scopeSuspicious($query)
-    {
-        return $query->where('is_suspicious', true);
-    }
-
-    public function scopeByEventType($query, string $eventType)
-    {
-        return $query->where('event_type', $eventType);
-    }
-
-    public function scopeByDateRange($query, $startDate, $endDate)
-    {
-        return $query->whereBetween('created_at', [$startDate, $endDate]);
     }
 }

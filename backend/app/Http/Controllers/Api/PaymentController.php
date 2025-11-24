@@ -95,4 +95,40 @@ class PaymentController extends Controller
 
         return response()->json($purchases);
     }
+
+    public function simulatePurchase(Request $request): JsonResponse
+    {
+        $request->validate([
+            'course_id' => 'required|exists:courses,id',
+        ]);
+
+        $user = Auth::user();
+        $course = Course::findOrFail($request->course_id);
+
+        // Create a completed purchase record
+        $purchase = \App\Models\Purchase::create([
+            'user_id' => $user->id,
+            'course_id' => $course->id,
+            'stripe_session_id' => 'sim_' . uniqid(),
+            'stripe_payment_intent_id' => 'pi_sim_' . uniqid(),
+            'amount' => $course->price,
+            'currency' => 'EUR',
+            'status' => 'completed',
+            'purchased_at' => now(),
+        ]);
+
+        // Enroll the user
+        if (!$user->isEnrolledIn($course)) {
+            $user->enrollments()->create([
+                'course_id' => $course->id,
+                'enrolled_at' => now(),
+                'progress_percentage' => 0,
+            ]);
+        }
+
+        return response()->json([
+            'message' => 'Purchase simulated successfully',
+            'purchase' => $purchase
+        ]);
+    }
 }

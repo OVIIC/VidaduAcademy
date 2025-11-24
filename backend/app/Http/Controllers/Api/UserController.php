@@ -131,22 +131,65 @@ class UserController extends Controller
     /**
      * Download certificate for completed course
      */
+    /**
+     * Download certificate for completed course
+     */
     public function downloadCertificate(Request $request, $enrollmentId)
     {
         $user = $request->user();
         $enrollment = $user->enrollments()
             ->with('course')
             ->where('id', $enrollmentId)
-            ->where('progress', 100)
+            ->where('progress_percentage', 100)
             ->firstOrFail();
 
-        // For now, return a simple PDF or redirect to certificate generation service
-        // This would typically generate a PDF certificate
-        return response()->json([
-            'message' => 'Certificate download functionality will be implemented',
-            'enrollment' => $enrollment,
-            'download_url' => '#' // Placeholder for actual certificate download
-        ]);
+        // Generate a simple HTML certificate
+        $html = '
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <meta charset="utf-8">
+                <title>Certificate of Completion</title>
+                <style>
+                    body { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; text-align: center; padding: 50px; background: #f0f2f5; }
+                    .certificate { max-width: 800px; margin: 0 auto; background: white; padding: 60px; border: 20px solid #3b82f6; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+                    .header { font-size: 40px; font-weight: bold; color: #1e3a8a; margin-bottom: 20px; }
+                    .sub-header { font-size: 24px; color: #6b7280; margin-bottom: 40px; }
+                    .recipient { font-size: 48px; font-weight: bold; color: #111827; margin-bottom: 20px; border-bottom: 2px solid #e5e7eb; display: inline-block; padding-bottom: 10px; }
+                    .course-name { font-size: 32px; font-weight: bold; color: #3b82f6; margin-bottom: 40px; }
+                    .date { font-size: 18px; color: #6b7280; margin-top: 60px; }
+                    .signature { margin-top: 60px; display: flex; justify-content: space-around; }
+                    .sig-line { border-top: 1px solid #9ca3af; width: 200px; padding-top: 10px; font-size: 16px; color: #4b5563; }
+                    @media print {
+                        body { background: white; padding: 0; }
+                        .certificate { border: 10px solid #3b82f6; box-shadow: none; }
+                    }
+                </style>
+            </head>
+            <body>
+                <div class="certificate">
+                    <div class="header">CERTIFICATE OF COMPLETION</div>
+                    <div class="sub-header">This is to certify that</div>
+                    <div class="recipient">' . htmlspecialchars($user->name) . '</div>
+                    <div class="sub-header">has successfully completed the course</div>
+                    <div class="course-name">' . htmlspecialchars($enrollment->course->title) . '</div>
+                    <div class="date">Completed on ' . $enrollment->completed_at->format('F j, Y') . '</div>
+                    
+                    <div class="signature">
+                        <div class="sig-block">
+                            <div class="sig-line">VidaduAcademy Instructor</div>
+                        </div>
+                        <div class="sig-block">
+                            <div class="sig-line">Director of Education</div>
+                        </div>
+                    </div>
+                </div>
+                <script>window.print();</script>
+            </body>
+            </html>
+        ';
+
+        return response($html);
     }
 
     /**

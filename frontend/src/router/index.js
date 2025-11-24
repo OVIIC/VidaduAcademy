@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHistory, RouterView } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import HomeView from '@/views/HomeView.vue'
 
@@ -58,20 +58,21 @@ const router = createRouter({
       component: () => import('@/views/checkout/StripeCheckoutView.vue'),
       meta: { requiresAuth: true },
     },
-    {
-      path: '/learn/:courseSlug',
-      name: 'Learn',
-      component: () => import('@/views/LearnView.vue'),
-      meta: { requiresAuth: true, layout: 'dashboard' },
-      props: true,
-    },
-    {
-      path: '/learn/:courseSlug/:lessonSlug',
-      name: 'Lesson',
-      component: () => import('@/views/LessonView.vue'),
-      meta: { requiresAuth: true, layout: 'dashboard' },
-      props: true,
-    },
+    // Learn and Lesson routes are deprecated and replaced by CourseStudy
+    // {
+    //   path: '/learn/:courseSlug',
+    //   name: 'Learn',
+    //   component: () => import('@/views/LearnView.vue'),
+    //   meta: { requiresAuth: true, layout: 'dashboard' },
+    //   props: true,
+    // },
+    // {
+    //   path: '/learn/:courseSlug/:lessonSlug',
+    //   name: 'Lesson',
+    //   component: () => import('@/views/LessonView.vue'),
+    //   meta: { requiresAuth: true, layout: 'dashboard' },
+    //   props: true,
+    // },
     {
       path: '/payment/success',
       name: 'PaymentSuccess',
@@ -84,6 +85,52 @@ const router = createRouter({
       name: 'Profile',
       component: () => import('@/views/ProfileView.vue'),
       meta: { requiresAuth: true, layout: 'dashboard' },
+    },
+    // Admin Routes
+    {
+      path: '/admin',
+      component: RouterView,
+      meta: { requiresAuth: true, layout: 'admin', roles: ['admin'] },
+      children: [
+        {
+          path: '',
+          name: 'AdminDashboard',
+          component: () => import('@/views/admin/AdminDashboardView.vue'),
+        },
+        {
+          path: 'users',
+          name: 'AdminUsers',
+          component: () => import('@/views/admin/AdminUsersView.vue'),
+        },
+        {
+          path: 'security',
+          name: 'AdminSecurity',
+          component: () => import('@/views/admin/SecurityLogsView.vue'),
+        }
+      ]
+    },
+    // Instructor Routes
+    {
+      path: '/instructor',
+      component: RouterView,
+      meta: { requiresAuth: true, layout: 'instructor', roles: ['instructor'] },
+      children: [
+        {
+          path: '',
+          name: 'InstructorDashboard',
+          component: () => import('@/views/instructor/InstructorDashboardView.vue'),
+        },
+        {
+          path: 'courses',
+          name: 'InstructorCourses',
+          component: () => import('@/views/instructor/InstructorCoursesView.vue'),
+        },
+        {
+          path: 'courses/:id/edit',
+          name: 'InstructorCourseEdit',
+          component: () => import('@/views/instructor/CourseEditorView.vue'),
+        }
+      ]
     },
     {
       path: '/:pathMatch(.*)*',
@@ -109,6 +156,20 @@ router.beforeEach((to, from, next) => {
       next({ name: 'Login', query: { redirect: to.fullPath } })
     } else if (to.meta.requiresGuest && authStore.isAuthenticated) {
       next({ name: 'Dashboard' })
+    } else if (to.meta.roles) {
+      // Check for role requirements
+      const hasRequiredRole = to.meta.roles.some(role => authStore.hasRole(role))
+      
+      // Special check for instructor boolean flag if role is missing
+      const isInstructorOverride = to.meta.roles.includes('instructor') && authStore.isInstructor
+      
+      if (hasRequiredRole || isInstructorOverride) {
+        next()
+      } else {
+        // Redirect to dashboard if unauthorized
+        console.warn('Unauthorized access to role-protected route', to.path)
+        next({ name: 'Dashboard' })
+      }
     } else {
       next()
     }

@@ -111,6 +111,7 @@ class AuthController extends Controller
             return response()->json([
                 'message' => 'Registration successful',
                 'user' => $user->only(['id', 'name', 'email']),
+                'roles' => $user->getRoleNames(),
                 'token' => $token
             ], 201);
 
@@ -210,6 +211,7 @@ class AuthController extends Controller
         return response()->json([
             'message' => 'Login successful',
             'user' => $user->only(['id', 'name', 'email', 'is_instructor']),
+            'roles' => $user->getRoleNames(),
             'token' => $token
         ]);
     }
@@ -250,7 +252,8 @@ class AuthController extends Controller
                 'id', 'name', 'email', 'phone', 'location', 'bio', 
                 'avatar', 'website', 'youtube_channel', 'subscribers_count',
                 'content_niche', 'goals', 'is_instructor', 'is_active'
-            ])
+            ]),
+            'roles' => $user->getRoleNames()
         ]);
     }
 

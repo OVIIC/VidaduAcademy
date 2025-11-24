@@ -68,6 +68,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/checkout', [PaymentController::class, 'createCheckoutSession']);
         Route::get('/history', [PaymentController::class, 'purchaseHistory']);
         Route::get('/course/{courseId}/status', [PaymentController::class, 'checkCoursePurchaseStatus']);
+        Route::post('/simulate', [PaymentController::class, 'simulatePurchase']);
     });
 
     // Learning routes
@@ -101,11 +102,8 @@ Route::prefix('auth')->group(function () {
 });
 
 // Security reporting endpoint
-Route::post('/security/violations', function (Request $request) {
-    // Log CSP violations and other security events from frontend
-    \Log::warning('Frontend security violation', $request->all());
-    return response()->json(['status' => 'logged']);
-})->middleware('rate.limit:security_reports,10,1');
+Route::post('/security/violations', [\App\Http\Controllers\Api\Admin\SecurityLogController::class, 'store'])
+    ->middleware('rate.limit:security_reports,10,1');
 
 // Enrollment routes (admin/instructor only)
 Route::middleware(['auth:sanctum'])->prefix('enrollments')->group(function () {
@@ -114,6 +112,17 @@ Route::middleware(['auth:sanctum'])->prefix('enrollments')->group(function () {
     Route::delete('/unenroll', [EnrollmentController::class, 'unenrollUser']);
     Route::put('/{enrollment}/progress', [EnrollmentController::class, 'updateProgress']);
     Route::get('/course/{course}/students', [EnrollmentController::class, 'getCourseEnrollments']);
+});
+
+// Admin Routes
+Route::middleware(['auth:sanctum', 'role:admin'])->prefix('admin')->group(function () {
+    Route::apiResource('users', \App\Http\Controllers\Api\Admin\AdminUserController::class);
+    Route::get('security-logs', [\App\Http\Controllers\Api\Admin\SecurityLogController::class, 'index']);
+});
+
+// Instructor Routes
+Route::middleware(['auth:sanctum', 'role:instructor'])->prefix('instructor')->group(function () {
+    Route::apiResource('courses', \App\Http\Controllers\Api\Instructor\InstructorCourseController::class);
 });
 
 // Stripe webhook (must be before auth middleware)

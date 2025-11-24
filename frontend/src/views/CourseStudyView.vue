@@ -336,11 +336,21 @@
             >
               {{ progressPercentage === 0 ? 'Začať kurz' : 'Pokračovať' }}
             </button>
-            <div v-else class="text-center py-4 text-gray-500">
-              <svg class="mx-auto h-8 w-8 text-gray-400 mb-2" fill="currentColor" viewBox="0 0 20 20">
-                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+            <div v-else class="text-center py-4">
+              <svg class="mx-auto h-12 w-12 text-green-500 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
-              <p>Kurz je dokončený!</p>
+              <h3 class="text-lg font-medium text-white mb-2">Kurz je dokončený!</h3>
+              <p class="text-gray-400 mb-4">Gratulujeme k úspešnému absolvovaniu kurzu.</p>
+              <button
+                @click="downloadCertificate"
+                class="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-3 px-4 rounded-lg transition duration-200 flex items-center justify-center"
+              >
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                Stiahnuť certifikát
+              </button>
             </div>
           </div>
         </div>
@@ -348,7 +358,7 @@
     </div>
 
     <!-- Error State (Temporarily disabled) -->
-    <!-- <div v-else class="text-center py-12">
+    <div v-else class="text-center py-12">
       <div class="text-gray-400 text-lg">Kurz sa nenašiel</div>
       <p class="text-gray-500 mt-2">Skúste sa vrátiť neskôr.</p>
       <router-link 
@@ -357,19 +367,34 @@
       >
         Späť na moje kurzy
       </router-link>
-    </div> -->
+    </div>
   </div>
 </template>
 
 <script setup>
 import { ref, computed, onMounted, nextTick, onUnmounted } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { useRoute } from 'vue-router'
 import { useToast } from 'vue-toastification'
-import { learningService } from '@/services'
+import { learningService, authService } from '@/services'
 
 const route = useRoute()
-const router = useRouter()
 const toast = useToast()
+
+const downloadCertificate = async () => {
+  if (!course.value?.enrollment?.id) return
+  
+  try {
+    const response = await authService.getCertificate(course.value.enrollment.id)
+    const win = window.open('', '_blank')
+    if (win) {
+      win.document.write(response)
+      win.document.close()
+    }
+  } catch (error) {
+    console.error('Error downloading certificate:', error)
+    toast.error('Nepodarilo sa stiahnuť certifikát. Skúste to prosím neskôr.')
+  }
+}
 
 const loading = ref(false)
 const course = ref(null)
@@ -446,56 +471,7 @@ const loadCourseContent = async () => {
       }))
     }
     
-    // Mock some lessons if none exist
-    if (lessons.value.length === 0) {
-      lessons.value = [
-        { 
-          id: 1, 
-          title: 'Úvod do kurzu', 
-          description: 'Základy a prehľad kurzu', 
-          content: '<h3>Vitajte v kurze!</h3><p>V tejto úvodnej lekcii sa zoznámite so základmi kurzu.</p>',
-          duration_minutes: 15, 
-          completed: false,
-          video_url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'
-        },
-        { 
-          id: 2, 
-          title: 'Prvé kroky', 
-          description: 'Začíname s prácou', 
-          content: '<h3>Prvé kroky</h3><p>Teraz sa naučíte základné techniky a postupy.</p>',
-          duration_minutes: 20, 
-          completed: false,
-          video_url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'
-        },
-        { 
-          id: 3, 
-          title: 'Pokročilé techniky', 
-          description: 'Hlbšie znalosti', 
-          content: '<h3>Pokročilé techniky</h3><p>V tejto lekcii sa dostaneme k pokročilejším témam.</p>',
-          duration_minutes: 25, 
-          completed: false,
-          video_url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'
-        },
-        { 
-          id: 4, 
-          title: 'Praktické cvičenia', 
-          description: 'Aplikácia poznatkov', 
-          content: '<h3>Praktické cvičenia</h3><p>Teraz si vyskúšate naučené poznatky na praktických príkladoch.</p>',
-          duration_minutes: 30, 
-          completed: false,
-          video_url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'
-        },
-        { 
-          id: 5, 
-          title: 'Záver a certifikát', 
-          description: 'Dokončenie kurzu', 
-          content: '<h3>Záver kurzu</h3><p>Gratulujeme! Dokončili ste kurz a môžete si stiahnuť certifikát.</p>',
-          duration_minutes: 10, 
-          completed: false,
-          video_url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'
-        }
-      ]
-    }
+
   } catch (error) {
     console.error('Error loading course content:', error)
     course.value = null
@@ -683,6 +659,8 @@ const handleKeyDown = (event) => {
       break
   }
 }
+
+
 
 onMounted(() => {
   loadCourseContent()

@@ -30,10 +30,27 @@ export const authService = {
     return response.data
   },
 
+  async logoutAll() {
+    const response = await api.post('/auth/logout-all')
+    return response.data
+  },
+
   async getUser() {
     const response = await api.get('/user')
     return response.data
   },
+
+  async getCertificate(enrollmentId) {
+    const response = await api.get(`/user/certificate/${enrollmentId}/download`, {
+      responseType: 'blob' // Important for handling binary/html data if we were doing PDF, but for HTML view we might just want to open window
+    })
+    return response.data
+  },
+
+  // Helper to get the URL for opening in new tab
+  getCertificateUrl(enrollmentId) {
+    return `${api.defaults.baseURL}/user/certificate/${enrollmentId}/download`
+  }
 }
 
 export const courseService = {
@@ -92,6 +109,11 @@ export const paymentService = {
     } catch (error) {
       return { has_purchased: false, is_enrolled: false }
     }
+  },
+
+  async simulatePurchase(courseId) {
+    const response = await api.post('/payments/simulate', { course_id: courseId })
+    return response.data
   },
 }
 

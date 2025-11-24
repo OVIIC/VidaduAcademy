@@ -77,6 +77,22 @@
                   Certifikáty
                 </button>
               </li>
+              <li>
+                <button
+                  @click="activeTab = 'purchases'"
+                  :class="[
+                    'w-full text-left px-3 py-2 rounded-xl text-sm font-medium transition duration-200',
+                    activeTab === 'purchases' 
+                      ? 'bg-gradient-to-br from-primary-500/20 via-secondary-500/20 to-primary-500/20 text-primary-400 border border-primary-500/30' 
+                      : 'text-gray-300 hover:bg-gray-800/50'
+                  ]"
+                >
+                  <svg class="w-4 h-4 inline mr-2" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M4 4a2 2 0 00-2 2v4a2 2 0 002 2V6h10a2 2 0 00-2-2H4zm2 6a2 2 0 012-2h8a2 2 0 012 2v4a2 2 0 01-2 2H8a2 2 0 01-2-2v-4zm6 4a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd" />
+                  </svg>
+                  História nákupov
+                </button>
+              </li>
             </ul>
           </nav>
         </div>
@@ -357,6 +373,19 @@
               <div class="space-y-4">
                 <div class="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
                   <div>
+                    <h4 class="text-sm font-medium text-gray-900">Správa relácií</h4>
+                    <p class="text-sm text-gray-600">Odhlásiť sa zo všetkých zariadení a prehliadačov</p>
+                  </div>
+                  <button 
+                    @click="logoutAllDevices"
+                    class="text-primary-600 hover:text-primary-800 text-sm font-medium"
+                  >
+                    Odhlásiť všade
+                  </button>
+                </div>
+
+                <div class="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
+                  <div>
                     <h4 class="text-sm font-medium text-gray-900">Stiahnuť údaje</h4>
                     <p class="text-sm text-gray-600">Stiahnite kópiu údajov svojho účtu</p>
                   </div>
@@ -474,6 +503,66 @@
               <p class="mt-1 text-sm text-gray-300">Dokončite kurz, aby ste získali svoj prvý certifikát.</p>
             </div>
           </div>
+
+          <!-- Purchase History Tab -->
+          <div v-else-if="activeTab === 'purchases'" class="bg-gradient-to-br from-gray-900/30 via-secondary-900/20 to-gray-900/40 backdrop-blur-xl border border-gray-700/50 rounded-2xl p-6">
+            <h2 class="text-xl font-bold text-white mb-6">História nákupov</h2>
+            
+            <div v-if="purchases.length > 0" class="overflow-x-auto">
+              <table class="w-full text-left">
+                <thead>
+                  <tr class="border-b border-gray-700">
+                    <th class="pb-3 text-sm font-medium text-gray-400">Kurz</th>
+                    <th class="pb-3 text-sm font-medium text-gray-400">Dátum</th>
+                    <th class="pb-3 text-sm font-medium text-gray-400">Cena</th>
+                    <th class="pb-3 text-sm font-medium text-gray-400">Stav</th>
+                    <th class="pb-3 text-sm font-medium text-gray-400"></th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-700">
+                  <tr v-for="purchase in purchases" :key="purchase.id" class="group">
+                    <td class="py-4 pr-4">
+                      <div class="font-medium text-white">{{ purchase.course.title }}</div>
+                      <div class="text-xs text-gray-500">ID: {{ purchase.transaction_id || purchase.id }}</div>
+                    </td>
+                    <td class="py-4 text-sm text-gray-300">
+                      {{ formatDate(purchase.created_at) }}
+                    </td>
+                    <td class="py-4 text-sm text-white font-medium">
+                      {{ formatPrice(purchase.amount, purchase.currency) }}
+                    </td>
+                    <td class="py-4">
+                      <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-900/50 text-green-400 border border-green-700/50">
+                        Zaplatené
+                      </span>
+                    </td>
+                    <td class="py-4 text-right">
+                      <router-link 
+                        :to="{ name: 'CourseStudy', params: { slug: purchase.course.slug }}"
+                        class="text-primary-400 hover:text-primary-300 text-sm font-medium"
+                      >
+                        Zobraziť kurz
+                      </router-link>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div v-else class="text-center py-8">
+              <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
+              </svg>
+              <h3 class="mt-2 text-sm font-medium text-white">Žiadne nákupy</h3>
+              <p class="mt-1 text-sm text-gray-300">Zatiaľ ste si nezakúpili žiadne kurzy.</p>
+              <router-link 
+                to="/courses"
+                class="mt-4 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700"
+              >
+                Prehliadať kurzy
+              </router-link>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -530,6 +619,7 @@ export default {
     const showPasswordForm = ref(false)
     const showDeleteConfirm = ref(false)
     const certificates = ref([])
+    const purchases = ref([])
 
     const form = reactive({
       name: '',
@@ -572,6 +662,13 @@ export default {
       })
     }
 
+    const formatPrice = (amount, currency = 'EUR') => {
+      return new Intl.NumberFormat('sk-SK', {
+        style: 'currency',
+        currency: currency
+      }).format(amount)
+    }
+
     const loadUserData = async () => {
       try {
         const response = await api.get('/user/profile')
@@ -606,6 +703,16 @@ export default {
       } catch (error) {
         console.error('Error loading certificates:', error)
         certificates.value = []
+      }
+    }
+
+    const loadPurchases = async () => {
+      try {
+        const response = await api.get('/payments/history')
+        purchases.value = response.data.data
+      } catch (error) {
+        console.error('Error loading purchases:', error)
+        purchases.value = []
       }
     }
 
@@ -697,6 +804,23 @@ export default {
       }
     }
 
+    const logoutAllDevices = async () => {
+      if (!confirm('Ste si istí, že sa chcete odhlásiť zo všetkých zariadení? Budete presmerovaní na prihlasovaciu stránku.')) {
+        return
+      }
+
+      try {
+        await api.post('/auth/logout-all')
+        authStore.logout()
+        toast.success('Boli ste úspešne odhlásení zo všetkých zariadení.')
+        // Redirect to login is handled by authStore or router guard usually, but let's be explicit
+        window.location.href = '/login'
+      } catch (error) {
+        console.error('Error logging out from all devices:', error)
+        toast.error('Chyba pri odhlasovaní.')
+      }
+    }
+
     const deleteAccount = async () => {
       try {
         await api.delete('/user/account', {
@@ -719,6 +843,7 @@ export default {
     onMounted(() => {
       loadUserData()
       loadCertificates()
+      loadPurchases()
     })
 
     return {
@@ -730,13 +855,16 @@ export default {
       showPasswordForm,
       showDeleteConfirm,
       certificates,
+      purchases,
       getInitials,
       formatDate,
+      formatPrice,
       updateProfile,
       updateNotifications,
       updatePassword,
       downloadCertificate,
       exportData,
+      logoutAllDevices,
       deleteAccount,
       resetForm
     }

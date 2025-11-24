@@ -216,7 +216,7 @@
 <script>
 import { ref, computed, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { useCourseStore } from '@/stores/course'
+
 import { useAuthStore } from '@/stores/auth'
 import { useEnrollmentStore } from '@/stores/enrollment'
 import { api } from '@/services/api'
@@ -234,7 +234,7 @@ export default {
   setup() {
     const route = useRoute()
     const router = useRouter()
-    const courseStore = useCourseStore()
+
     const authStore = useAuthStore()
     const enrollmentStore = useEnrollmentStore()
     const toast = useToast()

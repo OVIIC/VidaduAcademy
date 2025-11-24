@@ -9,7 +9,7 @@
 
       <!-- Stats Cards -->
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <div class="bg-secondary-surface shadow-highlight backdrop-blur-xl border border-gray-700/50 rounded-2xl p-6">
+        <div class="bg-secondary-surface backdrop-blur-xl border border-gray-700/50 rounded-2xl p-6">
           <div class="flex items-center">
             <img src="/images/zapisane_icon.jpg" alt="Zapísané kurzy" class="w-24 h-24 object-contain" />
             <div class="ml-4">
@@ -18,7 +18,7 @@
             </div>
           </div>
         </div>
-        <div class="bg-secondary-surface shadow-highlight backdrop-blur-xl border border-gray-700/50 rounded-2xl p-6">
+        <div class="bg-secondary-surface backdrop-blur-xl border border-gray-700/50 rounded-2xl p-6">
           <div class="flex items-center">
             <img src="/images/dokoncene_icon.png" alt="Dokončené" class="w-24 h-24 object-contain" />
             <div class="ml-4">
@@ -27,7 +27,7 @@
             </div>
           </div>
         </div>
-        <div class="bg-secondary-surface shadow-highlight backdrop-blur-xl border border-gray-700/50 rounded-2xl p-6">
+        <div class="bg-secondary-surface backdrop-blur-xl border border-gray-700/50 rounded-2xl p-6">
           <div class="flex items-center">
             <img src="/images/certificates_icon.png" alt="Certifikáty" class="w-24 h-24 object-contain" />
             <div class="ml-4">
@@ -42,7 +42,7 @@
         <!-- Main Content -->
         <div class="lg:col-span-2">
           <!-- Continue Learning -->
-          <div class="bg-secondary-surface shadow-highlight backdrop-blur-xl border border-gray-700/50 rounded-2xl p-6">
+          <div class="bg-secondary-surface backdrop-blur-xl border border-gray-700/50 rounded-2xl p-6">
             <h2 class="text-xl font-bold text-white mb-4">Pokračovať v učení</h2>
             
             <!-- Loading -->
@@ -71,7 +71,7 @@
                     <router-link
                       v-if="course.progress < 100"
                       :to="{ name: 'CourseStudy', params: { slug: course.slug } }"
-                      class="bg-primary-500 hover:bg-primary-600 text-white px-4 py-2 rounded-xl text-sm font-medium transition duration-200 shadow-highlight"
+                      class="bg-primary-500 hover:bg-primary-600 text-white px-4 py-2 rounded-xl text-sm font-medium transition duration-200"
                     >
                       Pokračovať
                     </router-link>
@@ -95,7 +95,7 @@
               <div class="mt-6">
                 <router-link
                   to="/courses"
-                  class="inline-flex items-center px-4 py-2 bg-primary-500 hover:bg-primary-600 text-white rounded-xl text-sm font-medium transition duration-200 shadow-highlight"
+                  class="inline-flex items-center px-4 py-2 bg-primary-500 hover:bg-primary-600 text-white rounded-xl text-sm font-medium transition duration-200"
                 >
                   Prehliadať kurzy
                 </router-link>
@@ -104,7 +104,7 @@
           </div>
 
           <!-- Your Courses Section -->
-          <div class="bg-secondary-surface shadow-highlight backdrop-blur-xl border border-gray-700/50 rounded-2xl p-6 mt-8">
+          <div class="bg-secondary-surface backdrop-blur-xl border border-gray-700/50 rounded-2xl p-6 mt-8">
             <div class="flex items-center justify-between mb-6">
               <h2 class="text-xl font-bold text-white">Tvoje kurzy</h2>
               <router-link
@@ -185,7 +185,7 @@
               <div class="mt-6">
                 <router-link
                   to="/courses"
-                  class="inline-flex items-center px-4 py-2 bg-primary-500 hover:bg-primary-600 text-white rounded-xl text-sm font-medium transition duration-200 shadow-highlight"
+                  class="inline-flex items-center px-4 py-2 bg-primary-500 hover:bg-primary-600 text-white rounded-xl text-sm font-medium transition duration-200"
                 >
                   Prehliadať kurzy
                 </router-link>
@@ -197,24 +197,24 @@
         <!-- Sidebar -->
         <div class="lg:col-span-1">
           <!-- Quick Actions -->
-          <div class="bg-secondary-surface shadow-highlight backdrop-blur-xl border border-gray-700/50 rounded-2xl p-6">
+          <div class="bg-secondary-surface backdrop-blur-xl border border-gray-700/50 rounded-2xl p-6">
             <h3 class="text-lg font-semibold text-white mb-4">Rýchle akcie</h3>
             <div class="space-y-3">
               <router-link
                 to="/courses"
-                class="w-full bg-primary-500 hover:bg-primary-600 text-white px-4 py-2 rounded-xl text-sm font-medium transition duration-200 block text-center shadow-highlight"
+                class="w-full bg-primary-500 hover:bg-primary-600 text-white px-4 py-2 rounded-xl text-sm font-medium transition duration-200 block text-center"
               >
                 Prehliadať kurzy
               </router-link>
               <router-link
                 to="/my-courses"
-                class="w-full bg-gradient-to-br from-gray-800/40 via-secondary-900/30 to-gray-800/50 backdrop-blur-xl border border-gray-700/50 hover:border-primary-500/50 text-gray-200 px-4 py-2 rounded-xl text-sm font-medium transition duration-200 block text-center shadow-highlight"
+                class="w-full bg-gradient-to-br from-gray-800/40 via-secondary-900/30 to-gray-800/50 backdrop-blur-xl border border-gray-700/50 hover:border-primary-500/50 text-gray-200 px-4 py-2 rounded-xl text-sm font-medium transition duration-200 block text-center"
               >
                 Moje kurzy
               </router-link>
               <router-link
                 to="/profile"
-                class="w-full bg-gradient-to-br from-gray-800/40 via-secondary-900/30 to-gray-800/50 backdrop-blur-xl border border-gray-700/50 hover:border-primary-500/50 text-gray-200 px-4 py-2 rounded-xl text-sm font-medium transition duration-200 block text-center shadow-highlight"
+                class="w-full bg-gradient-to-br from-gray-800/40 via-secondary-900/30 to-gray-800/50 backdrop-blur-xl border border-gray-700/50 hover:border-primary-500/50 text-gray-200 px-4 py-2 rounded-xl text-sm font-medium transition duration-200 block text-center"
               >
                 Upraviť profil
               </router-link>

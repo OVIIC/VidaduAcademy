@@ -22,22 +22,19 @@ export default {
       'desktop': {'min': '1024px'},   // Desktop and up
     },
     extend: {
-      boxShadow: {
-        'highlight': 'inset 0 1px 2px #ffffff30, 0 1px 2px #00000030, 0 2px 4px #00000015',
-      },
       colors: {
         primary: {
-          50: '#fff2f0',
-          100: '#ffe1dd',
-          200: '#ffc5bf',
-          300: '#ff9d94',
-          400: '#ff6b5e',
-          500: '#f05a45', // Vibrant Orange from button
-          600: '#dd3e2b',
-          700: '#ba2d1d',
-          800: '#992518',
-          900: '#7f2016',
-          950: '#450d08',
+          50: '#fff5f3',
+          100: '#ffe8e4',
+          200: '#ffd4cc',
+          300: '#ffb2a6',
+          400: '#ff8575',
+          500: '#ED6F55', // Updated Brand Orange
+          600: '#db563c',
+          700: '#b83e26',
+          800: '#993322',
+          900: '#7f2d20',
+          950: '#45150e',
         },
         secondary: {
           50: '#f5f4f7',
@@ -48,7 +45,7 @@ export default {
           500: '#645d85',
           600: '#4e4869',
           700: '#3e3954', // Card background
-          800: '#322e4b', // Main background
+          800: '#3B3157', // Main background
           900: '#252238', // Darker background
           950: '#151321',
           surface: '#585070', // Custom surface color
@@ -62,7 +59,7 @@ export default {
           500: '#7e899f',
           600: '#606a7f',
           700: '#495162',
-          800: '#322e4b', // Match Main Background
+          800: '#3B3157', // Match Main Background
           900: '#252238', // Match Darker Background
           950: '#151321',
         },

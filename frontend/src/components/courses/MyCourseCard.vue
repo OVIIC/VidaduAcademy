@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-secondary-surface rounded-lg shadow-highlight overflow-hidden hover:shadow-md transition duration-200">
+  <div class="bg-secondary-surface rounded-lg overflow-hidden hover:shadow-md transition duration-200">
     <!-- Course Image -->
     <div class="aspect-video bg-gray-200 relative">
       <img
@@ -75,7 +75,7 @@
         <router-link
           v-if="course.slug"
           :to="{ name: 'CourseStudy', params: { slug: course.slug } }"
-          class="flex-1 inline-flex justify-center items-center px-4 py-2 border border-transparent shadow-highlight text-sm font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700"
+          class="flex-1 inline-flex justify-center items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700"
         >
           Pokračovať
         </router-link>
@@ -93,7 +93,7 @@
         <button
           v-if="isCompleted"
           @click="viewCertificate"
-          class="px-4 py-2 border border-gray-600 rounded-lg text-sm font-medium text-gray-300 hover:bg-secondary-700 transition duration-200 shadow-highlight"
+          class="px-4 py-2 border border-gray-600 rounded-lg text-sm font-medium text-gray-300 hover:bg-secondary-700 transition duration-200"
         >
           Certifikát
         </button>

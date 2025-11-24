@@ -134,13 +134,12 @@ import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { 
   StarIcon, 
-  ClockIcon, 
   AcademicCapIcon, 
   CalendarIcon 
 } from '@heroicons/vue/24/outline'
 import LazyImage from '@/components/ui/LazyImage.vue'
 import { useAuthStore } from '@/stores/auth'
-import { courseService } from '@/services'
+
 
 const props = defineProps({
   course: {

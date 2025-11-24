@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-black">
+  <div class="min-h-screen bg-secondary-800">
     <!-- Loading -->
     <div v-if="loading" class="flex justify-center items-center h-64">
       <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-500"></div>
@@ -8,7 +8,7 @@
     <!-- Course Content -->
     <div v-else-if="course" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <!-- Course Header -->
-      <div class="bg-gray-900 border border-gray-700 rounded-lg shadow-sm p-6 mb-6">
+      <div class="bg-secondary-surface border border-gray-700/50 rounded-lg shadow-sm p-6 mb-6">
         <div class="flex items-start justify-between">
           <div class="flex-1">
             <nav class="text-sm text-gray-400 mb-2">
@@ -72,9 +72,9 @@
         <!-- Course Content (Left Column) -->
         <div class="lg:col-span-2 space-y-6">
           <!-- Selected Lesson Content -->
-          <div v-if="selectedLesson" ref="lessonContentRef" class="bg-gray-900 border border-gray-700 rounded-lg shadow-sm overflow-hidden">
+          <div v-if="selectedLesson" ref="lessonContentRef" class="bg-secondary-surface border border-gray-700/50 rounded-lg shadow-sm overflow-hidden">
             <!-- Lesson Header -->
-            <div class="bg-gradient-to-r from-primary-500 to-primary-600 px-6 py-4 text-white">
+            <div class="bg-primary-500 px-6 py-4 text-white">
               <div class="flex items-center justify-between">
                 <div>
                   <h2 class="text-xl font-semibold">{{ selectedLesson.title }}</h2>
@@ -85,7 +85,7 @@
                     v-if="selectedLessonIndex > 0"
                     @click="selectLesson(lessons[selectedLessonIndex - 1])"
                     :disabled="lessonSwitching"
-                    class="p-2 text-white hover:bg-primary-500 rounded-lg transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                    class="w-10 h-10 flex items-center justify-center rounded-xl border-2 border-white/30 hover:border-white hover:bg-white/10 text-white transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                     title="Predchádzajúca lekcia"
                   >
                     <div v-if="lessonSwitching" class="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
@@ -97,7 +97,7 @@
                     v-if="selectedLessonIndex < lessons.length - 1"
                     @click="selectLesson(lessons[selectedLessonIndex + 1])"
                     :disabled="lessonSwitching"
-                    class="p-2 text-white hover:bg-primary-500 rounded-lg transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                    class="w-10 h-10 flex items-center justify-center rounded-xl border-2 border-white/30 hover:border-white hover:bg-white/10 text-white transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                     title="Ďalšia lekcia"
                   >
                     <div v-if="lessonSwitching" class="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
@@ -136,7 +136,7 @@
 
               <!-- Lesson Resources -->
               <div v-if="selectedLesson.resources && selectedLesson.resources.length > 0" class="mb-6">
-                <h3 class="text-lg font-semibold text-gray-900 mb-3">Zdroje a súbory</h3>
+                <h3 class="text-lg font-semibold text-white mb-3">Zdroje a súbory</h3>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <a
                     v-for="resource in selectedLesson.resources"
@@ -144,7 +144,7 @@
                     :href="resource.url"
                     target="_blank"
                     rel="noopener noreferrer"
-                    class="flex items-center p-4 border border-gray-200 rounded-lg hover:border-primary-300 hover:bg-primary-50 transition duration-200"
+                    class="flex items-center p-4 border border-gray-700 rounded-lg hover:border-primary-500 hover:bg-secondary-700 transition duration-200"
                   >
                     <div class="flex-shrink-0 mr-3">
                       <div class="w-8 h-8 bg-primary-100 rounded-lg flex items-center justify-center">
@@ -160,9 +160,9 @@
                       </div>
                     </div>
                     <div class="flex-1 min-w-0">
-                      <p class="text-sm font-medium text-gray-900 truncate">{{ resource.title }}</p>
-                      <p v-if="resource.description" class="text-xs text-gray-500 truncate">{{ resource.description }}</p>
-                      <p class="text-xs text-primary-600 font-medium uppercase">{{ getResourceTypeLabel(resource.type) }}</p>
+                      <p class="text-sm font-medium text-white truncate">{{ resource.title }}</p>
+                      <p v-if="resource.description" class="text-xs text-gray-400 truncate">{{ resource.description }}</p>
+                      <p class="text-xs text-primary-400 font-medium uppercase">{{ getResourceTypeLabel(resource.type) }}</p>
                     </div>
                     <div class="flex-shrink-0 ml-2">
                       <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -175,9 +175,9 @@
 
               <!-- Lesson Transcript -->
               <div v-if="selectedLesson.transcript" class="mb-6">
-                <h3 class="text-lg font-semibold text-gray-900 mb-3">Prepis videa</h3>
-                <div class="bg-gray-50 rounded-lg p-4">
-                  <p class="text-sm text-gray-700 whitespace-pre-wrap">{{ selectedLesson.transcript }}</p>
+                <h3 class="text-lg font-semibold text-white mb-3">Prepis videa</h3>
+                <div class="bg-secondary-800 rounded-lg p-4">
+                  <p class="text-sm text-gray-300 whitespace-pre-wrap">{{ selectedLesson.transcript }}</p>
                 </div>
               </div>
 
@@ -232,7 +232,7 @@
           </div>
 
           <!-- Course Overview (when no lesson selected) -->
-          <div v-if="!selectedLesson" class="bg-gray-900 border border-gray-700 rounded-lg shadow-sm p-6">
+          <div v-if="!selectedLesson" class="bg-secondary-surface border border-gray-700/50 rounded-lg shadow-sm p-6">
             <h2 class="text-xl font-semibold text-white mb-4">Prehľad kurzu</h2>
             <p class="text-gray-300 mb-6">{{ course.description }}</p>
             
@@ -251,18 +251,18 @@
           </div>
 
           <!-- Course Lessons List -->
-          <div class="bg-gray-900 border border-gray-700 rounded-lg shadow-sm p-6">
+          <div class="bg-secondary-surface border border-gray-700/50 rounded-lg shadow-sm p-6">
             <h2 class="text-xl font-semibold text-white mb-4">Obsah kurzu</h2>
             
             <div v-if="lessons && lessons.length > 0" class="space-y-4">
               <div
                 v-for="(lesson, index) in lessons"
                 :key="lesson.id"
-                class="border rounded-lg p-4 hover:bg-gray-800 transition duration-200 cursor-pointer relative"
+                class="border rounded-lg p-4 hover:bg-secondary-700 transition duration-200 cursor-pointer relative"
                 @click="selectLesson(lesson)"
                 :class="{
                   'border-primary-500 bg-primary-900/20': selectedLesson?.id === lesson.id,
-                  'border-gray-700 bg-gray-800/50': selectedLesson?.id !== lesson.id,
+                  'border-gray-700 bg-secondary-800/50': selectedLesson?.id !== lesson.id,
                   'opacity-50 pointer-events-none': lessonSwitching
                 }"
               >
@@ -304,7 +304,7 @@
         <!-- Sidebar (Right Column) -->
         <div class="lg:col-span-1">
           <!-- Course Stats -->
-          <div class="bg-gray-900 border border-gray-700 rounded-lg shadow-sm p-6 mb-6">
+          <div class="bg-secondary-surface border border-gray-700/50 rounded-lg shadow-sm p-6 mb-6">
             <h3 class="text-lg font-semibold text-white mb-4">Štatistiky kurzu</h3>
             <div class="space-y-4">
               <div class="flex justify-between">
@@ -327,7 +327,7 @@
           </div>
 
           <!-- Continue Learning Button -->
-          <div class="bg-gray-900 border border-gray-700 rounded-lg shadow-sm p-6">
+          <div class="bg-secondary-surface border border-gray-700/50 rounded-lg shadow-sm p-6">
             <h3 class="text-lg font-semibold text-white mb-4">Pokračovať v učení</h3>
             <button
               v-if="nextLesson"
@@ -673,5 +673,35 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
-/* Component specific styles */
+/* Override prose typography for dark theme */
+:deep(.prose) {
+  color: #d1d5db; /* text-gray-300 */
+}
+
+:deep(.prose h1),
+:deep(.prose h2),
+:deep(.prose h3),
+:deep(.prose h4),
+:deep(.prose h5),
+:deep(.prose h6) {
+  color: #ffffff; /* text-white */
+}
+
+:deep(.prose strong) {
+  color: #ffffff; /* text-white */
+}
+
+:deep(.prose p),
+:deep(.prose li) {
+  color: #d1d5db; /* text-gray-300 */
+  font-weight: 300; /* light font weight */
+}
+
+:deep(.prose a) {
+  color: #ED6F55; /* primary-500 */
+}
+
+:deep(.prose code) {
+  color: #ED6F55; /* primary-500 */
+}
 </style>

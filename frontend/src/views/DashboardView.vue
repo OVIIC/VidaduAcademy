@@ -11,7 +11,7 @@
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         <div class="bg-secondary-surface backdrop-blur-xl border border-gray-700/50 rounded-2xl p-6">
           <div class="flex items-center">
-            <img src="/images/zapisane_icon.jpg" alt="Zapísané kurzy" class="w-24 h-24 object-contain" />
+            <img src="/images/enrolled-courses-3d.jpg" alt="Zapísané kurzy" class="w-24 h-24 object-contain" />
             <div class="ml-4">
               <h2 class="text-sm text-gray-300">Zapísané kurzy</h2>
               <p class="text-2xl font-bold text-white">{{ enrolledCourses.length }}</p>
@@ -20,7 +20,7 @@
         </div>
         <div class="bg-secondary-surface backdrop-blur-xl border border-gray-700/50 rounded-2xl p-6">
           <div class="flex items-center">
-            <img src="/images/dokoncene_icon.png" alt="Dokončené" class="w-24 h-24 object-contain" />
+            <img src="/images/completed-courses-3d.png" alt="Dokončené" class="w-24 h-24 object-contain" />
             <div class="ml-4">
               <h2 class="text-sm text-gray-300">Dokončené</h2>
               <p class="text-2xl font-bold text-white">{{ completedCourses }}</p>
@@ -29,7 +29,7 @@
         </div>
         <div class="bg-secondary-surface backdrop-blur-xl border border-gray-700/50 rounded-2xl p-6">
           <div class="flex items-center">
-            <img src="/images/certificates_icon.png" alt="Certifikáty" class="w-24 h-24 object-contain" />
+            <img src="/images/certificates-3d.png" alt="Certifikáty" class="w-24 h-24 object-contain" />
             <div class="ml-4">
               <h2 class="text-sm text-gray-300">Certifikáty</h2>
               <p class="text-2xl font-bold text-white">{{ certificates }}</p>

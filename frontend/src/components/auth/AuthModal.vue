@@ -82,14 +82,14 @@
 <script setup>
 import { useRouter } from 'vue-router'
 
-const props = defineProps({
+defineProps({
   isOpen: {
     type: Boolean,
     default: false
   },
-  courseTitle: {
+  initialView: {
     type: String,
-    default: ''
+    default: 'login'
   },
   coursePrice: {
     type: [String, Number],
@@ -97,7 +97,7 @@ const props = defineProps({
   }
 })
 
-const emit = defineEmits(['close'])
+const emit = defineEmits(['close', 'success']);
 
 const router = useRouter()
 

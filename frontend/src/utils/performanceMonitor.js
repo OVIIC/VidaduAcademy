@@ -3,7 +3,7 @@ class PerformanceMonitor {
   constructor() {
     this.metrics = new Map()
     this.observers = new Map()
-    this.isEnabled = process.env.NODE_ENV === 'production'
+    this.isEnabled = import.meta.env.MODE === 'production'
   }
 
   // Start timing a operation

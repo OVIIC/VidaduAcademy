@@ -103,7 +103,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted, computed } from 'vue'
+import { ref, onMounted, onUnmounted, watch } from 'vue'
 import { usePerformance } from '@/utils/performanceMonitor'
 
 const { getMetrics, clearMetrics: clearStoredMetrics } = usePerformance()
@@ -221,8 +221,9 @@ const stopAutoRefresh = () => {
 }
 
 // Start/stop auto-refresh based on dashboard visibility
-const unwatchDashboard = computed(() => {
-  if (showDashboard.value) {
+// Start/stop auto-refresh based on dashboard visibility
+watch(showDashboard, (newValue) => {
+  if (newValue) {
     startAutoRefresh()
   } else {
     stopAutoRefresh()

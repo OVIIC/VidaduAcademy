@@ -171,7 +171,7 @@ const tabs = [
 ];
 
 // Use store data directly
-const myCourses = computed(() => enrollmentStore.myCourses);
+
 const loading = computed(() => enrollmentStore.loading);
 
 const filteredCourses = computed(() => {

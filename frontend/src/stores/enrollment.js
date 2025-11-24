@@ -87,7 +87,7 @@ export const useEnrollmentStore = defineStore('enrollment', {
         // Always use empty array on error to prevent crashes
         this.myCourses = []
         // For development, don't throw error
-        if (process.env.NODE_ENV !== 'development') {
+        if (import.meta.env.MODE !== 'development') {
           throw error
         }
         return this.myCourses
@@ -110,7 +110,7 @@ export const useEnrollmentStore = defineStore('enrollment', {
         console.error('Error enrolling in course:', error)
         
         // Only throw error in production - for development, we might want to continue with fallback
-        if (process.env.NODE_ENV === 'production') {
+        if (import.meta.env.MODE === 'production') {
           throw error
         }
         

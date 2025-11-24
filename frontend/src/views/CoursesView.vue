@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-black text-white overflow-x-hidden">
+  <div class="min-h-screen bg-secondary-800 text-white overflow-x-hidden">
     <!-- Hero Course Section (Disney+ style) -->
     <div class="relative h-[65vh] overflow-hidden">
       <!-- Background Image with Smooth Transition -->
@@ -14,9 +14,9 @@
             />
           </transition>
           <!-- Disney+ style gradient overlays -->
-          <div class="absolute inset-0 bg-gradient-to-r from-black/90 via-black/50 to-transparent"></div>
-          <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
-          <div class="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-black to-transparent"></div>
+          <div class="absolute inset-0 bg-gradient-to-r from-secondary-900/90 via-secondary-900/50 to-transparent"></div>
+          <div class="absolute inset-0 bg-gradient-to-t from-secondary-900/80 via-transparent to-transparent"></div>
+          <div class="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-secondary-800 to-transparent"></div>
           
           <!-- Navigation Arrows -->
           <button
@@ -111,7 +111,7 @@
 
     <!-- Expandable Course Details Section -->
     <transition name="slide-down">
-      <div v-if="showCourseDetails && selectedCourse" class="bg-black border-t border-gray-800">
+      <div v-if="showCourseDetails && selectedCourse" class="bg-secondary-800 border-t border-gray-700/50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <!-- Main Content -->
@@ -159,7 +159,7 @@
 
             <!-- Sidebar -->
             <div class="lg:col-span-1">
-              <div class="bg-gray-900 rounded-2xl p-6 border border-gray-800 sticky top-4">
+              <div class="bg-secondary-surface rounded-2xl p-6 border border-gray-700/50 sticky top-4">
                 <!-- Course Stats -->
                 <div class="space-y-4 mb-6">
                   <div class="flex items-center justify-between">
@@ -176,12 +176,12 @@
                   </div>
                 </div>
 
-                <div class="border-t border-gray-800 pt-6">
+                <div class="border-t border-gray-700/50 pt-6">
                   <!-- Instructor Info -->
                   <div class="mb-6">
                     <h4 class="text-sm font-medium text-gray-400 mb-3">Inštruktor</h4>
                     <div class="flex items-center space-x-3">
-                      <div class="w-12 h-12 rounded-full bg-gray-800 flex items-center justify-center text-primary-400 font-bold text-lg">
+                      <div class="w-12 h-12 rounded-full bg-secondary-800 flex items-center justify-center text-primary-400 font-bold text-lg">
                         {{ (selectedCourse.instructor?.name || selectedCourse.instructor || '').charAt(0) }}
                       </div>
                       <div>
@@ -207,10 +207,10 @@
     </transition>
 
     <!-- Fade Transition Section -->
-    <div class="h-8 bg-gradient-to-b from-black to-black"></div>
+    <div class="h-8 bg-gradient-to-b from-secondary-800 to-secondary-800"></div>
 
     <!-- Course Gallery Section -->
-    <div class="bg-black py-4 min-h-screen">
+    <div class="bg-secondary-800 py-4 min-h-screen">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <!-- Filter Bar -->
         <div class="mb-8 space-y-4">
@@ -224,7 +224,7 @@
                 @input="handleSearch"
                 type="text" 
                 placeholder="Hľadať kurzy..." 
-                class="w-full bg-gray-900 text-white border border-gray-700 rounded-xl py-3 px-4 pl-10 focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
+                class="w-full bg-secondary-800 text-white border border-gray-700/50 rounded-xl py-3 px-4 pl-10 focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
               >
               <svg class="w-5 h-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
@@ -233,13 +233,13 @@
           </div>
 
           <!-- Filters & Sort -->
-          <div class="flex flex-col md:flex-row gap-4 items-center justify-between bg-gray-900/50 p-4 rounded-xl border border-gray-800">
+          <div class="flex flex-col md:flex-row gap-4 items-center justify-between bg-secondary-surface p-4 rounded-xl border border-gray-700/50">
             <div class="flex flex-wrap gap-3 w-full md:w-auto">
               <!-- Difficulty Filter -->
               <select 
                 v-model="selectedDifficulty"
                 @change="handleFilterChange"
-                class="bg-gray-800 text-white border border-gray-700 rounded-lg py-2 px-3 text-sm focus:ring-primary-500 focus:border-primary-500"
+                class="bg-secondary-800 text-white border border-gray-700/50 rounded-lg py-2 px-3 text-sm focus:ring-primary-500 focus:border-primary-500"
               >
                 <option value="">Všetky úrovne</option>
                 <option value="beginner">Začiatočník</option>
@@ -251,7 +251,7 @@
               <select 
                 v-model="selectedPrice"
                 @change="handleFilterChange"
-                class="bg-gray-800 text-white border border-gray-700 rounded-lg py-2 px-3 text-sm focus:ring-primary-500 focus:border-primary-500"
+                class="bg-secondary-800 text-white border border-gray-700/50 rounded-lg py-2 px-3 text-sm focus:ring-primary-500 focus:border-primary-500"
               >
                 <option value="">Všetky ceny</option>
                 <option value="free">Zadarmo</option>
@@ -264,7 +264,7 @@
               <select 
                 v-model="selectedSort"
                 @change="handleFilterChange"
-                class="bg-gray-800 text-white border border-gray-700 rounded-lg py-2 px-3 text-sm focus:ring-primary-500 focus:border-primary-500"
+                class="bg-secondary-800 text-white border border-gray-700/50 rounded-lg py-2 px-3 text-sm focus:ring-primary-500 focus:border-primary-500"
               >
                 <option value="created_at_desc">Najnovšie</option>
                 <option value="price_asc">Cena: Najnižšia</option>
@@ -301,7 +301,7 @@
               ]"
             >
               <!-- Course Card -->
-              <div class="bg-gray-900 rounded-2xl overflow-hidden shadow-lg border border-gray-800 hover:border-gray-700 h-full flex flex-col">
+              <div class="bg-secondary-surface rounded-2xl overflow-hidden shadow-lg border border-gray-700/50 hover:border-gray-600 h-full flex flex-col">
                 <!-- Course Thumbnail -->
                 <div class="aspect-video overflow-hidden relative">
                   <img 
@@ -333,9 +333,9 @@
                   
                   <p class="text-gray-400 text-sm line-clamp-2 mb-4 flex-grow">{{ course.short_description || course.description }}</p>
                   
-                  <div class="flex items-center justify-between mt-auto pt-4 border-t border-gray-800">
+                  <div class="flex items-center justify-between mt-auto pt-4 border-t border-gray-700/50">
                     <div class="flex items-center space-x-2">
-                      <div class="w-6 h-6 rounded-full bg-gray-700 flex items-center justify-center text-xs font-bold text-gray-300">
+                      <div class="w-6 h-6 rounded-full bg-secondary-800 flex items-center justify-center text-xs font-bold text-gray-300">
                         {{ (course.instructor?.name || course.instructor || '').charAt(0) }}
                       </div>
                       <span class="text-xs text-gray-300 truncate max-w-[100px]">{{ course.instructor?.name || course.instructor }}</span>
@@ -375,7 +375,7 @@
         </div>
 
         <!-- No courses found -->
-        <div v-else class="text-center py-20 bg-gray-900/30 rounded-2xl border border-gray-800 mt-8">
+        <div v-else class="text-center py-20 bg-secondary-surface rounded-2xl border border-gray-700/50 mt-8">
           <svg class="mx-auto h-16 w-16 text-gray-600 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
           </svg>

@@ -50,6 +50,6 @@
   }
 
   .progress-fill {
-    @apply h-full bg-gradient-to-r from-primary-600 to-primary-400 rounded-full transition-all duration-500 ease-out;
+    @apply h-full bg-primary-600 rounded-full transition-all duration-500 ease-out;
   }
 }

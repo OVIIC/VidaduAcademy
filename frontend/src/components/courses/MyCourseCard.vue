@@ -1,7 +1,5 @@
 <template>
-  <div
-    class="bg-secondary-surface rounded-lg shadow-highlight overflow-hidden hover:shadow-md transition duration-200"
-  >
+  <div class="bg-secondary-surface rounded-lg shadow-highlight overflow-hidden hover:shadow-md transition duration-200">
     <!-- Course Image -->
     <div class="aspect-video bg-gray-200 relative">
       <img

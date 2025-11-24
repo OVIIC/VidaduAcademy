@@ -91,8 +91,8 @@ const toggleCollapse = () => {
 
 const navigation = [
   { name: 'Dashboard', href: '/dashboard', icon: HomeIcon },
-  { name: 'My Courses', href: '/my-courses', icon: BookOpenIcon },
-  { name: 'Profile', href: '/profile', icon: UserIcon },
+  { name: 'Moje kurzy', href: '/my-courses', icon: BookOpenIcon },
+  { name: 'Profil', href: '/profile', icon: UserIcon },
 ]
 
 const userInitials = computed(() => {

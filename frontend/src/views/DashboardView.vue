@@ -11,38 +11,27 @@
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         <div class="bg-secondary-surface shadow-highlight backdrop-blur-xl border border-gray-700/50 rounded-2xl p-6">
           <div class="flex items-center">
-            <div class="p-3 bg-gradient-to-br from-primary-500/20 via-secondary-500/20 to-primary-500/20 backdrop-blur-xl border border-primary-500/30 rounded-xl">
-              <img src="/images/zapisane_kurzy_icon.png" alt="Zapísané kurzy" class="w-6 h-6 object-contain" />
-            </div>
+            <img src="/images/zapisane_icon.jpg" alt="Zapísané kurzy" class="w-24 h-24 object-contain" />
             <div class="ml-4">
-              <p class="text-sm text-gray-300">Zapísané kurzy</p>
+              <h2 class="text-sm text-gray-300">Zapísané kurzy</h2>
               <p class="text-2xl font-bold text-white">{{ enrolledCourses.length }}</p>
             </div>
           </div>
         </div>
         <div class="bg-secondary-surface shadow-highlight backdrop-blur-xl border border-gray-700/50 rounded-2xl p-6">
           <div class="flex items-center">
-            <div class="p-3 bg-gradient-to-br from-green-500/20 via-green-600/20 to-green-500/20 backdrop-blur-xl border border-green-500/30 rounded-xl">
-              <svg class="w-6 h-6 text-green-500" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-              </svg>
-            </div>
+            <img src="/images/dokoncene_icon.png" alt="Dokončené" class="w-24 h-24 object-contain" />
             <div class="ml-4">
-              <p class="text-sm text-gray-300">Dokončené</p>
+              <h2 class="text-sm text-gray-300">Dokončené</h2>
               <p class="text-2xl font-bold text-white">{{ completedCourses }}</p>
             </div>
           </div>
         </div>
         <div class="bg-secondary-surface shadow-highlight backdrop-blur-xl border border-gray-700/50 rounded-2xl p-6">
           <div class="flex items-center">
-            <div class="p-3 bg-gradient-to-br from-secondary-500/20 via-purple-500/20 to-secondary-500/20 backdrop-blur-xl border border-secondary-500/30 rounded-xl">
-              <svg class="w-6 h-6 text-secondary-500" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M13 7H7v6h6V7z"/>
-                <path d="M13 2H7a2 2 0 00-2 2v12a2 2 0 002 2h6a2 2 0 002-2V4a2 2 0 00-2-2z"/>
-              </svg>
-            </div>
+            <img src="/images/certificates_icon.png" alt="Certifikáty" class="w-24 h-24 object-contain" />
             <div class="ml-4">
-              <p class="text-sm text-gray-300">Certifikáty</p>
+              <h2 class="text-sm text-gray-300">Certifikáty</h2>
               <p class="text-2xl font-bold text-white">{{ certificates }}</p>
             </div>
           </div>
@@ -72,7 +61,7 @@
                     <h3 class="font-medium text-white mb-1">{{ course.title }}</h3>
                     <div class="w-full bg-gray-700/50 rounded-full h-2 mb-2">
                       <div
-                        class="bg-gradient-to-r from-primary-500 to-secondary-500 h-2 rounded-full"
+                        class="bg-primary-500 h-2 rounded-full"
                         :style="{ width: `${course.progress}%` }"
                       ></div>
                     </div>
@@ -82,7 +71,7 @@
                     <router-link
                       v-if="course.progress < 100"
                       :to="{ name: 'CourseStudy', params: { slug: course.slug } }"
-                      class="bg-gradient-to-r from-primary-500 to-secondary-500 hover:from-primary-600 hover:to-secondary-600 text-white px-4 py-2 rounded-xl text-sm font-medium transition duration-200 shadow-highlight"
+                      class="bg-primary-500 hover:bg-primary-600 text-white px-4 py-2 rounded-xl text-sm font-medium transition duration-200 shadow-highlight"
                     >
                       Pokračovať
                     </router-link>
@@ -106,7 +95,7 @@
               <div class="mt-6">
                 <router-link
                   to="/courses"
-                  class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-primary-500 to-secondary-500 hover:from-primary-600 hover:to-secondary-600 text-white rounded-xl text-sm font-medium transition duration-200 shadow-highlight"
+                  class="inline-flex items-center px-4 py-2 bg-primary-500 hover:bg-primary-600 text-white rounded-xl text-sm font-medium transition duration-200 shadow-highlight"
                 >
                   Prehliadať kurzy
                 </router-link>
@@ -165,7 +154,7 @@
                     <!-- Progress Bar -->
                     <div class="w-full bg-gray-700/50 rounded-full h-2 mb-2">
                       <div
-                        class="bg-gradient-to-r from-primary-500 to-secondary-500 h-2 rounded-full transition-all duration-300"
+                        class="bg-primary-500 h-2 rounded-full transition-all duration-300"
                         :style="{ width: `${course.enrollment_data?.progress_percentage || 0}%` }"
                       ></div>
                     </div>
@@ -196,7 +185,7 @@
               <div class="mt-6">
                 <router-link
                   to="/courses"
-                  class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-primary-500 to-secondary-500 hover:from-primary-600 hover:to-secondary-600 text-white rounded-xl text-sm font-medium transition duration-200 shadow-highlight"
+                  class="inline-flex items-center px-4 py-2 bg-primary-500 hover:bg-primary-600 text-white rounded-xl text-sm font-medium transition duration-200 shadow-highlight"
                 >
                   Prehliadať kurzy
                 </router-link>
@@ -213,7 +202,7 @@
             <div class="space-y-3">
               <router-link
                 to="/courses"
-                class="w-full bg-gradient-to-r from-primary-500 to-secondary-500 hover:from-primary-600 hover:to-secondary-600 text-white px-4 py-2 rounded-xl text-sm font-medium transition duration-200 block text-center shadow-highlight"
+                class="w-full bg-primary-500 hover:bg-primary-600 text-white px-4 py-2 rounded-xl text-sm font-medium transition duration-200 block text-center shadow-highlight"
               >
                 Prehliadať kurzy
               </router-link>

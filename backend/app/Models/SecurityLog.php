@@ -9,6 +9,8 @@ class SecurityLog extends Model
 {
     use HasFactory;
 
+    public $timestamps = false;
+
     protected $fillable = [
         'event_type',
         'description',

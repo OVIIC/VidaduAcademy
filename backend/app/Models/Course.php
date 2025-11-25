@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class Course extends Model
 {
@@ -34,8 +35,6 @@ class Course extends Model
         'price' => 'decimal:2',
         'featured' => 'boolean',
         'published_at' => 'datetime',
-        'what_you_will_learn' => 'array',
-        'requirements' => 'array',
     ];
 
     public function instructor(): BelongsTo
@@ -87,10 +86,12 @@ class Course extends Model
     public function getWhatYouWillLearnAttribute($value)
     {
         $decoded = json_decode($value, true) ?: [];
-        // Convert to Filament repeater format if accessing from form
-        if (request()->is('admin/*') && !empty($decoded) && !isset($decoded[0]['item'])) {
+        
+        // Convert to Filament repeater format ONLY if accessing from admin panel
+        if (request() && request()->is('admin/*') && !empty($decoded) && !isset($decoded[0]['item'])) {
             return array_map(fn($item) => ['item' => $item], $decoded);
         }
+        
         return $decoded;
     }
 
@@ -107,10 +108,12 @@ class Course extends Model
     public function getRequirementsAttribute($value)
     {
         $decoded = json_decode($value, true) ?: [];
-        // Convert to Filament repeater format if accessing from form
-        if (request()->is('admin/*') && !empty($decoded) && !isset($decoded[0]['item'])) {
+        
+        // Convert to Filament repeater format ONLY if accessing from admin panel
+        if (request() && request()->is('admin/*') && !empty($decoded) && !isset($decoded[0]['item'])) {
             return array_map(fn($item) => ['item' => $item], $decoded);
         }
+        
         return $decoded;
     }
 }

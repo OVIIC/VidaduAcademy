@@ -1,7 +1,7 @@
 <template>
   <div class="min-h-screen bg-secondary-800 text-white overflow-x-hidden">
     <!-- Hero Course Section (Disney+ style) -->
-    <div class="relative h-[65vh] overflow-hidden">
+    <div class="relative h-[75vh] overflow-hidden">
       <!-- Background Image with Smooth Transition -->
       <div class="absolute inset-0">
         <div class="relative w-full h-full">
@@ -16,7 +16,6 @@
           <!-- Disney+ style gradient overlays -->
           <div class="absolute inset-0 bg-gradient-to-r from-secondary-900/90 via-secondary-900/50 to-transparent"></div>
           <div class="absolute inset-0 bg-gradient-to-t from-secondary-900/80 via-transparent to-transparent"></div>
-          <div class="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-secondary-800 to-transparent"></div>
           
           <!-- Navigation Arrows -->
           <button
@@ -72,7 +71,7 @@
               </div>
 
               <!-- Course Description -->
-              <p class="text-xl md:text-2xl leading-relaxed mb-8 text-gray-200 max-w-2xl font-light">
+              <p class="text-lg md:text-xl leading-relaxed mb-8 text-gray-200 max-w-2xl font-extralight">
                 {{ selectedCourse?.short_description || 'Vyberte kurz pre zobrazenie detailov.' }}
               </p>
 
@@ -109,108 +108,107 @@
       </div>
     </div>
 
-    <!-- Expandable Course Details Section -->
-    <transition name="slide-down">
-      <div v-if="showCourseDetails && selectedCourse" class="bg-secondary-800 border-t border-gray-700/50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <!-- Main Content -->
-            <div class="lg:col-span-2 space-y-8">
-              <!-- Full Description -->
-              <div>
-                <h3 class="text-2xl font-bold text-white mb-4">O kurze</h3>
-                <p class="text-gray-300 text-lg leading-relaxed">{{ selectedCourse.description }}</p>
-              </div>
-
-              <!-- What You'll Learn -->
-              <div v-if="selectedCourse.what_you_will_learn && selectedCourse.what_you_will_learn.length > 0">
-                <h3 class="text-2xl font-bold text-white mb-4">Čo sa naučíte</h3>
-                <ul class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                  <li 
-                    v-for="(item, index) in selectedCourse.what_you_will_learn" 
-                    :key="index"
-                    class="flex items-start space-x-3"
-                  >
-                    <svg class="w-6 h-6 text-green-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                      <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-                    </svg>
-                    <span class="text-gray-300">{{ item }}</span>
-                  </li>
-                </ul>
-              </div>
-
-              <!-- Requirements -->
-              <div v-if="selectedCourse.requirements && selectedCourse.requirements.length > 0">
-                <h3 class="text-2xl font-bold text-white mb-4">Požiadavky</h3>
-                <ul class="space-y-2">
-                  <li 
-                    v-for="(req, index) in selectedCourse.requirements" 
-                    :key="index"
-                    class="flex items-start space-x-3"
-                  >
-                    <svg class="w-6 h-6 text-gray-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                    </svg>
-                    <span class="text-gray-300">{{ req }}</span>
-                  </li>
-                </ul>
-              </div>
-            </div>
-
-            <!-- Sidebar -->
-            <div class="lg:col-span-1">
-              <div class="bg-secondary-surface rounded-2xl p-6 border border-gray-700/50 sticky top-4">
-                <!-- Course Stats -->
-                <div class="space-y-4 mb-6">
-                  <div class="flex items-center justify-between">
-                    <span class="text-gray-400">Úroveň</span>
-                    <span class="text-white capitalize font-medium">{{ selectedCourse.difficulty_level }}</span>
-                  </div>
-                  <div class="flex items-center justify-between">
-                    <span class="text-gray-400">Dĺžka</span>
-                    <span class="text-white font-medium">{{ selectedCourse.duration }}</span>
-                  </div>
-                  <div class="flex items-center justify-between">
-                    <span class="text-gray-400">Cena</span>
-                    <span class="text-green-400 font-bold text-xl">€{{ selectedCourse.price }}</span>
-                  </div>
+    <!-- Content Section with Rounded Top -->
+    <div class="relative z-20 bg-secondary-800 rounded-t-[3rem] -mt-8 min-h-screen">
+      <!-- Expandable Course Details Section -->
+      <transition name="slide-down">
+        <div v-if="showCourseDetails && selectedCourse" class="border-b border-gray-700/50">
+          <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+              <!-- Main Content -->
+              <div class="lg:col-span-2 space-y-8">
+                <!-- Full Description -->
+                <div>
+                  <h3 class="text-2xl font-bold text-white mb-4">O kurze</h3>
+                  <p class="text-gray-300 text-lg leading-relaxed">{{ selectedCourse.description }}</p>
                 </div>
 
-                <div class="border-t border-gray-700/50 pt-6">
-                  <!-- Instructor Info -->
-                  <div class="mb-6">
-                    <h4 class="text-sm font-medium text-gray-400 mb-3">Inštruktor</h4>
-                    <div class="flex items-center space-x-3">
-                      <div class="w-12 h-12 rounded-full bg-secondary-800 flex items-center justify-center text-primary-400 font-bold text-lg">
-                        {{ (selectedCourse.instructor?.name || selectedCourse.instructor || '').charAt(0) }}
-                      </div>
-                      <div>
-                        <p class="text-white font-medium">{{ selectedCourse.instructor?.name || selectedCourse.instructor }}</p>
-                        <p class="text-gray-400 text-sm">{{ selectedCourse.instructor?.email || '' }}</p>
-                      </div>
+                <!-- What You'll Learn -->
+                <div v-if="selectedCourse.what_you_will_learn && selectedCourse.what_you_will_learn.length > 0">
+                  <h3 class="text-2xl font-bold text-white mb-4">Čo sa naučíte</h3>
+                  <ul class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <li 
+                      v-for="(item, index) in selectedCourse.what_you_will_learn" 
+                      :key="index"
+                      class="flex items-start space-x-3"
+                    >
+                      <svg class="w-6 h-6 text-green-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                      </svg>
+                      <span class="text-gray-300">{{ item }}</span>
+                    </li>
+                  </ul>
+                </div>
+
+                <!-- Requirements -->
+                <div v-if="selectedCourse.requirements && selectedCourse.requirements.length > 0">
+                  <h3 class="text-2xl font-bold text-white mb-4">Požiadavky</h3>
+                  <ul class="space-y-2">
+                    <li 
+                      v-for="(req, index) in selectedCourse.requirements" 
+                      :key="index"
+                      class="flex items-start space-x-3"
+                    >
+                      <svg class="w-6 h-6 text-gray-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                      </svg>
+                      <span class="text-gray-300">{{ req }}</span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+
+              <!-- Sidebar -->
+              <div class="lg:col-span-1">
+                <div class="bg-secondary-surface rounded-2xl p-6 border border-gray-700/50 sticky top-4">
+                  <!-- Course Stats -->
+                  <div class="space-y-4 mb-6">
+                    <div class="flex items-center justify-between">
+                      <span class="text-gray-400">Úroveň</span>
+                      <span class="text-white capitalize font-medium">{{ selectedCourse.difficulty_level }}</span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                      <span class="text-gray-400">Dĺžka</span>
+                      <span class="text-white font-medium">{{ selectedCourse.duration }}</span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                      <span class="text-gray-400">Cena</span>
+                      <span class="text-green-400 font-bold text-xl">€{{ selectedCourse.price }}</span>
                     </div>
                   </div>
 
-                  <!-- Purchase Button -->
-                  <button
-                    @click="handlePurchase(selectedCourse)"
-                    class="w-full bg-primary-500 hover:bg-primary-600 text-white px-6 py-3 rounded-xl font-bold transition-all duration-200"
-                  >
-                    Kúpiť kurz
-                  </button>
+                  <div class="border-t border-gray-700/50 pt-6">
+                    <!-- Instructor Info -->
+                    <div class="mb-6">
+                      <h4 class="text-sm font-medium text-gray-400 mb-3">Inštruktor</h4>
+                      <div class="flex items-center space-x-3">
+                        <div class="w-12 h-12 rounded-full bg-secondary-800 flex items-center justify-center text-primary-400 font-bold text-lg">
+                          {{ (selectedCourse.instructor?.name || selectedCourse.instructor || '').charAt(0) }}
+                        </div>
+                        <div>
+                          <p class="text-white font-medium">{{ selectedCourse.instructor?.name || selectedCourse.instructor }}</p>
+                          <p class="text-gray-400 text-sm">{{ selectedCourse.instructor?.email || '' }}</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Purchase Button -->
+                    <button
+                      @click="handlePurchase(selectedCourse)"
+                      class="w-full bg-primary-500 hover:bg-primary-600 text-white px-6 py-3 rounded-xl font-bold transition-all duration-200"
+                    >
+                      Kúpiť kurz
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-    </transition>
+      </transition>
 
-    <!-- Fade Transition Section -->
-    <div class="h-8 bg-gradient-to-b from-secondary-800 to-secondary-800"></div>
-
-    <!-- Course Gallery Section -->
-    <div class="bg-secondary-800 py-4 min-h-screen">
+      <!-- Course Gallery Section -->
+      <div class="py-12">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <!-- Filter Bar -->
         <div class="mb-8 space-y-4">
@@ -224,7 +222,7 @@
                 @input="handleSearch"
                 type="text" 
                 placeholder="Hľadať kurzy..." 
-                class="w-full bg-secondary-800 text-white border border-gray-700/50 rounded-xl py-3 px-4 pl-10 focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
+                class="w-full bg-secondary-surface text-white border border-gray-700/50 rounded-xl py-3 px-4 pl-10 focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
               >
               <svg class="w-5 h-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
@@ -389,6 +387,7 @@
           </button>
         </div>
       </div>
+    </div>
     </div>
 
     <!-- Checkout Loading Modal -->

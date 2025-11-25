@@ -288,7 +288,11 @@
 
         <!-- Course Grid -->
         <div v-else-if="courses && courses.length > 0">
-          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          <TransitionGroup 
+            tag="div" 
+            name="course-list" 
+            class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 relative"
+          >
             <div
               v-for="course in courses"
               :key="`course-${course.id}`"
@@ -348,7 +352,7 @@
                 </div>
               </div>
             </div>
-          </div>
+          </TransitionGroup>
 
           <!-- Pagination -->
           <div v-if="pagination.last_page > 1" class="mt-12 flex justify-center space-x-2">
@@ -777,5 +781,24 @@ onMounted(() => {
 .hero-content-fade-enter-to,
 .hero-content-fade-leave-from {
   opacity: 1;
+}
+
+/* Course List Animations */
+.course-list-move,
+.course-list-enter-active,
+.course-list-leave-active {
+  transition: all 0.3s cubic-bezier(0.55, 0, 0.1, 1);
+}
+
+.course-list-enter-from,
+.course-list-leave-to {
+  opacity: 0;
+  transform: scale(0.9) translateY(30px);
+}
+
+.course-list-leave-active {
+  position: absolute;
+  width: 100%; /* Ensure width is maintained during removal */
+  z-index: 0; /* Keep leaving items behind */
 }
 </style>

@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory, RouterView } from 'vue-router'
+import { createRouter, createWebHistory } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import HomeView from '@/views/HomeView.vue'
 
@@ -84,52 +84,8 @@ const router = createRouter({
       component: () => import('@/views/ProfileView.vue'),
       meta: { requiresAuth: true, layout: 'dashboard' },
     },
-    // Admin Routes
-    {
-      path: '/admin',
-      component: RouterView,
-      meta: { requiresAuth: true, layout: 'admin', roles: ['admin'] },
-      children: [
-        {
-          path: '',
-          name: 'AdminDashboard',
-          component: () => import('@/views/admin/AdminDashboardView.vue'),
-        },
-        {
-          path: 'users',
-          name: 'AdminUsers',
-          component: () => import('@/views/admin/AdminUsersView.vue'),
-        },
-        {
-          path: 'security',
-          name: 'AdminSecurity',
-          component: () => import('@/views/admin/SecurityLogsView.vue'),
-        }
-      ]
-    },
-    // Instructor Routes
-    {
-      path: '/instructor',
-      component: RouterView,
-      meta: { requiresAuth: true, layout: 'instructor', roles: ['instructor'] },
-      children: [
-        {
-          path: '',
-          name: 'InstructorDashboard',
-          component: () => import('@/views/instructor/InstructorDashboardView.vue'),
-        },
-        {
-          path: 'courses',
-          name: 'InstructorCourses',
-          component: () => import('@/views/instructor/InstructorCoursesView.vue'),
-        },
-        {
-          path: 'courses/:id/edit',
-          name: 'InstructorCourseEdit',
-          component: () => import('@/views/instructor/CourseEditorView.vue'),
-        }
-      ]
-    },
+
+
     {
       path: '/:pathMatch(.*)*',
       name: 'NotFound',

@@ -78,13 +78,7 @@ export const courseService = {
     }, 10 * 60 * 1000) // Cache for 10 minutes
   },
 
-  async getCoursesByInstructor(instructorId) {
-    const cacheKey = apiCache.generateKey(`/courses/instructor/${instructorId}`)
-    return cachedApiCall(cacheKey, async () => {
-      const response = await api.get(`/courses/instructor/${instructorId}`)
-      return response.data
-    }, 15 * 60 * 1000) // Cache for 15 minutes
-  },
+
 }
 
 export const paymentService = {

@@ -17,9 +17,7 @@ const router = createRouter({
     },
     {
       path: '/course/:slug',
-      name: 'CourseDetail',
-      component: () => import('@/views/CourseDetailView.vue'),
-      props: true,
+      redirect: '/courses',
     },
     {
       path: '/login',

@@ -227,8 +227,8 @@ const handleCourseAction = async () => {
       return
     }
     
-    // Navigate to course detail for purchase
-    router.push(`/course/${props.course.slug}`)
+    // Navigate to courses page (details are shown there)
+    router.push('/courses')
   }
 }
 </script>

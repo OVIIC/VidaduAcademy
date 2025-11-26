@@ -59,7 +59,7 @@ export const courseService = {
     return cachedApiCall(cacheKey, async () => {
       const response = await api.get('/courses', { params })
       return response.data
-    }, 10 * 60 * 1000) // Cache for 10 minutes
+    }, 1 * 60 * 1000) // Cache for 1 minute
   },
 
   async getCourse(slug) {

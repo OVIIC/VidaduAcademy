@@ -18,12 +18,12 @@
     </div>
 
     <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-      <div class="backdrop-blur-xl border border-dark-700/50 rounded-2xl py-8 px-4 shadow-xl sm:px-10" style="background-color: #625A79;">
+      <div class="backdrop-blur-xl border border-dark-700/50 rounded-2xl py-8 px-4 shadow-xl sm:px-10" style="background-color: #585070;">
         <!-- Social Login -->
         <div class="mb-6">
           <a
             :href="`${apiUrl}/auth/google/redirect`"
-            class="w-full flex justify-center items-center px-4 py-2 border border-dark-600 rounded-xl shadow-sm text-sm font-medium text-white bg-dark-800 hover:bg-dark-700 transition-colors duration-200">
+            class="w-full flex justify-center items-center px-4 py-2 border border-dark-600 rounded-2xl shadow-sm text-sm font-medium text-white bg-dark-800 hover:bg-dark-700 transition-colors duration-200">
             <svg class="h-5 w-5 mr-2" viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg">
               <g transform="matrix(1, 0, 0, 1, 27.009001, -39.238998)">
                 <path fill="#4285F4" d="M -3.264 51.509 C -3.264 50.719 -3.334 49.969 -3.454 49.239 L -14.754 49.239 L -14.754 53.749 L -8.284 53.749 C -8.574 55.229 -9.424 56.479 -10.684 57.329 L -10.684 60.329 L -6.824 60.329 C -4.564 58.239 -3.264 55.159 -3.264 51.509 Z"/>
@@ -49,7 +49,7 @@
                 type="text"
                 autocomplete="name"
                 required
-                class="input-field"
+                class="block w-full rounded-2xl border-gray-600 bg-gray-800/50 text-white shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm backdrop-blur-sm"
               />
             </div>
           </div>
@@ -66,7 +66,7 @@
                 type="email"
                 autocomplete="email"
                 required
-                class="input-field"
+                class="block w-full rounded-2xl border-gray-600 bg-gray-800/50 text-white shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm backdrop-blur-sm"
               />
             </div>
           </div>
@@ -82,7 +82,7 @@
                 name="youtube_channel"
                 type="url"
                 placeholder="https://youtube.com/@vaškanál"
-                class="input-field"
+                class="block w-full rounded-2xl border-gray-600 bg-gray-800/50 text-white shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm backdrop-blur-sm"
               />
             </div>
           </div>
@@ -99,7 +99,7 @@
                 type="number"
                 min="0"
                 placeholder="0"
-                class="input-field"
+                class="block w-full rounded-2xl border-gray-600 bg-gray-800/50 text-white shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm backdrop-blur-sm"
               />
             </div>
           </div>
@@ -116,7 +116,7 @@
                 type="password"
                 autocomplete="new-password"
                 required
-                class="input-field"
+                class="block w-full rounded-2xl border-gray-600 bg-gray-800/50 text-white shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm backdrop-blur-sm"
               />
             </div>
           </div>
@@ -133,7 +133,7 @@
                 type="password"
                 autocomplete="new-password"
                 required
-                class="input-field"
+                class="block w-full rounded-2xl border-gray-600 bg-gray-800/50 text-white shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm backdrop-blur-sm"
               />
             </div>
           </div>

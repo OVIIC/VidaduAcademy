@@ -320,7 +320,12 @@ class AuthController extends Controller
         ]);
 
         // Revoke all existing tokens except current
-        $user->tokens()->where('id', '!=', $request->user()->currentAccessToken()->id)->delete();
+        $currentToken = $request->user()->currentAccessToken();
+        if ($currentToken) {
+            $user->tokens()->where('id', '!=', $currentToken->id)->delete();
+        } else {
+            $user->tokens()->delete();
+        }
 
         // Log password change
         $this->auditService->logSecurityEvent(

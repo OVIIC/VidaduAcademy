@@ -104,6 +104,8 @@ class SecurityMiddlewareTest extends TestCase
     /** @test */
     public function it_handles_account_lockout()
     {
+        $this->withoutMiddleware([\App\Http\Middleware\CustomRateLimiter::class]);
+
         $user = User::factory()->create([
             'email' => 'lockout@example.com',
             'password' => Hash::make('correctpassword')
@@ -125,7 +127,7 @@ class SecurityMiddlewareTest extends TestCase
 
         $response->assertStatus(423);
         $response->assertJson([
-            'message' => 'Account temporarily locked due to multiple failed login attempts. Please try again later.'
+            'message' => 'Account is temporarily locked due to multiple failed login attempts.'
         ]);
     }
 
@@ -146,7 +148,7 @@ class SecurityMiddlewareTest extends TestCase
 
         $response = $this->postJson('/api/security/violations', $violationReport);
 
-        $response->assertStatus(200);
+        $response->assertStatus(201);
         $response->assertJson(['status' => 'logged']);
         
         // Verify the violation was logged

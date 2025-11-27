@@ -40,13 +40,19 @@ class SecurityLogController extends Controller
         // This endpoint is for internal use or public reporting (e.g. CSP)
         // Validation is minimal to ensure we capture as much as possible
         
+        $eventType = $request->input('type', 'general_violation');
+        if ($request->has('csp-report')) {
+            $eventType = 'csp_violation';
+        }
+
         $log = SecurityLog::create([
-            'event_type' => $request->input('type', 'general_violation'),
-            'description' => $request->input('description', 'Security event reported'),
+            'event_type' => $eventType,
+            'action' => $request->input('action', 'security_event_reported'),
+            'severity' => $request->input('severity', 'warning'),
             'ip_address' => $request->ip(),
             'user_agent' => $request->userAgent(),
             'user_id' => $request->user('sanctum')?->id,
-            'payload' => $request->all(),
+            'metadata' => $request->all(),
         ]);
 
         return response()->json(['status' => 'logged'], 201);

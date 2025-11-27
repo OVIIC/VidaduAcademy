@@ -33,7 +33,6 @@ const authStore = useAuthStore();
 const toast = useToast();
 
 onMounted(async () => {
-  const { provider } = route.params;
   const { otp, error } = route.query;
 
   if (error) {

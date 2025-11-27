@@ -144,14 +144,14 @@ class AuditServiceTest extends TestCase
             'REMOTE_ADDR' => '127.0.0.1'
         ]);
 
-        // Create old log entry
-        $oldLog = SecurityLog::create([
+        // Create old log entry using DB::table to avoid timestamp issues
+        $oldLogId = \DB::table('security_logs')->insertGetId([
             'event_type' => 'old_event',
             'action' => 'old_action',
             'ip_address' => '127.0.0.1',
             'user_agent' => 'Test Agent',
             'severity' => 'info',
-            'created_at' => now()->subDays(40) // 40 days old
+            'created_at' => now()->subDays(40)->toDateTimeString() // 40 days old
         ]);
 
         // Create recent log entry
@@ -161,7 +161,7 @@ class AuditServiceTest extends TestCase
         $cleaned = $this->auditService->cleanupOldLogs();
 
         $this->assertTrue($cleaned > 0);
-        $this->assertDatabaseMissing('security_logs', ['id' => $oldLog->id]);
+        $this->assertDatabaseMissing('security_logs', ['id' => $oldLogId]);
         $this->assertDatabaseHas('security_logs', ['event_type' => 'recent_event']);
     }
 

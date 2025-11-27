@@ -32,6 +32,12 @@ const router = createRouter({
       meta: { requiresGuest: true },
     },
     {
+      path: '/auth/callback/:provider',
+      name: 'SocialCallback',
+      component: () => import('@/views/auth/SocialCallbackView.vue'),
+      meta: { requiresGuest: true },
+    },
+    {
       path: '/dashboard',
       name: 'Dashboard',
       component: () => import('@/views/DashboardView.vue'),

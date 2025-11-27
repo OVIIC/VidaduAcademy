@@ -513,8 +513,7 @@ const selectLesson = (lesson) => {
 
 const startLesson = (lesson) => {
   console.log('Starting lesson:', lesson.title)
-  // TODO: Navigate to lesson player/viewer
-  // router.push({ name: 'LessonPlayer', params: { courseSlug: route.params.slug, lessonId: lesson.id } })
+  selectLesson(lesson)
 }
 
 const formatDuration = (minutes) => {

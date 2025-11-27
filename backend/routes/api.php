@@ -99,6 +99,11 @@ Route::prefix('auth')->group(function () {
         Route::put('/change-password', [AuthController::class, 'changePassword'])
             ->middleware('rate.limit:password_change,3,60'); // 3 attempts per hour
     });
+
+    // Social Auth
+    Route::get('/{provider}/redirect', [\App\Http\Controllers\Api\SocialAuthController::class, 'redirectToProvider']);
+    Route::get('/{provider}/callback', [\App\Http\Controllers\Api\SocialAuthController::class, 'handleProviderCallback']);
+    Route::post('/social/exchange', [\App\Http\Controllers\Api\SocialAuthController::class, 'exchangeToken']);
 });
 
 // Security reporting endpoint

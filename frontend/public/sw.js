@@ -23,6 +23,8 @@ const API_CACHE_PATTERNS = [
 const CACHE_BLACKLIST = [
   /\/api\/auth\/login/,
   /\/api\/auth\/logout/,
+  /\/auth\/callback/,
+  /\/auth\/social/,
   /\/api\/payments/,
   /\/payment\/success/,
   /\/admin/,

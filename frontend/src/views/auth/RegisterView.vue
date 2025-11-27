@@ -1,30 +1,29 @@
 <template>
-  <div class="min-h-screen bg-white flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+  <div class="min-h-screen text-white flex flex-col justify-center py-12 sm:px-6 lg:px-8" style="background-color: #3B3157;">
     <div class="sm:mx-auto sm:w-full sm:max-w-md">
       <div class="flex justify-center">
-        <div class="w-12 h-12 bg-gradient-to-r from-primary-600 to-secondary-600 rounded-lg flex items-center justify-center">
+        <div class="w-12 h-12 bg-gradient-to-r from-primary-500 to-secondary-500 rounded-lg flex items-center justify-center">
           <span class="text-white font-bold text-lg">V</span>
         </div>
       </div>
-      <h2 class="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">
+      <h2 class="mt-6 text-center text-3xl font-bold tracking-tight text-white">
         Vytvorte si účet
       </h2>
-      <p class="mt-2 text-center text-sm text-gray-600">
+      <p class="mt-2 text-center text-sm text-gray-300">
         Alebo
-        <router-link to="/login" class="font-medium text-primary-600 hover:text-primary-500">
+        <router-link to="/login" class="font-medium text-primary-500 hover:text-primary-400">
           sa prihláste do existujúceho účtu
         </router-link>
       </p>
     </div>
 
     <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-      <div class="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+      <div class="backdrop-blur-xl border border-dark-700/50 rounded-2xl py-8 px-4 shadow-xl sm:px-10" style="background-color: #625A79;">
         <!-- Social Login -->
         <div class="mb-6">
           <a
             :href="`${apiUrl}/auth/google/redirect`"
-            class="w-full flex justify-center items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition-colors duration-200"
-          >
+            class="w-full flex justify-center items-center px-4 py-2 border border-dark-600 rounded-xl shadow-sm text-sm font-medium text-white bg-dark-800 hover:bg-dark-700 transition-colors duration-200">
             <svg class="h-5 w-5 mr-2" viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg">
               <g transform="matrix(1, 0, 0, 1, 27.009001, -39.238998)">
                 <path fill="#4285F4" d="M -3.264 51.509 C -3.264 50.719 -3.334 49.969 -3.454 49.239 L -14.754 49.239 L -14.754 53.749 L -8.284 53.749 C -8.574 55.229 -9.424 56.479 -10.684 57.329 L -10.684 60.329 L -6.824 60.329 C -4.564 58.239 -3.264 55.159 -3.264 51.509 Z"/>
@@ -39,7 +38,7 @@
 
         <form class="space-y-6" @submit.prevent="handleSubmit">
           <div>
-            <label for="name" class="block text-sm font-medium text-gray-700">
+            <label for="name" class="block text-sm font-medium text-gray-200">
               Celé meno
             </label>
             <div class="mt-1">
@@ -56,7 +55,7 @@
           </div>
 
           <div>
-            <label for="email" class="block text-sm font-medium text-gray-700">
+            <label for="email" class="block text-sm font-medium text-gray-200">
               Emailová adresa
             </label>
             <div class="mt-1">
@@ -73,7 +72,7 @@
           </div>
 
           <div>
-            <label for="youtube_channel" class="block text-sm font-medium text-gray-700">
+            <label for="youtube_channel" class="block text-sm font-medium text-gray-200">
               URL YouTube kanála (voliteľné)
             </label>
             <div class="mt-1">
@@ -89,7 +88,7 @@
           </div>
 
           <div>
-            <label for="subscribers_count" class="block text-sm font-medium text-gray-700">
+            <label for="subscribers_count" class="block text-sm font-medium text-gray-200">
               Súčasný počet odberateľov (voliteľné)
             </label>
             <div class="mt-1">
@@ -106,7 +105,7 @@
           </div>
 
           <div>
-            <label for="password" class="block text-sm font-medium text-gray-700">
+            <label for="password" class="block text-sm font-medium text-gray-200">
               Heslo
             </label>
             <div class="mt-1">
@@ -123,7 +122,7 @@
           </div>
 
           <div>
-            <label for="password_confirmation" class="block text-sm font-medium text-gray-700">
+            <label for="password_confirmation" class="block text-sm font-medium text-gray-200">
               Potvrdiť heslo
             </label>
             <div class="mt-1">
@@ -148,11 +147,11 @@
               required
               class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
             />
-            <label for="agree-terms" class="ml-2 block text-sm text-gray-900">
+            <label for="agree-terms" class="ml-2 block text-sm text-gray-200">
               Súhlasím s
-              <a href="#" class="text-primary-600 hover:text-primary-500">Podmienkami služby</a>
+              <a href="#" class="text-primary-500 hover:text-primary-400">Podmienkami služby</a>
               a
-              <a href="#" class="text-primary-600 hover:text-primary-500">Zásadami ochrany súkromia</a>
+              <a href="#" class="text-primary-500 hover:text-primary-400">Zásadami ochrany súkromia</a>
             </label>
           </div>
 

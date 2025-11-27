@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-black text-white flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+  <div class="min-h-screen text-white flex flex-col justify-center py-12 sm:px-6 lg:px-8" style="background-color: #3B3157;">
     <div class="sm:mx-auto sm:w-full sm:max-w-md">
       <div class="flex justify-center">
         <div class="w-12 h-12 bg-gradient-to-r from-primary-500 to-secondary-500 rounded-lg flex items-center justify-center">
@@ -18,7 +18,7 @@
     </div>
 
     <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-      <div class="bg-gradient-to-br from-gray-900/30 via-secondary-900/20 to-gray-900/40 backdrop-blur-xl border border-gray-700/50 rounded-2xl py-8 px-4 shadow-xl sm:px-10">
+      <div class="backdrop-blur-xl border border-dark-700/50 rounded-2xl py-8 px-4 shadow-xl sm:px-10" style="background-color: #625A79;">
         <form class="space-y-6" @submit.prevent="handleSubmit">
           <!-- Security Notice -->
           <div v-if="securityNotice" class="bg-gradient-to-br from-yellow-500/20 via-yellow-600/20 to-yellow-500/20 backdrop-blur-xl border border-yellow-500/50 rounded-2xl p-4">
@@ -75,7 +75,7 @@
           </div>
 
           <div>
-            <label for="password" class="block text-sm font-medium text-gray-700">
+            <label for="password" class="block text-sm font-medium text-gray-200">
               Heslo
             </label>
             <div class="mt-1">
@@ -97,7 +97,7 @@
           </div>
 
           <!-- Rate Limit Notice -->
-          <div v-if="rateLimitNotice" class="bg-red-50 border border-red-200 rounded-md p-4">
+          <div v-if="rateLimitNotice" class="bg-gradient-to-br from-red-500/20 via-red-600/20 to-red-500/20 backdrop-blur-xl border border-red-500/50 rounded-2xl p-4">
             <div class="flex">
               <div class="flex-shrink-0">
                 <svg class="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
@@ -105,7 +105,7 @@
                 </svg>
               </div>
               <div class="ml-3">
-                <p class="text-sm text-red-700">{{ rateLimitNotice }}</p>
+                <p class="text-sm text-red-200">{{ rateLimitNotice }}</p>
               </div>
             </div>
           </div>
@@ -119,13 +119,13 @@
                 type="checkbox"
                 class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
               />
-              <label for="remember-me" class="ml-2 block text-sm text-gray-900">
+              <label for="remember-me" class="ml-2 block text-sm text-gray-200">
                 Zapamätať si ma
               </label>
             </div>
 
             <div class="text-sm">
-              <a href="#" class="font-medium text-primary-600 hover:text-primary-500">
+              <a href="#" class="font-medium text-primary-500 hover:text-primary-400">
                 Zabudli ste heslo?
               </a>
             </div>

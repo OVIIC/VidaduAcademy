@@ -20,8 +20,7 @@
       </router-view>
     </component>
     
-    <!-- Performance Dashboard (development only) -->
-    <PerformanceDashboard v-if="isDevelopment" />
+
     
     <!-- Global Loading Overlay -->
     <div 
@@ -40,7 +39,6 @@
 import { onMounted, computed, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
-import PerformanceDashboard from '@/components/debug/PerformanceDashboard.vue'
 import DefaultLayout from '@/layouts/DefaultLayout.vue'
 import DashboardLayout from '@/layouts/DashboardLayout.vue'
 
@@ -63,11 +61,6 @@ const layout = computed(() => {
 
 // Global loading state
 const isGlobalLoading = ref(false)
-
-// Show performance dashboard only in development
-const isDevelopment = computed(() => {
-  return import.meta.env.DEV || import.meta.env.VITE_SHOW_PERFORMANCE === 'true'
-})
 
 // Page transition handlers
 const onPageEnter = () => {

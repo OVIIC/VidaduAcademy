@@ -150,8 +150,9 @@
         </div>
 
         <div class="mt-12 text-center relative z-10">
-            <router-link to="/courses" class="inline-flex items-center gap-2 text-primary-400 hover:text-primary-300 font-semibold transition-colors group">
-            Všetky kurzy <ArrowLongRightIcon class="w-6 h-6 group-hover:translate-x-1 transition-transform" />
+            <router-link to="/courses" class="px-8 py-4 bg-[rgb(237,111,85)] hover:bg-[rgb(220,100,75)] text-white font-bold rounded-2xl transition-all shadow-lg hover:shadow-[rgb(237,111,85)]/25 hover:-translate-y-1 inline-flex items-center gap-2 group">
+            <span>Všetky kurzy</span>
+            <ArrowRightIcon class="w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </router-link>
         </div>
         </section>
@@ -426,7 +427,6 @@ import { ref, onMounted, onUnmounted, computed } from 'vue'
 import {
   ArrowRightIcon,
   PlayCircleIcon,
-  ArrowLongRightIcon,
   UserGroupIcon,
   ChartBarIcon,
   ShieldCheckIcon,

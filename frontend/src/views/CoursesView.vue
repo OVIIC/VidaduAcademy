@@ -409,7 +409,6 @@ import { paymentService } from '@/services'
 import { useAuthStore } from '@/stores/auth'
 import { useEnrollmentStore } from '@/stores/enrollment'
 import { useCourseStore } from '@/stores/course'
-import { usePerformance } from '@/utils/performanceMonitor'
 import { useToast } from 'vue-toastification'
 import CheckoutLoadingModal from '@/components/ui/CheckoutLoadingModal.vue'
 import { debounce } from 'lodash'
@@ -418,7 +417,6 @@ const router = useRouter()
 const authStore = useAuthStore()
 const enrollmentStore = useEnrollmentStore()
 const courseStore = useCourseStore()
-const { measureAsync, logMemory } = usePerformance()
 const toast = useToast()
 
 // Use course store instead of local state
@@ -597,9 +595,9 @@ const changePage = (page) => {
 const loadCourses = async () => {
   try {
     if (import.meta.env.DEV) console.log('Loading courses via course store...')
-    await measureAsync('Load Courses API', async () => {
-      return await courseStore.fetchCourses()
-    })
+    
+    await courseStore.fetchCourses()
+    
     if (import.meta.env.DEV) console.log('Courses loaded:', courses.value.length)
     
     // Set first course as selected for hero if no course is selected
@@ -610,13 +608,8 @@ const loadCourses = async () => {
     
     // Load purchase status for each course if user is authenticated
     if (authStore.user && courses.value.length > 0) {
-      await measureAsync('Load Purchase Status', async () => {
-        await loadPurchaseStatus()
-      })
+      await loadPurchaseStatus()
     }
-    
-    // Log memory usage after loading
-    logMemory('After loading courses')
   } catch (error) {
     console.error('Error loading courses:', error)
   }

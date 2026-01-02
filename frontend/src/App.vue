@@ -12,7 +12,6 @@
       <router-view v-slot="{ Component, route }">
         <transition 
           name="page-transition" 
-          mode="out-in"
           @enter="onPageEnter"
           @leave="onPageLeave"
         >
@@ -116,19 +115,26 @@ body {
 }
 
 /* Page transitions */
-.page-transition-enter-active,
+/* Reveal effect: New page is instant (underneath), Old page fades out (on top) */
+.page-transition-enter-active {
+  z-index: 0;
+}
+
 .page-transition-leave-active {
-  transition: all 0.3s ease;
+  transition: opacity 0.3s ease;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 10;
 }
 
 .page-transition-enter-from {
-  opacity: 0;
-  transform: translateY(10px);
+  opacity: 1;
 }
 
 .page-transition-leave-to {
   opacity: 0;
-  transform: translateY(-10px);
 }
 
 /* Safe area insets for mobile devices */

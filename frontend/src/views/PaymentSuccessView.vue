@@ -160,14 +160,14 @@ export default {
         const sessionId = route.query.session_id
         
         if (sessionId) {
-          console.log(`Attempting payment verification (attempt ${retryCount + 1})...`)
+          if (import.meta.env.DEV) console.log(`Attempting payment verification (attempt ${retryCount + 1})...`)
           
           // Verify payment and get course details
           const response = await api.post('/payments/verify', { session_id: sessionId })
           course.value = response.data.course
           paymentDetails.value = response.data.payment
           
-          console.log('Payment verification successful:', response.data)
+          if (import.meta.env.DEV) console.log('Payment verification successful:', response.data)
         } else {
           console.warn('No session_id in URL query parameters')
           // Fallback: show generic success
@@ -179,7 +179,7 @@ export default {
         // Retry up to 3 times with exponential backoff
         if (retryCount < 2 && route.query.session_id) {
           const delay = Math.pow(2, retryCount) * 1000 // 1s, 2s, 4s
-          console.log(`Retrying in ${delay}ms...`)
+          if (import.meta.env.DEV) console.log(`Retrying in ${delay}ms...`)
           setTimeout(() => loadPaymentDetails(retryCount + 1), delay)
         } else {
           // Show success even if API fails after all retries

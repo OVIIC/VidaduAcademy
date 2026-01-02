@@ -59,6 +59,6 @@ class CourseObserver
      */
     protected function clearCache(Course $course): void
     {
-        $this->cacheService->forgetCourse($course->id);
+        $this->cacheService->forgetCourse($course->id, $course->slug);
     }
 }

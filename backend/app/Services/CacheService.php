@@ -109,10 +109,14 @@ class CacheService
     /**
      * Invalidate course cache
      */
-    public function forgetCourse(int $courseId): void
+    public function forgetCourse(int $courseId, ?string $slug = null): void
     {
         try {
             Cache::forget(self::COURSE_PREFIX . $courseId);
+            
+            if ($slug) {
+                Cache::forget('course:slug:' . $slug);
+            }
             
             if (config('cache.default') === 'redis' || config('cache.default') === 'memcached') {
                 Cache::tags(['courses'])->flush();

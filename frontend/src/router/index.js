@@ -62,21 +62,7 @@ const router = createRouter({
       component: () => import('@/views/checkout/StripeCheckoutView.vue'),
       meta: { requiresAuth: true },
     },
-    // Learn and Lesson routes are deprecated and replaced by CourseStudy
-    // {
-    //   path: '/learn/:courseSlug',
-    //   name: 'Learn',
-    //   component: () => import('@/views/LearnView.vue'),
-    //   meta: { requiresAuth: true, layout: 'dashboard' },
-    //   props: true,
-    // },
-    // {
-    //   path: '/learn/:courseSlug/:lessonSlug',
-    //   name: 'Lesson',
-    //   component: () => import('@/views/LessonView.vue'),
-    //   meta: { requiresAuth: true, layout: 'dashboard' },
-    //   props: true,
-    // },
+
     {
       path: '/payment/success',
       name: 'PaymentSuccess',

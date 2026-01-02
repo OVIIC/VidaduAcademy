@@ -1,64 +1,83 @@
 <template>
   <aside 
-    class="bg-secondary-800 border-r border-secondary-700 min-h-screen hidden md:flex flex-col shrink-0 transition-all duration-300 ease-in-out"
-    :class="[isCollapsed ? 'w-20' : 'w-64']"
+    class="relative z-30 m-4 h-[calc(100vh-2rem)] hidden md:flex flex-col shrink-0 transition-all duration-300 ease-in-out p-4 rounded-3xl border border-dark-700/50 bg-dark-900/80 backdrop-blur-xl shadow-2xl"
+    :class="[isCollapsed ? 'w-24' : 'w-72']"
   >
-    <div class="p-6 flex items-center justify-between">
+    <!-- Header -->
+    <div class="flex items-center justify-between mb-8 px-2 pt-2">
       <router-link v-if="!isCollapsed" to="/" class="flex items-center gap-2 overflow-hidden whitespace-nowrap">
-        <span class="text-2xl font-bold text-white transition-all duration-300">
+        <span class="text-2xl font-bold bg-gradient-to-r from-primary-400 to-primary-600 bg-clip-text text-transparent transition-all duration-300">
           Vidadu
         </span>
       </router-link>
+      <div v-else class="w-full flex justify-center">
+         <span class="text-xl font-bold text-primary-500">V</span>
+      </div>
       
       <button 
         @click="toggleCollapse" 
-        class="w-8 h-8 flex items-center justify-center rounded-lg border border-gray-600 hover:border-white text-gray-400 hover:text-white transition-all duration-200 focus:outline-none"
-        :class="{ 'mx-auto': isCollapsed }"
+        class="w-8 h-8 flex items-center justify-center rounded-xl bg-dark-800 hover:bg-dark-700 text-gray-400 hover:text-white transition-all duration-200 focus:outline-none"
+        :class="{ 'mx-auto mt-4': isCollapsed }"
       >
         <component :is="isCollapsed ? ChevronRightIcon : ChevronLeftIcon" class="h-4 w-4" />
       </button>
     </div>
     
-    <nav class="flex-1 px-4 pt-4 space-y-1 overflow-y-auto">
+    <!-- Navigation -->
+    <nav class="flex-1 space-y-2 overflow-y-auto custom-scrollbar">
       <router-link 
         v-for="item in navigation" 
         :key="item.name"
         :to="item.href"
-        class="group flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors whitespace-nowrap"
-        :class="[
-          $route.path === item.href
-            ? 'bg-secondary-700 text-white'
-            : 'text-gray-400 hover:bg-secondary-700/50 hover:text-white',
-          isCollapsed ? 'justify-center' : ''
-        ]"
-        :title="isCollapsed ? item.name : ''"
+        custom
+        v-slot="{ href, navigate, isActive }"
       >
-        <component 
-          :is="item.icon" 
-          class="h-5 w-5 flex-shrink-0 transition-colors"
+        <a
+          :href="href"
+          @click="navigate"
+          class="group flex items-center px-4 py-3 text-sm font-medium rounded-2xl transition-all duration-300 whitespace-nowrap relative overflow-hidden focus:outline-none"
           :class="[
-            $route.path === item.href ? 'text-primary-500' : 'text-gray-500 group-hover:text-gray-300',
-            isCollapsed ? '' : 'mr-3'
+            isActive
+              ? 'bg-white/10 text-white shadow-inner'
+              : 'text-gray-400 hover:bg-white/5 hover:text-white',
+            isCollapsed ? 'justify-center px-0 w-12 h-12 mx-auto' : ''
           ]"
-        />
-        <span 
-          class="transition-opacity duration-200"
-          :class="[isCollapsed ? 'opacity-0 w-0 hidden' : 'opacity-100']"
+          :title="isCollapsed ? item.name : ''"
         >
-          {{ item.name }}
-        </span>
+          <component 
+            :is="item.icon" 
+            class="h-5 w-5 flex-shrink-0 transition-colors duration-200"
+            :class="[
+              isActive ? 'text-white' : 'text-gray-500 group-hover:text-white',
+              isCollapsed ? '' : 'mr-3'
+            ]"
+          />
+          
+          <span 
+            class="transition-all duration-200 relative z-10"
+            :class="[isCollapsed ? 'opacity-0 w-0 hidden' : 'opacity-100']"
+          >
+            {{ item.name }}
+          </span>
+
+          <!-- Active Indicator (Removed distinct pill background, using class based bg) -->
+        </a>
       </router-link>
     </nav>
     
-    <div ref="userMenuRef" class="p-4 border-t border-gray-800 mt-auto relative">
+    <!-- User Menu -->
+    <div ref="userMenuRef" class="mt-auto relative pt-4 border-t border-dark-800">
       <button 
         @click="showUserMenu = !showUserMenu"
-        class="w-full flex items-center gap-3 hover:bg-secondary-700 rounded-lg p-2 transition-colors"
+        class="w-full flex items-center gap-3 hover:bg-dark-800 rounded-2xl p-2 transition-all duration-200"
         :class="{ 'justify-center': isCollapsed }"
       >
-        <div class="h-8 w-8 rounded-full bg-gray-800 flex items-center justify-center text-primary-500 font-bold border border-gray-700 flex-shrink-0">
-          {{ userInitials }}
+        <div class="h-10 w-10 rounded-full bg-gradient-to-br from-primary-500 to-secondary-600 p-[2px] flex-shrink-0">
+          <div class="h-full w-full rounded-full bg-dark-900 flex items-center justify-center text-white text-sm font-bold border-2 border-transparent">
+             {{ userInitials }}
+          </div>
         </div>
+        
         <div 
           class="flex-1 min-w-0 transition-opacity duration-200 text-left"
           :class="[isCollapsed ? 'opacity-0 w-0 hidden' : 'opacity-100']"
@@ -70,34 +89,46 @@
             {{ authStore.user?.email }}
           </p>
         </div>
+        
+        <div v-if="!isCollapsed" class="text-gray-500">
+           <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+           </svg>
+        </div>
       </button>
 
       <!-- Dropdown Menu -->
-      <div 
-        v-if="showUserMenu && !isCollapsed"
-        class="absolute bottom-full left-4 right-4 mb-2 bg-secondary-surface border border-gray-700 rounded-lg shadow-lg overflow-hidden"
+      <transition
+        enter-active-class="transition duration-100 ease-out"
+        enter-from-class="transform scale-95 opacity-0"
+        enter-to-class="transform scale-100 opacity-100"
+        leave-active-class="transition duration-75 ease-in"
+        leave-from-class="transform scale-100 opacity-100"
+        leave-to-class="transform scale-95 opacity-0"
       >
-        <router-link
-          to="/profile"
-          @click="showUserMenu = false"
-          class="flex items-center gap-3 px-4 py-3 hover:bg-secondary-700 transition-colors text-gray-300 hover:text-white"
+        <div 
+          v-if="showUserMenu && !isCollapsed"
+          class="absolute bottom-full left-0 right-0 mb-2 bg-dark-800 border border-dark-700 rounded-2xl shadow-xl overflow-hidden backdrop-blur-xl"
         >
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-          </svg>
-          <span class="text-sm font-medium">Settings</span>
-        </router-link>
-        <button
-          @click="handleLogout"
-          class="w-full flex items-center gap-3 px-4 py-3 hover:bg-secondary-700 transition-colors text-gray-300 hover:text-white"
-        >
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-          </svg>
-          <span class="text-sm font-medium">Logout</span>
-        </button>
-      </div>
+          <router-link
+            to="/profile"
+            @click="showUserMenu = false"
+            class="flex items-center gap-3 px-4 py-3 hover:bg-dark-700 transition-colors text-gray-300 hover:text-white"
+          >
+            <UserIcon class="w-5 h-5" />
+            <span class="text-sm font-medium">Profil</span>
+          </router-link>
+          <button
+            @click="handleLogout"
+            class="w-full flex items-center gap-3 px-4 py-3 hover:bg-dark-700 transition-colors text-red-400 hover:text-red-300 border-t border-dark-700"
+          >
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+            </svg>
+            <span class="text-sm font-medium">Odhlásiť sa</span>
+          </button>
+        </div>
+      </transition>
     </div>
   </aside>
 </template>

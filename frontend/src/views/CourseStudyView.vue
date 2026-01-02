@@ -447,9 +447,9 @@ const selectedLessonIndex = computed(() => {
 const loadCourseContent = async () => {
   loading.value = true
   try {
-    console.log('Loading course content for slug:', route.params.slug)
+    if (import.meta.env.DEV) console.log('Loading course content for slug:', route.params.slug)
     const response = await learningService.getCourseContent(route.params.slug)
-    console.log('Course content response:', response)
+    if (import.meta.env.DEV) console.log('Course content response:', response)
     
     course.value = response.course || response
     lessons.value = response.lessons || []
@@ -486,7 +486,7 @@ const selectLesson = (lesson) => {
   
   lessonSwitching.value = true
   selectedLesson.value = lesson
-  console.log('Selected lesson:', lesson.title)
+  if (import.meta.env.DEV) console.log('Selected lesson:', lesson.title)
   
   // Scroll to lesson content after a small delay to ensure DOM update
   nextTick(() => {
@@ -512,7 +512,7 @@ const selectLesson = (lesson) => {
 }
 
 const startLesson = (lesson) => {
-  console.log('Starting lesson:', lesson.title)
+  if (import.meta.env.DEV) console.log('Starting lesson:', lesson.title)
   selectLesson(lesson)
 }
 
@@ -612,9 +612,12 @@ const toggleLessonCompletion = async (lesson) => {
       lesson.slug,
       progressData
     )
+
     
-    console.log(`Lesson ${lesson.title} marked as ${newCompletionStatus ? 'completed' : 'incomplete'}`)
-    console.log('Progress update response:', response)
+    if (import.meta.env.DEV) {
+      console.log(`Lesson ${lesson.title} marked as ${newCompletionStatus ? 'completed' : 'incomplete'}`)
+      console.log('Progress update response:', response)
+    }
     
     // Update lesson with fresh data from server
     if (response.progress) {

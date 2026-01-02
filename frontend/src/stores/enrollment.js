@@ -66,9 +66,9 @@ export const useEnrollmentStore = defineStore('enrollment', {
 
       this.loading = true
       try {
-        console.log('Loading my courses from store...')
+        if (import.meta.env.DEV) console.log('Loading my courses from store...')
         const response = await enrollmentService.getMyCourses()
-        console.log('Store - My courses response:', response)
+        if (import.meta.env.DEV) console.log('Store - My courses response:', response)
         
         // Ensure response.data exists and is an array
         if (response && response.data && Array.isArray(response.data)) {
@@ -80,7 +80,7 @@ export const useEnrollmentStore = defineStore('enrollment', {
         
         this.lastUpdated = Date.now()
         
-        console.log('Store - My courses loaded:', this.myCourses.length)
+        if (import.meta.env.DEV) console.log('Store - My courses loaded:', this.myCourses.length)
         return this.myCourses
       } catch (error) {
         console.error('Store - Error loading my courses:', error)
@@ -98,9 +98,9 @@ export const useEnrollmentStore = defineStore('enrollment', {
 
     async enrollInCourse(courseId) {
       try {
-        console.log('Enrolling in course:', courseId)
+        if (import.meta.env.DEV) console.log('Enrolling in course:', courseId)
         const response = await enrollmentService.enrollInCourse(courseId)
-        console.log('Enrollment response:', response)
+        if (import.meta.env.DEV) console.log('Enrollment response:', response)
         
         // Refresh my courses after successful enrollment
         await this.loadMyCourses(true)
@@ -155,7 +155,7 @@ export const useEnrollmentStore = defineStore('enrollment', {
             enrolled_at: new Date().toISOString(),
           }
         })
-        console.log('Course added to local state:', course.title)
+        if (import.meta.env.DEV) console.log('Course added to local state:', course.title)
       }
     },
 

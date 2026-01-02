@@ -504,7 +504,7 @@ const toggleCourseDetails = async () => {
 
 // Course selection (smooth transition to hero)
 const selectCourse = async (course) => {
-  console.log('Selecting course:', course.title)
+  if (import.meta.env.DEV) console.log('Selecting course:', course.title)
   selectedCourse.value = course
   
   // Close details when selecting a new course
@@ -596,16 +596,16 @@ const changePage = (page) => {
 
 const loadCourses = async () => {
   try {
-    console.log('Loading courses via course store...')
+    if (import.meta.env.DEV) console.log('Loading courses via course store...')
     await measureAsync('Load Courses API', async () => {
       return await courseStore.fetchCourses()
     })
-    console.log('Courses loaded:', courses.value.length)
+    if (import.meta.env.DEV) console.log('Courses loaded:', courses.value.length)
     
     // Set first course as selected for hero if no course is selected
     if (courses.value.length > 0 && !selectedCourse.value) {
       selectedCourse.value = courses.value[0]
-      console.log('Set first course as hero:', selectedCourse.value.title)
+      if (import.meta.env.DEV) console.log('Set first course as hero:', selectedCourse.value.title)
     }
     
     // Load purchase status for each course if user is authenticated
@@ -634,7 +634,7 @@ const loadPurchaseStatus = async () => {
 
 const handlePurchase = async (course) => {
   if (!authStore.user) {
-    console.log('User not authenticated, redirecting to login')
+    if (import.meta.env.DEV) console.log('User not authenticated, redirecting to login')
     toast.info('Pre nákup kurzu sa musíte prihlásiť.')
     router.push('/login')
     return
@@ -653,7 +653,7 @@ const handlePurchase = async (course) => {
     checkoutCourse.value = course
     showCheckoutLoading.value = true
     
-    console.log('Creating Stripe checkout session for course:', course.title)
+    if (import.meta.env.DEV) console.log('Creating Stripe checkout session for course:', course.title)
     
     // Try to create Stripe checkout session
     const successUrl = `${window.location.origin}/payment/success?session_id={CHECKOUT_SESSION_ID}`
@@ -674,7 +674,7 @@ const handlePurchase = async (course) => {
     checkoutCourse.value = null
     
     // Fallback to our simulator for development
-    console.log('Falling back to simulator checkout')
+    if (import.meta.env.DEV) console.log('Falling back to simulator checkout')
     const checkoutUrl = `/checkout?courseTitle=${encodeURIComponent(course.title)}&coursePrice=${course.price}&courseId=${course.id}&courseSlug=${encodeURIComponent(course.slug)}`
     router.push(checkoutUrl)
   }

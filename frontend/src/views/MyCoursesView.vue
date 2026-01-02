@@ -234,7 +234,7 @@ const getEmptyStateDescription = () => {
 
 const loadMyCourses = async () => {
   if (!authStore.user || !authStore.isAuthenticated) {
-    console.log("User not authenticated, skipping course loading");
+    if (import.meta.env.DEV) console.log("User not authenticated, skipping course loading");
     return;
   }
 
@@ -268,7 +268,7 @@ watch(
       oldRouteName &&
       oldRouteName !== "MyCourses"
     ) {
-      console.log("Navigated to MyCourses, refreshing data...");
+      if (import.meta.env.DEV) console.log("Navigated to MyCourses, refreshing data...");
       loadMyCourses();
     }
   },

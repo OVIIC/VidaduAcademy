@@ -33,25 +33,25 @@ export const useAuthStore = defineStore('auth', {
       const user = localStorage.getItem('user')
       const roles = localStorage.getItem('roles')
       
-      console.log('Initializing auth:', { hasToken: !!token, hasUser: !!user })
+      if (import.meta.env.DEV) console.log('Initializing auth:', { hasToken: !!token, hasUser: !!user })
       
       if (token && user) {
         this.token = token
         this.user = JSON.parse(user)
         this.roles = roles ? JSON.parse(roles) : []
         this.isAuthenticated = true
-        console.log('Auth initialized successfully for user:', this.user?.email)
+        if (import.meta.env.DEV) console.log('Auth initialized successfully for user:', this.user?.email)
       } else {
-        console.log('No valid auth data found in localStorage')
+        if (import.meta.env.DEV) console.log('No valid auth data found in localStorage')
       }
     },
 
     async login(credentials) {
       this.loading = true
       try {
-        console.log('Attempting login for:', credentials.email)
+        if (import.meta.env.DEV) console.log('Attempting login for:', credentials.email)
         const data = await authService.login(credentials)
-        console.log('Login successful, received data:', { user: data.user?.email, hasToken: !!data.token })
+        if (import.meta.env.DEV) console.log('Login successful, received data:', { user: data.user?.email, hasToken: !!data.token })
         
         this.user = data.user
         this.token = data.token
@@ -62,7 +62,7 @@ export const useAuthStore = defineStore('auth', {
         localStorage.setItem('user', JSON.stringify(data.user))
         localStorage.setItem('roles', JSON.stringify(this.roles))
         
-        console.log('Auth state updated, localStorage saved')
+        if (import.meta.env.DEV) console.log('Auth state updated, localStorage saved')
         toast.success('Vitajte späť!')
         return data
       } catch (error) {
@@ -103,11 +103,11 @@ export const useAuthStore = defineStore('auth', {
     async logout() {
       try {
         await authService.logout()
-        console.log('Backend logout successful')
+        if (import.meta.env.DEV) console.log('Backend logout successful')
       } catch (error) {
         console.error('Logout error:', error)
       } finally {
-        console.log('Clearing auth state and localStorage')
+        if (import.meta.env.DEV) console.log('Clearing auth state and localStorage')
         this.user = null
         this.token = null
         this.roles = []
@@ -170,7 +170,7 @@ export const useAuthStore = defineStore('auth', {
       localStorage.setItem('user', JSON.stringify(mockUser))
       localStorage.setItem('roles', JSON.stringify(mockRoles))
       
-      console.log('Debug login activated with user:', mockUser)
+      if (import.meta.env.DEV) console.log('Debug login activated with user:', mockUser)
     }
   },
 })

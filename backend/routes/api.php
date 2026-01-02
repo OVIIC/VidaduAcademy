@@ -9,7 +9,7 @@ use App\Http\Controllers\Api\LearningController;
 use App\Http\Controllers\Api\EnrollmentController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\AuthController;
-use App\Http\Controllers\Api\StripeWebhookController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -48,7 +48,7 @@ Route::prefix('courses')->group(function () {
 Route::post('/webhook/stripe', [PaymentController::class, 'webhook'])->name('stripe.webhook');
 
 // Payment verification (public, no auth required)
-Route::post('/payments/verify', [PaymentVerificationController::class, 'verifyPayment'])->name('payments.verify');
+Route::post('/payments/verify', [PaymentController::class, 'verifyPayment'])->name('payments.verify');
 
 // Protected routes
 Route::middleware('auth:sanctum')->group(function () {
@@ -130,6 +130,4 @@ Route::middleware(['auth:sanctum', 'role:instructor'])->prefix('instructor')->gr
     Route::apiResource('courses', \App\Http\Controllers\Api\Instructor\InstructorCourseController::class);
 });
 
-// Stripe webhook (must be before auth middleware)
-Route::post('/stripe/webhook', [StripeWebhookController::class, 'handleWebhook'])
-    ->name('stripe.webhook.v2');
+

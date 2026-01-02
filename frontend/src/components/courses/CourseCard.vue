@@ -1,11 +1,19 @@
 <template>
-  <div class="card hover:shadow-lg transition-shadow duration-300 group">
+  <div 
+    class="bg-dark-900/40 backdrop-blur-md border border-dark-700/50 rounded-2xl overflow-hidden transition-all duration-300 group"
+    :class="[
+      enableHoverEffects ? 'hover:shadow-2xl hover:shadow-primary-500/10 hover:border-primary-500/30' : ''
+    ]"
+  >
     <div class="relative overflow-hidden">
       <LazyImage
         :src="course.thumbnail || '/placeholder-course.jpg'"
         :alt="course.title"
         container-class="w-full h-48"
-        image-class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+        :image-class="[
+          'w-full h-48 object-cover transition-transform duration-300',
+          enableHoverEffects ? 'group-hover:scale-105' : ''
+        ]"
         :fallback-src="'/placeholder-course.jpg'"
       />
       <div v-if="course.featured" class="absolute top-3 right-3">
@@ -30,7 +38,10 @@
       </div>
 
       <!-- Course Title -->
-      <h3 class="text-lg font-semibold text-white mb-2 line-clamp-2 group-hover:text-primary-500 transition-colors">
+      <h3 
+        class="text-lg font-semibold text-white mb-2 line-clamp-2 transition-colors"
+        :class="[enableHoverEffects ? 'group-hover:text-primary-500' : '']"
+      >
         {{ course.title }}
       </h3>
 
@@ -39,110 +50,38 @@
         {{ course.short_description }}
       </p>
 
-      <!-- Course Meta -->
-      <div class="flex items-center justify-between text-sm text-dark-400 mb-4">
-        <div class="flex items-center space-x-4">
-          <div class="flex items-center">
-            <ClockIcon class="h-4 w-4 mr-1" />
-            {{ formatDuration(course.duration_minutes) }}
-          </div>
-          <div class="flex items-center">
-            <AcademicCapIcon class="h-4 w-4 mr-1" />
-            Kurz
-          </div>
-        </div>
+      <!-- Course Meta (Duration only) -->
+      <div v-if="showDuration" class="flex items-center text-sm text-dark-400">
         <div class="flex items-center">
-          <span
-            class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium"
-            :class="getDifficultyBadgeClass(course.difficulty_level)"
-          >
-            {{ translateDifficulty(course.difficulty_level) }}
-          </span>
-        </div>
-      </div>
-
-      <!-- Price and Action -->
-      <div class="flex items-center justify-between">
-        <div>
-          <span class="text-2xl font-bold text-white">
-            {{ formatPrice(course.price) }}
-          </span>
-          <span class="text-sm text-dark-400 ml-1">{{ course.currency }}</span>
-        </div>
-        
-        <div class="flex flex-col items-end space-y-2">
-          <!-- Purchase status -->
-          <div v-if="isPurchased" class="text-sm font-medium text-green-400 bg-green-900/30 px-2 py-1 rounded">
-            Kurz je zakúpený
-          </div>
-          
-          <button
-            @click="showCourseDetail"
-            class="btn-primary"
-          >
-            Zistiť viac
-          </button>
+          <ClockIcon class="h-4 w-4 mr-1" />
+          {{ formatDuration(course.duration_minutes) }}
         </div>
       </div>
     </div>
-
-    <!-- Course Detail Modal -->
-    <CourseDetailModal
-      :show="showModal"
-      :course="course"
-      :isPurchased="isPurchased"
-      :isCheckoutLoading="isCheckoutLoading"
-      @close="showModal = false"
-      @purchase="handlePurchase"
-    />
   </div>
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
 import {
   StarIcon,
   ClockIcon,
-  AcademicCapIcon,
 } from '@heroicons/vue/24/outline'
-import { useEnrollmentStore } from '@/stores/enrollment'
-import CourseDetailModal from './CourseDetailModal.vue'
 import LazyImage from '@/components/ui/LazyImage.vue'
 
-const props = defineProps({
+defineProps({
   course: {
     type: Object,
     required: true,
   },
-  isCheckoutLoading: {
+  showDuration: {
     type: Boolean,
-    default: false,
+    default: true
   },
+  enableHoverEffects: {
+    type: Boolean,
+    default: true
+  }
 })
-
-const emit = defineEmits(['purchase'])
-
-const enrollmentStore = useEnrollmentStore()
-const showModal = ref(false)
-
-// Check if course is purchased
-const isPurchased = computed(() => {
-  return enrollmentStore.hasPurchasedCourse(props.course.id)
-})
-
-const showCourseDetail = () => {
-  showModal.value = true
-}
-
-const handlePurchase = (course) => {
-  emit('purchase', course)
-}
-
-const formatPrice = (price) => {
-  if (!price) return '$0.00'
-  const numPrice = parseFloat(price)
-  return isNaN(numPrice) ? '$0.00' : `$${numPrice.toFixed(2)}`
-}
 
 const getInstructorInitials = (name) => {
   if (!name) return 'NN'
@@ -172,24 +111,6 @@ const formatDuration = (minutes) => {
   const hours = Math.floor(minutes / 60)
   const remainingMinutes = minutes % 60
   return remainingMinutes > 0 ? `${hours}h ${remainingMinutes}m` : `${hours}h`
-}
-
-const getDifficultyBadgeClass = (level) => {
-  const classes = {
-    beginner: 'bg-green-900/30 text-green-400',
-    intermediate: 'bg-yellow-900/30 text-yellow-400',
-    advanced: 'bg-red-900/30 text-red-400',
-  }
-  return classes[level] || 'bg-dark-700 text-dark-200'
-}
-
-const translateDifficulty = (level) => {
-  const translations = {
-    beginner: 'Začiatočník',
-    intermediate: 'Stredne pokročilý',
-    advanced: 'Pokročilý',
-  }
-  return translations[level] || level
 }
 </script>
 

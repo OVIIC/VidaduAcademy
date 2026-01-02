@@ -2,7 +2,7 @@
   <div class="min-h-screen flex flex-col">
     <AppNavigation />
     
-    <main id="main-content" class="flex-1 pb-safe-bottom">
+    <main id="main-content" class="relative flex-1 pb-safe-bottom">
       <slot></slot>
     </main>
     

@@ -89,7 +89,7 @@ class CourseController extends Controller
             ->where('status', 'published')
             ->where('featured', true)
             ->orderBy('created_at', 'desc')
-            ->limit(6)
+            ->limit(20)
             ->get();
         });
 

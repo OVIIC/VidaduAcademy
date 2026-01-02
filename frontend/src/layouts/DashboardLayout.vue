@@ -1,10 +1,10 @@
 <template>
-  <div class="h-screen flex bg-secondary-800 overflow-hidden">
-    <AppSidebar />
+  <div class="h-screen flex bg-dark-950 overflow-hidden">
+    <AppSidebar class="hidden md:flex" />
     
     <div class="flex-1 flex flex-col min-w-0 overflow-hidden">
       <!-- Mobile header -->
-      <div class="md:hidden bg-secondary-800 border-b border-secondary-700 p-4 flex items-center justify-between">
+      <div class="md:hidden bg-dark-900 border-b border-dark-700 p-4 flex items-center justify-between">
         <router-link to="/" class="font-bold text-xl text-white">Vidadu</router-link>
         <button @click="isSidebarOpen = !isSidebarOpen" class="text-gray-400 hover:text-white">
           <span class="sr-only">Open sidebar</span>
@@ -17,7 +17,7 @@
       <!-- Mobile sidebar overlay -->
       <div v-if="isSidebarOpen" class="fixed inset-0 z-40 md:hidden" role="dialog" aria-modal="true">
         <div class="fixed inset-0 bg-gray-900 bg-opacity-75" aria-hidden="true" @click="isSidebarOpen = false"></div>
-        <div class="relative flex-1 flex flex-col max-w-xs w-full bg-secondary-800 h-full">
+        <div class="relative flex-1 flex flex-col max-w-xs w-full bg-dark-900 h-full">
           <div class="absolute top-0 right-0 -mr-12 pt-2">
             <button @click="isSidebarOpen = false" class="ml-1 flex items-center justify-center h-10 w-10 rounded-full focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white">
               <span class="sr-only">Close sidebar</span>
@@ -32,7 +32,7 @@
         </div>
       </div>
 
-      <main class="flex-1 overflow-y-auto focus:outline-none">
+      <main class="relative flex-1 overflow-y-auto focus:outline-none">
         <slot></slot>
       </main>
     </div>

@@ -774,7 +774,7 @@ export default {
     const downloadCertificate = async (certificateId) => {
       try {
         const response = await api.get(`/user/certificate/${certificateId}/download`)
-        console.log('Certificate download:', response.data)
+        if (import.meta.env.DEV) console.log('Certificate download:', response.data)
         
         toast.info('Funkcia sťahovania certifikátov bude čoskoro implementovaná.')
       } catch (error) {

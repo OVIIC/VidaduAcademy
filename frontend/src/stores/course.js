@@ -47,15 +47,15 @@ export const useCourseStore = defineStore('course', {
 
   actions: {
     async fetchCourses(params = {}) {
-      console.log('fetchCourses called with params:', params)
+      if (import.meta.env.DEV) console.log('fetchCourses called with params:', params)
       this.loading = true
       try {
-        console.log('Making API call...')
+        if (import.meta.env.DEV) console.log('Making API call...')
         const response = await courseService.getAllCourses({
           ...this.filters,
           ...params,
         })
-        console.log('API response:', response)
+        if (import.meta.env.DEV) console.log('API response:', response)
         
         if (params.page && params.page > 1) {
           // Append for pagination - response už je paginated objekt
@@ -64,7 +64,7 @@ export const useCourseStore = defineStore('course', {
           // Replace for new search/filter - response už je paginated objekt
           this.courses = response.data || []
         }
-        console.log('Courses after setting:', this.courses)
+        if (import.meta.env.DEV) console.log('Courses after setting:', this.courses)
         
         this.pagination = {
           current_page: response.current_page,
@@ -77,7 +77,7 @@ export const useCourseStore = defineStore('course', {
         toast.error('Načítanie kurzov sa nepodarilo')
       } finally {
         this.loading = false
-        console.log('Loading set to false')
+        if (import.meta.env.DEV) console.log('Loading set to false')
       }
     },
 
@@ -134,7 +134,7 @@ export const useCourseStore = defineStore('course', {
       await this.fetchCourses({ page: 1 })
       await this.fetchFeaturedCourses()
       
-      console.log('Courses refreshed from server')
+      if (import.meta.env.DEV) console.log('Courses refreshed from server')
     },
   },
 })

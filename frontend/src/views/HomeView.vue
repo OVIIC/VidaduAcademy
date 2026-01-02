@@ -20,7 +20,7 @@
 
             
             <div class="melting-text-container mb-8">
-                <h1 class="text-5xl sm:text-6xl lg:text-7xl font-bold leading-tight tracking-tight drop-shadow-2xl mb-4">
+                <h1 class="text-5xl sm:text-6xl lg:text-7xl font-black leading-tight tracking-tight drop-shadow-2xl mb-4">
                 <span class="block text-white mb-2">Dominuj na YouTube</span>
                 <span class="block text-transparent bg-clip-text bg-gradient-to-r from-primary-400 via-primary-500 to-secondary-500 animate-gradient-x">
                     so svojim kanálom
@@ -28,7 +28,7 @@
                 </h1>
             </div>
             
-            <p class="text-xl sm:text-2xl text-dark-200 mb-10 max-w-2xl mx-auto leading-relaxed animate-fade-in-up delay-200 font-normal">
+            <p class="text-xl sm:text-2xl text-dark-200 mb-10 max-w-2xl mx-auto leading-relaxed animate-fade-in-up delay-200 font-extralight">
                 Tvor obsah ako skutočný kreatívec.
                 <br class="hidden sm:block" />
                 VidaduAcademy ťa naučí presné postupy, ktoré používa top <span class="text-primary-400 font-black">1 %</span> online tvorcov.
@@ -37,7 +37,7 @@
             <div class="flex flex-col sm:flex-row gap-5 justify-center items-center animate-fade-in-up delay-300">
                 <router-link to="/courses" class="group relative px-8 py-4 bg-primary-600 hover:bg-primary-500 text-white font-bold rounded-2xl transition-all duration-300 shadow-lg hover:shadow-primary-500/25 transform hover:-translate-y-1 overflow-hidden">
                 <span class="relative z-10 flex items-center gap-2">
-                    🚀 Začať študovať
+                    Začni študovať
                     <ArrowRightIcon class="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                 </span>
                 <div class="absolute inset-0 bg-gradient-to-r from-primary-500 via-white/20 to-primary-500 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700 ease-in-out"></div>
@@ -78,11 +78,11 @@
 
         <div class="relative z-10 mb-12 px-4 max-w-7xl mx-auto">
             <div class="text-center max-w-3xl mx-auto mb-10">
-            <h2 class="text-3xl sm:text-4xl font-bold text-white mb-6">
-                Odporúčané kurzy
+            <h2 class="text-3xl sm:text-4xl font-black text-white mb-6">
+                Najdetailnejšie kurzy ktoré nájdeš online
             </h2>
-            <p class="text-lg text-dark-300">
-                Naštartuj svoj rast s našimi najpopulárnejšími kurzami. Praktické vedomosti, ktoré môžeš použiť hneď.
+            <p class="text-sm text-dark-50 font-extralight">
+                Vidadu tím má za sebou 15 rokov práce s top tvorcami. Naše skúsenosti sme pretavili do praktických kurzov pre každého, kto to s tvorbou myslí vážne.
             </p>
             </div>
 
@@ -161,11 +161,12 @@
         <section class="py-24 relative z-10">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center max-w-3xl mx-auto mb-20">
-            <h2 class="text-3xl sm:text-4xl font-bold text-white mb-6">
+            <h2 class="text-3xl sm:text-4xl font-black text-white mb-6">
                 Prečo práve VidaduAcademy?
             </h2>
-            <p class="text-xl text-dark-300">
-                Nidky nebolo jednoduchšie stať sa profesionálnym tvorcom. Ponúkame ti kompletný ekosystém pre tvoj úspech.
+            <p class="text-xl text-dark-300 font-extralight">
+                Vidadu tím má za sebou 15 rokov práce s top tvorcami. Naše skúsenosti sme pretavili do praktických kurzov pre každého, kto to s tvorbou myslí vážne.
+                Ponúkame ti kompletný ekosystém pre tvoj úspech.
             </p>
             </div>
 
@@ -175,9 +176,9 @@
                 <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary-500/20 to-purple-500/20 flex items-center justify-center mb-8 group-hover:scale-110 transition-transform duration-300">
                 <UserGroupIcon class="w-8 h-8 text-primary-400" />
                 </div>
-                <h3 class="text-2xl font-bold text-white mb-4">Komunita Tvorcov</h3>
-                <p class="text-dark-300 leading-relaxed">
-                Nie si na to sám. Staň sa súčasťou aktívnej komunity, kde si navzájom pomáhame, zdieľame tipy a rastieme spolu.
+                <h3 class="text-2xl font-bold text-white mb-4">15 rokov v prvej línii</h3>
+                <p class="text-dark-300 leading-relaxed font-extralight">
+                Naše know-how nie je vyčítané z kníh, ale overené prácou s top SK/CZ tvorcami.
                 </p>
             </div>
 
@@ -186,9 +187,9 @@
                 <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500/20 to-cyan-500/20 flex items-center justify-center mb-8 group-hover:scale-110 transition-transform duration-300">
                 <ChartBarIcon class="w-8 h-8 text-blue-400" />
                 </div>
-                <h3 class="text-2xl font-bold text-white mb-4">Stratégie na Mieru</h3>
-                <p class="text-dark-300 leading-relaxed">
-                Žiadna teória, len prax. Učíme ťa presné kroky a stratégie, ktoré fungujú v roku 2025, podložené reálnymi dátami.
+                <h3 class="text-2xl font-bold text-white mb-4">Prax nad teóriu</h3>
+                <p class="text-dark-300 leading-relaxed font-extralight">
+                Žiadna vata. Dostaneš len funkčné stratégie, ktoré môžeš okamžite použiť.
                 </p>
             </div>
 
@@ -197,9 +198,9 @@
                 <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-green-500/20 to-emerald-500/20 flex items-center justify-center mb-8 group-hover:scale-110 transition-transform duration-300">
                 <ShieldCheckIcon class="w-8 h-8 text-emerald-400" />
                 </div>
-                <h3 class="text-2xl font-bold text-white mb-4">Overení Experti</h3>
-                <p class="text-dark-300 leading-relaxed">
-                Uč sa od ľudí, ktorí to reálne dokázali. Naši inštruktori majú za sebou milióny zhliadnutí a úspešné kanály.
+                <h3 class="text-2xl font-bold text-white mb-4">Kompletný ekosystém</h3>
+                <p class="text-dark-300 leading-relaxed font-extralight">
+                Viac než len kurzy a osobné konzultácie. Získaš zázemie, ktoré potrebuješ, ak to s tvorbou myslíš naozaj vážne.
                 </p>
             </div>
             </div>
@@ -211,8 +212,8 @@
     <section id="how-it-works" ref="howItWorksSection" class="relative bg-dark-950 py-24 pb-40">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-24">
-                <h2 class="text-3xl sm:text-4xl font-bold text-white mb-6">Ako to funguje?</h2>
-                <p class="text-xl text-dark-300">Tvoja cesta k úspechu v 3 jednoduchých krokoch</p>
+                <h2 class="text-3xl sm:text-4xl font-black text-white mb-6">Ako to funguje?</h2>
+                <p class="text-xl text-dark-300 font-extralight">Tvoja cesta k úspechu v 3 jednoduchých krokoch</p>
             </div>
 
             <div class="flex flex-col lg:flex-row gap-8 lg:gap-20">
@@ -224,9 +225,9 @@
                         <div class="inline-block px-4 py-2 bg-primary-500/10 border border-primary-500/20 text-primary-400 rounded-full text-sm font-bold mb-6 w-fit backdrop-blur-sm">
                             KROK 01
                         </div>
-                        <h3 class="text-4xl font-bold text-white mb-6 leading-tight">Zaregistruj sa <span class="text-primary-400">zadarmo</span></h3>
-                        <p class="text-xl text-dark-300 leading-relaxed max-w-lg">
-                            Vytvor si účet behom pár sekúnd. Nie je potrebná žiadna kreditná karta. Získaj okamžitý prístup k úvodným lekciám a pripoj sa do našej komunity.
+                        <h3 class="text-4xl font-black text-white mb-6 leading-tight">Zaregistruješ sa <span class="text-primary-400">zadarmo</span></h3>
+                        <p class="text-xl text-dark-300 leading-relaxed max-w-lg font-extralight">
+                            Účet si vytvoríš behom pár sekúnd. Nie je potrebná žiadna kreditná karta ani žiadna platba. Získaj okamžitý prístup k úvodným lekciám a potom sa rozhodneš, či chceš pokračovať ďalej.
                         </p>
                     </div>
 
@@ -235,9 +236,9 @@
                         <div class="inline-block px-4 py-2 bg-secondary-500/10 border border-secondary-500/20 text-secondary-400 rounded-full text-sm font-bold mb-6 w-fit backdrop-blur-sm">
                             KROK 02
                         </div>
-                        <h3 class="text-4xl font-bold text-white mb-6 leading-tight">Vyber si svoju <span class="text-secondary-400">cestu</span></h3>
-                        <p class="text-xl text-dark-300 leading-relaxed max-w-lg">
-                            Prejdi si katalóg kurzov. Či už začínaš s YouTube, chceš sa naučiť strihať, alebo pochopiť monetizáciu. Sleduj lekcie vlastným tempom, kedykoľvek.
+                        <h3 class="text-4xl font-black text-white mb-6 leading-tight">Nájdi svoj kurz a <span class="text-secondary-400">študuj</span></h3>
+                        <p class="text-xl text-dark-300 leading-relaxed max-w-lg font-extralight">
+                            Náš katalóg ti ponúka všetko pre tvoj rast, od prvého videa až po biznis stratégie. Či už riešiš YouTube, strih alebo monetizáciu, u nás nájdeš odpovede. Uč sa vlastným tempom, alebo si vyžiadaj osobnú konzultáciu s Vidadu expertom.
                         </p>
                     </div>
 
@@ -246,8 +247,8 @@
                         <div class="inline-block px-4 py-2 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 rounded-full text-sm font-bold mb-6 w-fit backdrop-blur-sm">
                             KROK 03
                         </div>
-                        <h3 class="text-4xl font-bold text-white mb-6 leading-tight">Aplikuj a <span class="text-emerald-400">zarábaj</span></h3>
-                        <p class="text-xl text-dark-300 leading-relaxed max-w-lg">
+                        <h3 class="text-4xl font-black text-white mb-6 leading-tight">Aplikuj a <span class="text-emerald-400">zarábaj</span></h3>
+                        <p class="text-xl text-dark-300 leading-relaxed max-w-lg font-extralight">
                             Použi získané vedomosti v praxi. Sleduj ako ti rastú zhliadnutia, odberatelia a príjmy. Získaj certifikát a staň sa profesionálnym tvorcom.
                         </p>
                     </div>
@@ -376,10 +377,10 @@
             </div>
 
             <div class="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center mt-24">
-                <h2 class="text-4xl sm:text-5xl font-bold text-white mb-8 tracking-tight">
+                <h2 class="text-4xl sm:text-5xl font-black text-white mb-8 tracking-tight">
                 Pripravený začať svoju cestu?
                 </h2>
-                <p class="text-xl text-dark-300 mb-12 max-w-2xl mx-auto">
+                <p class="text-xl text-dark-300 mb-12 max-w-2xl mx-auto font-extralight">
                 Nečakaj kým ťa predbehne konkurencia. Pridaj sa k VidaduAcademy ešte dnes a začni budovať svoju budúcnosť na YouTube.
                 </p>
                 <div class="flex flex-col sm:flex-row gap-4 justify-center">
@@ -400,7 +401,7 @@
     <!-- FAQ Section -->
     <section class="py-24 bg-dark-950">
       <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h2 class="text-3xl sm:text-4xl font-bold text-white text-center mb-16">
+        <h2 class="text-3xl sm:text-4xl font-black text-white text-center mb-16">
           Často kladené otázky
         </h2>
         

@@ -1,7 +1,15 @@
 <template>
-  <div class="min-h-screen bg-secondary-800 text-white overflow-x-hidden">
+  <div class="min-h-screen bg-dark-950 text-white overflow-x-hidden relative">
+    <!-- Background Effects -->
+    <div class="fixed inset-0 overflow-hidden pointer-events-none z-0">
+        <div class="absolute -top-[500px] -left-1/4 w-[1000px] h-[1000px] bg-primary-600/20 rounded-full blur-[120px] opacity-30 animate-pulse-slow"></div>
+        <div class="absolute top-[40%] -right-1/4 w-[800px] h-[800px] bg-secondary-600/10 rounded-full blur-[100px] opacity-30 animate-pulse-slow delay-500"></div>
+        <div class="absolute -bottom-[200px] -left-1/4 w-[800px] h-[800px] bg-primary-600/20 rounded-full blur-[120px] opacity-30 animate-pulse-slow delay-1000"></div>
+        <div class="absolute top-0 left-0 w-full h-full bg-[url('/images/grid-pattern.svg')] bg-repeat opacity-[0.03]"></div>
+    </div>
+
     <!-- Hero Course Section (Disney+ style) -->
-    <div class="relative h-[75vh] overflow-hidden">
+    <div class="relative h-[75vh] overflow-hidden z-10">
       <!-- Background Image with Smooth Transition -->
       <div class="absolute inset-0">
         <div class="relative w-full h-full">
@@ -14,14 +22,14 @@
             />
           </transition>
           <!-- Disney+ style gradient overlays -->
-          <div class="absolute inset-0 bg-gradient-to-r from-secondary-900/90 via-secondary-900/50 to-transparent"></div>
-          <div class="absolute inset-0 bg-gradient-to-t from-secondary-900/80 via-transparent to-transparent"></div>
+          <div class="absolute inset-0 bg-gradient-to-r from-dark-950/90 via-dark-950/50 to-transparent"></div>
+          <div class="absolute inset-0 bg-gradient-to-t from-dark-950/80 via-transparent to-transparent"></div>
           
           <!-- Navigation Arrows -->
           <button
             v-if="courses.length > 1"
             @click="navigateCourse('prev')"
-            class="absolute left-4 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-xl bg-black/20 hover:bg-black/40 backdrop-blur-sm border border-white/30 hover:border-white text-white flex items-center justify-center transition-all duration-200 hover:scale-110 shadow-lg"
+            class="absolute left-4 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-xl bg-dark-900/40 hover:bg-dark-900/60 backdrop-blur-sm border border-white/30 hover:border-white text-white flex items-center justify-center transition-all duration-200 hover:scale-110 shadow-lg"
             :disabled="currentCourseIndex === 0"
             :class="{ 'opacity-30 cursor-not-allowed': currentCourseIndex === 0 }"
           >
@@ -33,7 +41,7 @@
           <button
             v-if="courses.length > 1"
             @click="navigateCourse('next')"
-            class="absolute right-4 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-xl bg-black/20 hover:bg-black/40 backdrop-blur-sm border border-white/30 hover:border-white text-white flex items-center justify-center transition-all duration-200 hover:scale-110 shadow-lg"
+            class="absolute right-4 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-xl bg-dark-900/40 hover:bg-dark-900/60 backdrop-blur-sm border border-white/30 hover:border-white text-white flex items-center justify-center transition-all duration-200 hover:scale-110 shadow-lg"
             :disabled="currentCourseIndex === courses.length - 1"
             :class="{ 'opacity-30 cursor-not-allowed': currentCourseIndex === courses.length - 1 }"
           >
@@ -50,7 +58,7 @@
           <transition name="hero-content-fade" mode="out-in">
             <div :key="selectedCourse?.id || 'default'" class="max-w-3xl mt-16">
               <!-- Course Title (Large Disney+ style) -->
-              <h1 class="text-3xl md:text-5xl lg:text-6xl font-bold mb-6 leading-none tracking-tight">
+              <h1 class="text-3xl md:text-5xl lg:text-6xl font-bold mb-6 leading-none tracking-tight text-white drop-shadow-2xl">
                 {{ selectedCourse?.title || 'Načítavajú sa kurzy...' }}
               </h1>
 
@@ -66,12 +74,12 @@
                   <div class="w-3 h-3 rounded-full" :class="getDifficultyColor(selectedCourse.difficulty)"></div>
                   <span class="capitalize text-white">{{ selectedCourse.difficulty }}</span>
                 </div>
-                <div class="text-gray-200">{{ selectedCourse.duration }}</div>
+                <div class="text-dark-200">{{ selectedCourse.duration }}</div>
                 <div class="text-green-400 font-bold">€{{ selectedCourse.price }}</div>
               </div>
 
               <!-- Course Description -->
-              <p class="text-lg md:text-xl leading-relaxed mb-8 text-gray-200 max-w-2xl font-extralight">
+              <p class="text-lg md:text-xl leading-relaxed mb-8 text-dark-200 max-w-2xl font-extralight shadow-black drop-shadow-md">
                 {{ selectedCourse?.short_description || 'Vyberte kurz pre zobrazenie detailov.' }}
               </p>
 
@@ -81,7 +89,7 @@
                   v-if="selectedCourse"
                   @click="handlePurchase(selectedCourse)"
                   :disabled="showCheckoutLoading && checkoutCourse?.id === selectedCourse.id"
-                  class="bg-primary-500 hover:bg-primary-600 text-white disabled:opacity-50 px-10 py-4 rounded-2xl font-bold text-xl transition-all duration-200 flex items-center space-x-3 shadow-lg hover:shadow-xl"
+                  class="bg-primary-600 hover:bg-primary-500 text-white disabled:opacity-50 px-10 py-4 rounded-2xl font-bold text-xl transition-all duration-200 flex items-center space-x-3 shadow-lg hover:shadow-primary-500/25"
                 >
                   <svg v-if="showCheckoutLoading && checkoutCourse?.id === selectedCourse.id" class="animate-spin w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
@@ -94,7 +102,7 @@
                 
                 <button 
                   @click="toggleCourseDetails"
-                  class="bg-gray-600/70 hover:bg-gray-600/90 text-white px-8 py-4 rounded-2xl font-bold text-xl transition-all duration-200 flex items-center space-x-3"
+                  class="bg-dark-800/80 hover:bg-dark-800 text-white px-8 py-4 rounded-2xl font-bold text-xl transition-all duration-200 flex items-center space-x-3 border border-dark-700 hover:border-dark-600 backdrop-blur-sm"
                 >
                   <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
@@ -109,10 +117,10 @@
     </div>
 
     <!-- Content Section with Rounded Top -->
-    <div class="relative z-20 bg-secondary-800 rounded-t-[3rem] -mt-8 min-h-screen">
+    <div class="relative z-20 bg-dark-950 rounded-t-[3rem] -mt-8 min-h-screen border-t border-dark-800/50">
       <!-- Expandable Course Details Section -->
       <transition name="slide-down">
-        <div v-if="showCourseDetails && selectedCourse" class="border-b border-gray-700/50">
+        <div v-if="showCourseDetails && selectedCourse" class="border-b border-dark-800">
           <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
               <!-- Main Content -->
@@ -120,7 +128,7 @@
                 <!-- Full Description -->
                 <div>
                   <h3 class="text-2xl font-bold text-white mb-4">O kurze</h3>
-                  <p class="text-gray-300 text-lg leading-relaxed">{{ selectedCourse.description }}</p>
+                  <p class="text-dark-300 text-lg leading-relaxed">{{ selectedCourse.description }}</p>
                 </div>
 
                 <!-- What You'll Learn -->
@@ -135,7 +143,7 @@
                       <svg class="w-6 h-6 text-green-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                         <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
                       </svg>
-                      <span class="text-gray-300">{{ item }}</span>
+                      <span class="text-dark-300">{{ item }}</span>
                     </li>
                   </ul>
                 </div>
@@ -149,10 +157,10 @@
                       :key="index"
                       class="flex items-start space-x-3"
                     >
-                      <svg class="w-6 h-6 text-gray-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg class="w-6 h-6 text-dark-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
                       </svg>
-                      <span class="text-gray-300">{{ req }}</span>
+                      <span class="text-dark-300">{{ req }}</span>
                     </li>
                   </ul>
                 </div>
@@ -160,34 +168,34 @@
 
               <!-- Sidebar -->
               <div class="lg:col-span-1">
-                <div class="bg-secondary-surface rounded-2xl p-6 border border-gray-700/50 sticky top-4">
+                <div class="bg-dark-900 rounded-3xl p-6 border border-dark-800 sticky top-4 shadow-xl">
                   <!-- Course Stats -->
                   <div class="space-y-4 mb-6">
                     <div class="flex items-center justify-between">
-                      <span class="text-gray-400">Úroveň</span>
+                      <span class="text-dark-400">Úroveň</span>
                       <span class="text-white capitalize font-medium">{{ selectedCourse.difficulty_level }}</span>
                     </div>
                     <div class="flex items-center justify-between">
-                      <span class="text-gray-400">Dĺžka</span>
+                      <span class="text-dark-400">Dĺžka</span>
                       <span class="text-white font-medium">{{ selectedCourse.duration }}</span>
                     </div>
                     <div class="flex items-center justify-between">
-                      <span class="text-gray-400">Cena</span>
+                      <span class="text-dark-400">Cena</span>
                       <span class="text-green-400 font-bold text-xl">€{{ selectedCourse.price }}</span>
                     </div>
                   </div>
 
-                  <div class="border-t border-gray-700/50 pt-6">
+                  <div class="border-t border-dark-800 pt-6">
                     <!-- Instructor Info -->
                     <div class="mb-6">
-                      <h4 class="text-sm font-medium text-gray-400 mb-3">Inštruktor</h4>
+                      <h4 class="text-sm font-medium text-dark-400 mb-3">Inštruktor</h4>
                       <div class="flex items-center space-x-3">
-                        <div class="w-12 h-12 rounded-full bg-secondary-800 flex items-center justify-center text-primary-400 font-bold text-lg">
+                        <div class="w-12 h-12 rounded-full bg-dark-800 flex items-center justify-center text-primary-400 font-bold text-lg border border-dark-700">
                           {{ (selectedCourse.instructor?.name || selectedCourse.instructor || '').charAt(0) }}
                         </div>
                         <div>
                           <p class="text-white font-medium">{{ selectedCourse.instructor?.name || selectedCourse.instructor }}</p>
-                          <p class="text-gray-400 text-sm">{{ selectedCourse.instructor?.email || '' }}</p>
+                          <p class="text-dark-400 text-sm">{{ selectedCourse.instructor?.email || '' }}</p>
                         </div>
                       </div>
                     </div>
@@ -195,7 +203,7 @@
                     <!-- Purchase Button -->
                     <button
                       @click="handlePurchase(selectedCourse)"
-                      class="w-full bg-primary-500 hover:bg-primary-600 text-white px-6 py-3 rounded-xl font-bold transition-all duration-200"
+                      class="w-full bg-primary-600 hover:bg-primary-500 text-white px-6 py-3 rounded-xl font-bold transition-all duration-200 shadow-lg hover:shadow-primary-500/25"
                     >
                       Kúpiť kurz
                     </button>
@@ -222,22 +230,22 @@
                 @input="handleSearch"
                 type="text" 
                 placeholder="Hľadať kurzy..." 
-                class="w-full bg-secondary-surface text-white border border-gray-700/50 rounded-xl py-3 px-4 pl-10 focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
+                class="w-full bg-dark-900 text-white border border-dark-800 rounded-xl py-3 px-4 pl-10 focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all placeholder-dark-400"
               >
-              <svg class="w-5 h-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg class="w-5 h-5 text-dark-400 absolute left-3 top-1/2 transform -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
               </svg>
             </div>
           </div>
 
           <!-- Filters & Sort -->
-          <div class="flex flex-col md:flex-row gap-4 items-center justify-between bg-secondary-surface p-4 rounded-xl border border-gray-700/50">
+          <div class="flex flex-col md:flex-row gap-4 items-center justify-between bg-dark-900 p-4 rounded-2xl border border-dark-800">
             <div class="flex flex-wrap gap-3 w-full md:w-auto">
               <!-- Difficulty Filter -->
               <select 
                 v-model="selectedDifficulty"
                 @change="handleFilterChange"
-                class="bg-secondary-800 text-white border border-gray-700/50 rounded-lg py-2 px-3 text-sm focus:ring-primary-500 focus:border-primary-500"
+                class="bg-dark-800 text-white border border-dark-700 rounded-lg py-2 px-3 text-sm focus:ring-primary-500 focus:border-primary-500"
               >
                 <option value="">Všetky úrovne</option>
                 <option value="beginner">Začiatočník</option>
@@ -249,7 +257,7 @@
               <select 
                 v-model="selectedPrice"
                 @change="handleFilterChange"
-                class="bg-secondary-800 text-white border border-gray-700/50 rounded-lg py-2 px-3 text-sm focus:ring-primary-500 focus:border-primary-500"
+                class="bg-dark-800 text-white border border-dark-700 rounded-lg py-2 px-3 text-sm focus:ring-primary-500 focus:border-primary-500"
               >
                 <option value="">Všetky ceny</option>
                 <option value="free">Zadarmo</option>
@@ -258,11 +266,11 @@
             </div>
 
             <div class="flex items-center gap-3 w-full md:w-auto justify-end">
-              <span class="text-gray-400 text-sm">Zoradiť podľa:</span>
+              <span class="text-dark-400 text-sm">Zoradiť podľa:</span>
               <select 
                 v-model="selectedSort"
                 @change="handleFilterChange"
-                class="bg-secondary-800 text-white border border-gray-700/50 rounded-lg py-2 px-3 text-sm focus:ring-primary-500 focus:border-primary-500"
+                class="bg-dark-800 text-white border border-dark-700 rounded-lg py-2 px-3 text-sm focus:ring-primary-500 focus:border-primary-500"
               >
                 <option value="created_at_desc">Najnovšie</option>
                 <option value="price_asc">Cena: Najnižšia</option>
@@ -272,7 +280,7 @@
 
               <button
                 @click="resetFilters"
-                class="text-gray-400 hover:text-white text-sm underline ml-2"
+                class="text-dark-400 hover:text-white text-sm underline ml-2"
                 v-if="hasActiveFilters"
               >
                 Resetovať
@@ -283,7 +291,7 @@
 
         <!-- Loading State -->
         <div v-if="loading" class="flex justify-center py-20">
-          <div class="animate-spin rounded-full h-12 w-12 border-b-4 border-white"></div>
+          <div class="animate-spin rounded-full h-12 w-12 border-b-4 border-primary-500"></div>
         </div>
 
         <!-- Course Grid -->
@@ -303,16 +311,16 @@
               ]"
             >
               <!-- Course Card -->
-              <div class="bg-secondary-surface rounded-2xl overflow-hidden shadow-lg border border-gray-700/50 hover:border-gray-600 h-full flex flex-col">
+              <div class="bg-dark-900 rounded-2xl overflow-hidden shadow-lg border border-dark-800 hover:border-primary-500/50 hover:shadow-primary-500/10 h-full flex flex-col group">
                 <!-- Course Thumbnail -->
                 <div class="aspect-video overflow-hidden relative">
                   <img 
                     :src="course.thumbnail || '/api/placeholder/500/280'"
                     :alt="course.title"
-                    class="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
+                    class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                   />
                   <!-- Price Badge -->
-                  <div class="absolute top-3 right-3 bg-black/70 backdrop-blur-sm text-white px-2 py-1 rounded-md text-xs font-bold border border-gray-700">
+                  <div class="absolute top-3 right-3 bg-black/70 backdrop-blur-sm text-white px-2 py-1 rounded-md text-xs font-bold border border-white/10">
                     {{ course.price > 0 ? `€${course.price}` : 'Zadarmo' }}
                   </div>
                 </div>
@@ -320,10 +328,10 @@
                 <!-- Course Info -->
                 <div class="p-5 flex-grow flex flex-col">
                   <div class="flex items-center justify-between mb-2">
-                    <span class="text-xs font-medium px-2 py-1 rounded-full bg-gray-800 text-gray-300 border border-gray-700 capitalize">
+                    <span class="text-xs font-medium px-2 py-1 rounded-full bg-dark-800 text-dark-300 border border-dark-700 capitalize">
                       {{ course.difficulty }}
                     </span>
-                    <div class="flex items-center text-xs text-gray-400">
+                    <div class="flex items-center text-xs text-dark-400">
                       <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
                       </svg>
@@ -333,14 +341,14 @@
 
                   <h3 class="font-bold text-lg mb-2 text-white line-clamp-2 group-hover:text-primary-400 transition-colors">{{ course.title }}</h3>
                   
-                  <p class="text-gray-400 text-sm line-clamp-2 mb-4 flex-grow">{{ course.short_description || course.description }}</p>
+                  <p class="text-dark-400 text-sm line-clamp-2 mb-4 flex-grow">{{ course.short_description || course.description }}</p>
                   
-                  <div class="flex items-center justify-between mt-auto pt-4 border-t border-gray-700/50">
+                  <div class="flex items-center justify-between mt-auto pt-4 border-t border-dark-800">
                     <div class="flex items-center space-x-2">
-                      <div class="w-6 h-6 rounded-full bg-secondary-800 flex items-center justify-center text-xs font-bold text-gray-300">
+                      <div class="w-6 h-6 rounded-full bg-dark-800 flex items-center justify-center text-xs font-bold text-dark-300 border border-dark-700">
                         {{ (course.instructor?.name || course.instructor || '').charAt(0) }}
                       </div>
-                      <span class="text-xs text-gray-300 truncate max-w-[100px]">{{ course.instructor?.name || course.instructor }}</span>
+                      <span class="text-xs text-dark-300 truncate max-w-[100px]">{{ course.instructor?.name || course.instructor }}</span>
                     </div>
                     <button 
                       @click.stop="handlePurchase(course)"
@@ -359,17 +367,17 @@
             <button 
               @click="changePage(pagination.current_page - 1)"
               :disabled="pagination.current_page === 1"
-              class="px-4 py-2 rounded-lg bg-gray-800 text-white disabled:opacity-50 hover:bg-gray-700 transition-colors"
+              class="px-4 py-2 rounded-lg bg-dark-800 text-white disabled:opacity-50 hover:bg-dark-700 transition-colors border border-dark-700"
             >
               Predchádzajúca
             </button>
-            <span class="px-4 py-2 text-gray-400">
+            <span class="px-4 py-2 text-dark-400">
               Strana {{ pagination.current_page }} z {{ pagination.last_page }}
             </span>
             <button 
               @click="changePage(pagination.current_page + 1)"
               :disabled="pagination.current_page === pagination.last_page"
-              class="px-4 py-2 rounded-lg bg-gray-800 text-white disabled:opacity-50 hover:bg-gray-700 transition-colors"
+              class="px-4 py-2 rounded-lg bg-dark-800 text-white disabled:opacity-50 hover:bg-dark-700 transition-colors border border-dark-700"
             >
               Ďalšia
             </button>
@@ -377,15 +385,15 @@
         </div>
 
         <!-- No courses found -->
-        <div v-else class="text-center py-20 bg-secondary-surface rounded-2xl border border-gray-700/50 mt-8">
-          <svg class="mx-auto h-16 w-16 text-gray-600 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div v-else class="text-center py-20 bg-dark-900 rounded-2xl border border-dark-800 mt-8">
+          <svg class="mx-auto h-16 w-16 text-dark-600 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
           </svg>
-          <div class="text-gray-300 text-xl font-medium mb-2">Nenašli sa žiadne kurzy</div>
-          <p class="text-gray-500">Skúste zmeniť kritériá vyhľadávania alebo filtre.</p>
+          <div class="text-dark-300 text-xl font-medium mb-2">Nenašli sa žiadne kurzy</div>
+          <p class="text-dark-500">Skúste zmeniť kritériá vyhľadávania alebo filtre.</p>
           <button 
             @click="resetFilters"
-            class="mt-6 px-6 py-2 bg-gray-800 hover:bg-gray-700 text-white rounded-lg transition-colors"
+            class="mt-6 px-6 py-2 bg-dark-800 hover:bg-dark-700 text-white rounded-lg transition-colors border border-dark-700"
           >
             Vymazať filtre
           </button>

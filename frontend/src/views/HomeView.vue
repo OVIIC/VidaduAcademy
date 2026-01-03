@@ -211,7 +211,7 @@
     <!-- How It Works - Sticky Scroll -->
     <section id="how-it-works" ref="howItWorksSection" class="relative bg-dark-950 py-24 pb-40">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-24">
+            <div class="text-center mb-32 relative z-10">
                 <h2 class="text-3xl sm:text-4xl font-black text-white mb-6">Ako to funguje?</h2>
                 <p class="text-xl text-dark-300 font-extralight">Tvoja cesta k úspechu v 3 jednoduchých krokoch</p>
             </div>
@@ -257,7 +257,9 @@
 
                 <!-- Right Column: Sticky Visuals -->
                 <div class="hidden lg:block w-1/2 relative">
-                    <div class="sticky top-[20%] h-[600px] w-full rounded-3xl overflow-hidden border border-dark-800 bg-dark-900 shadow-2xl">
+                    <div class="sticky h-[560px] max-h-[75vh] w-full rounded-3xl overflow-hidden border border-dark-800 bg-dark-900 shadow-2xl"
+                         style="top: max(140px, 50vh - 280px)"
+                    >
                          <!-- Background Elements -->
                          <div class="absolute inset-0 bg-[url('/images/grid-pattern.svg')] bg-repeat opacity-[0.05]"></div>
                          <div class="absolute top-0 right-0 w-[500px] h-[500px] bg-primary-600/10 rounded-full blur-[100px] transition-colors duration-700"

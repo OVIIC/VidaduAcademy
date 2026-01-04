@@ -73,12 +73,20 @@ class CourseController extends Controller
             }
 
             // Optimized ordering
-            $orderBy = $request->get('sort', 'created_at');
-            $orderDirection = $request->get('direction', 'desc');
+            $orderBy = $request->get('sort_by', 'created_at');
+            $orderDirection = $request->get('sort_order', 'desc');
             
             $allowedSorts = ['created_at', 'title', 'price', 'difficulty_level'];
             if (!in_array($orderBy, $allowedSorts)) {
                 $orderBy = 'created_at';
+            }
+
+            // Validate direction
+            $orderDirection = strtolower($orderDirection) === 'asc' ? 'asc' : 'desc';
+
+            if ($orderBy === 'price') {
+                // "Different way": Use implicit casting by adding 0. This works reliably in SQLite and MySQL to treat text as numbers.
+                return $query->orderByRaw('price + 0 ' . $orderDirection)->paginate(12);
             }
 
             return $query->orderBy($orderBy, $orderDirection)->paginate(12);

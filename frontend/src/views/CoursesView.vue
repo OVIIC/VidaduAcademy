@@ -262,14 +262,25 @@
               />
 
               <!-- Price Filter -->
-              <CustomSelect
-                v-model="selectedPrice"
-                :options="priceOptions"
-                placeholder="Všetky ceny"
+              <PriceFilter
+                v-model="selectedPriceRange"
+                :max="300"
                 class="w-full sm:w-48"
                 @update:modelValue="handleFilterChange"
               />
 
+              <button
+                @click="resetFilters"
+                class="text-sm font-bold transition-all ml-2"
+                :class="hasActiveFilters ? 'text-primary-500 hover:text-primary-400 cursor-pointer' : 'text-dark-500 cursor-not-allowed'"
+                :disabled="!hasActiveFilters"
+              >
+                Resetovať filtre
+              </button>
+            </div>
+
+            <div class="flex items-center gap-3 w-full md:w-auto justify-end">
+              <span class="text-sm text-dark-400 font-medium whitespace-nowrap hidden md:block">Triediť podľa:</span>
               <!-- Sort -->
               <CustomSelect
                 v-model="selectedSort"
@@ -278,16 +289,6 @@
                 class="w-full sm:w-48"
                 @update:modelValue="handleFilterChange"
               />
-            </div>
-
-            <div class="flex items-center gap-3 w-full md:w-auto justify-end">
-              <button
-                @click="resetFilters"
-                class="text-dark-400 hover:text-white text-sm underline ml-2"
-                v-if="hasActiveFilters"
-              >
-                Resetovať
-              </button>
             </div>
           </div>
         </div>
@@ -415,6 +416,7 @@
 </template>
 <script setup>
 import CustomSelect from '@/components/ui/CustomSelect.vue'
+import PriceFilter from '@/components/ui/PriceFilter.vue'
 import { ref, onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { paymentService } from '@/services'
@@ -441,7 +443,7 @@ const checkoutCourse = ref(null)
 // Filters state
 const searchQuery = ref('')
 const selectedDifficulty = ref([])
-const selectedPrice = ref('')
+const selectedPriceRange = ref(null) // { min: 0, max: 200 }
 const selectedCategory = ref([])
 const selectedSort = ref('created_at_desc')
 const categories = computed(() => courseStore.categories)
@@ -453,19 +455,12 @@ const difficultyOptions = [
   { value: 'advanced', label: 'Expert' }
 ]
 
-const priceOptions = [
-  { value: '', label: 'Všetky ceny' },
-  { value: 'paid', label: 'Platené' },
-  { value: 'free', label: 'Zadarmo' }
-]
 
 const sortOptions = [
   { value: 'created_at_desc', label: 'Najnovšie' },
   { value: 'created_at_asc', label: 'Najstaršie' },
   { value: 'price_asc', label: 'Najlacnejšie' },
   { value: 'price_desc', label: 'Najdrahšie' },
-  { value: 'difficulty_asc', label: 'Najľahšie' },
-  { value: 'difficulty_desc', label: 'Najťažšie' }
 ]
 
 const categoryOptions = computed(() => {
@@ -482,7 +477,7 @@ const categoryOptions = computed(() => {
 
 // Computed property to check if any filters are active
 const hasActiveFilters = computed(() => {
-  return searchQuery.value || selectedDifficulty.value.length > 0 || selectedPrice.value || selectedCategory.value.length > 0 || selectedSort.value !== 'created_at_desc'
+  return searchQuery.value || selectedDifficulty.value.length > 0 || (selectedPriceRange.value !== null) || selectedCategory.value.length > 0 || selectedSort.value !== 'created_at_desc'
 })
 
 // Selected course for hero section (Disney+ style)
@@ -591,20 +586,18 @@ const applyFilters = () => {
   }
 
   // Handle difficulty filter
-  if (selectedDifficulty.value.length > 0) {
-    filters.difficulty = selectedDifficulty.value
-  }
+  filters.difficulty = selectedDifficulty.value
 
   // Handle category filter
-  if (selectedCategory.value.length > 0) {
-    filters.category = selectedCategory.value
-  }
+  filters.category = selectedCategory.value
 
   // Handle price filter
-  if (selectedPrice.value === 'free') {
-    filters.max_price = 0
-  } else if (selectedPrice.value === 'paid') {
-    filters.min_price = 0.01 // Assuming strictly paid
+  if (selectedPriceRange.value) {
+    filters.min_price = selectedPriceRange.value.min
+    filters.max_price = selectedPriceRange.value.max
+  } else {
+    filters.min_price = null
+    filters.max_price = null
   }
 
   // Handle sort (always single select)
@@ -624,7 +617,7 @@ const applyFilters = () => {
 const resetFilters = () => {
   searchQuery.value = ''
   selectedDifficulty.value = []
-  selectedPrice.value = ''
+  selectedPriceRange.value = null
   selectedCategory.value = []
   selectedSort.value = 'created_at_desc'
   courseStore.clearFilters()

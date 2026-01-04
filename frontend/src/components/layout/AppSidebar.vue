@@ -4,23 +4,26 @@
     :class="[isCollapsed ? 'w-24' : 'w-72']"
   >
     <!-- Header -->
-    <div class="flex items-center justify-between mb-8 px-2 pt-2">
-      <router-link v-if="!isCollapsed" to="/" class="flex items-center gap-2 overflow-hidden whitespace-nowrap">
+    <button 
+      @click="toggleCollapse" 
+      class="absolute right-0 top-8 transform translate-x-1/2 z-50 w-8 h-8 flex items-center justify-center rounded-xl bg-dark-800 border border-dark-700 text-gray-400 hover:text-white hover:border-primary-500 transition-all duration-200 focus:outline-none shadow-xl"
+    >
+      <component :is="isCollapsed ? ChevronRightIcon : ChevronLeftIcon" class="h-4 w-4" />
+    </button>
+
+    <!-- Header -->
+    <div 
+      class="flex items-center mb-8 px-2 pt-2 transition-all duration-300 h-10"
+      :class="[isCollapsed ? 'justify-center' : 'justify-start']"
+    >
+      <router-link v-if="!isCollapsed" to="/" class="flex items-center gap-2 overflow-hidden whitespace-nowrap shrink-0">
         <span class="text-2xl font-bold bg-gradient-to-r from-primary-400 to-primary-600 bg-clip-text text-transparent transition-all duration-300">
           Vidadu
         </span>
       </router-link>
-      <div v-else class="w-full flex justify-center">
+      <div v-else class="flex justify-center shrink-0 w-full">
          <span class="text-xl font-bold text-primary-500">V</span>
       </div>
-      
-      <button 
-        @click="toggleCollapse" 
-        class="w-8 h-8 flex items-center justify-center rounded-xl bg-dark-800 hover:bg-dark-700 text-gray-400 hover:text-white transition-all duration-200 focus:outline-none"
-        :class="{ 'mx-auto mt-4': isCollapsed }"
-      >
-        <component :is="isCollapsed ? ChevronRightIcon : ChevronLeftIcon" class="h-4 w-4" />
-      </button>
     </div>
     
     <!-- Navigation -->
@@ -107,8 +110,13 @@
         leave-to-class="transform scale-95 opacity-0"
       >
         <div 
-          v-if="showUserMenu && !isCollapsed"
-          class="absolute bottom-full left-0 right-0 mb-2 bg-dark-800 border border-dark-700 rounded-2xl shadow-xl overflow-hidden backdrop-blur-xl"
+          v-if="showUserMenu"
+          class="absolute bg-dark-800 border border-dark-700 rounded-2xl shadow-xl overflow-hidden backdrop-blur-xl z-50"
+          :class="[
+            isCollapsed 
+              ? 'left-full bottom-0 ml-4 w-60 origin-bottom-left' 
+              : 'bottom-full left-0 right-0 mb-2 origin-bottom'
+          ]"
         >
           <router-link
             to="/profile"

@@ -26,11 +26,11 @@ class CourseController extends Controller
         
         $courses = $this->cacheService->rememberCoursesList($cacheKey, function () use ($request) {
             $query = Course::select([
-                'id', 'instructor_id', 'title', 'slug', 'short_description', 
+                'id', 'instructor_id', 'category_id', 'title', 'slug', 'short_description', 
                 'price', 'currency', 'thumbnail', 'difficulty_level', 
                 'duration_minutes', 'created_at'
             ])
-            ->with(['instructor:id,name,email,subscribers_count'])
+            ->with(['instructor:id,name,email,subscribers_count', 'category:id,name,slug'])
             ->where('status', 'published');
 
             // Optimize search with full-text search if available
@@ -51,7 +51,17 @@ class CourseController extends Controller
 
             // Filter by difficulty
             if ($request->has('difficulty') && !empty($request->difficulty)) {
-                $query->where('difficulty_level', $request->difficulty);
+                $difficulty = (array) $request->difficulty;
+                $query->whereIn('difficulty_level', $difficulty);
+            }
+
+            // Filter by category
+            if ($request->has('category') && !empty($request->category)) {
+                $categories = (array) $request->category;
+                $query->whereHas('category', function ($q) use ($categories) {
+                    $q->whereIn('slug', $categories)
+                      ->orWhereIn('id', $categories);
+                });
             }
 
             // Filter by price range
@@ -108,6 +118,7 @@ class CourseController extends Controller
             ])
             ->with([
                 'instructor:id,name,email,avatar,bio,subscribers_count',
+                'category:id,name,slug',
                 'lessons' => function ($query) {
                     $query->select(['id', 'course_id', 'title', 'slug', 'duration_minutes', 'order', 'is_preview'])
                           ->where('status', 'published')

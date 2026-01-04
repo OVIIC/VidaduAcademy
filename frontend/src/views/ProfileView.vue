@@ -1,16 +1,23 @@
 <template>
-  <div class="min-h-screen bg-secondary-800 text-white py-8">
-    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+  <div class="min-h-screen bg-dark-950 text-white py-8 relative overflow-hidden">
+    <!-- Background Effects -->
+    <div class="fixed inset-0 overflow-hidden pointer-events-none z-0">
+        <div class="absolute -top-[500px] -left-1/4 w-[1000px] h-[1000px] bg-primary-600/20 rounded-full blur-[120px] opacity-30 animate-pulse-slow"></div>
+        <div class="absolute top-[40%] -right-1/4 w-[800px] h-[800px] bg-secondary-600/10 rounded-full blur-[100px] opacity-30 animate-pulse-slow delay-500"></div>
+        <div class="absolute -bottom-[200px] -left-1/4 w-[800px] h-[800px] bg-primary-600/20 rounded-full blur-[120px] opacity-30 animate-pulse-slow delay-1000"></div>
+        <div class="absolute top-0 left-0 w-full h-full bg-[url('/images/grid-pattern.svg')] bg-repeat opacity-[0.03]"></div>
+    </div>
+    <div class="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
       <!-- Header -->
       <div class="mb-8">
-        <h1 class="text-3xl font-bold text-white">Profil používateľa</h1>
-        <p class="mt-2 text-gray-300">Spravujte svoje osobné údaje a nastavenia</p>
+        <h1 class="text-3xl font-black text-white">Profil používateľa</h1>
+        <p class="mt-2 text-dark-300 font-extralight">Spravujte svoje osobné údaje a nastavenia</p>
       </div>
 
       <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
         <!-- Sidebar Navigation -->
         <div class="lg:col-span-1">
-          <nav class="bg-secondary-surface border border-gray-700/50 rounded-2xl p-4">
+          <nav class="bg-dark-900 border border-dark-800 rounded-2xl p-4">
             <ul class="space-y-2">
               <li>
                 <button
@@ -18,8 +25,8 @@
                   :class="[
                     'w-full text-left px-3 py-2 rounded-xl text-sm font-medium transition duration-200',
                     activeTab === 'personal' 
-                      ? 'bg-secondary-700 text-primary-400 border border-primary-500/30' 
-                      : 'text-gray-300 hover:bg-secondary-700/50'
+                      ? 'bg-dark-800 text-primary-400 border border-primary-500/30' 
+                      : 'text-dark-300 hover:bg-dark-800/50'
                   ]"
                 >
                   <svg class="w-4 h-4 inline mr-2" fill="currentColor" viewBox="0 0 20 20">
@@ -35,7 +42,7 @@
                     'w-full text-left px-3 py-2 rounded-xl text-sm font-medium transition duration-200',
                     activeTab === 'security' 
                       ? 'bg-gradient-to-br from-primary-500/20 via-secondary-500/20 to-primary-500/20 text-primary-400 border border-primary-500/30' 
-                      : 'text-gray-300 hover:bg-gray-800/50'
+                      : 'text-dark-300 hover:bg-dark-800/50'
                   ]"
                 >
                   <svg class="w-4 h-4 inline mr-2" fill="currentColor" viewBox="0 0 20 20">
@@ -51,7 +58,7 @@
                     'w-full text-left px-3 py-2 rounded-xl text-sm font-medium transition duration-200',
                     activeTab === 'notifications' 
                       ? 'bg-gradient-to-br from-primary-500/20 via-secondary-500/20 to-primary-500/20 text-primary-400 border border-primary-500/30' 
-                      : 'text-gray-300 hover:bg-gray-800/50'
+                      : 'text-dark-300 hover:bg-dark-800/50'
                   ]"
                 >
                   <svg class="w-4 h-4 inline mr-2" fill="currentColor" viewBox="0 0 20 20">
@@ -67,7 +74,7 @@
                     'w-full text-left px-3 py-2 rounded-xl text-sm font-medium transition duration-200',
                     activeTab === 'certificates' 
                       ? 'bg-gradient-to-br from-primary-500/20 via-secondary-500/20 to-primary-500/20 text-primary-400 border border-primary-500/30' 
-                      : 'text-gray-300 hover:bg-gray-800/50'
+                      : 'text-dark-300 hover:bg-dark-800/50'
                   ]"
                 >
                   <svg class="w-4 h-4 inline mr-2" fill="currentColor" viewBox="0 0 20 20">
@@ -84,7 +91,7 @@
                     'w-full text-left px-3 py-2 rounded-xl text-sm font-medium transition duration-200',
                     activeTab === 'purchases' 
                       ? 'bg-gradient-to-br from-primary-500/20 via-secondary-500/20 to-primary-500/20 text-primary-400 border border-primary-500/30' 
-                      : 'text-gray-300 hover:bg-gray-800/50'
+                      : 'text-dark-300 hover:bg-dark-800/50'
                   ]"
                 >
                   <svg class="w-4 h-4 inline mr-2" fill="currentColor" viewBox="0 0 20 20">
@@ -100,13 +107,13 @@
         <!-- Content Area -->
         <div class="lg:col-span-3">
           <!-- Personal Info Tab -->
-          <div v-if="activeTab === 'personal'" class="bg-secondary-surface border border-gray-700/50 rounded-2xl p-6">
+          <div v-if="activeTab === 'personal'" class="bg-dark-900 border border-dark-800 rounded-2xl p-6">
             <h2 class="text-xl font-bold text-white mb-6">Osobné údaje</h2>
             
             <form @submit.prevent="updateProfile" class="space-y-6">
               <!-- Profile Avatar -->
               <div class="flex items-center space-x-6">
-                <div class="w-20 h-20 rounded-full bg-secondary-800 border border-primary-500/30 flex items-center justify-center text-primary-400 text-xl font-bold">
+                <div class="w-20 h-20 rounded-full bg-dark-800 border border-primary-500/30 flex items-center justify-center text-primary-400 text-xl font-bold">
                   {{ getInitials(form.name) }}
                 </div>
                 <div>
@@ -116,14 +123,14 @@
                   >
                     Zmeniť avatar
                   </button>
-                  <p class="text-sm text-gray-400 mt-2">JPG, GIF alebo PNG. Max. veľkosť 2MB.</p>
+                  <p class="text-sm text-dark-400 mt-2">JPG, GIF alebo PNG. Max. veľkosť 2MB.</p>
                 </div>
               </div>
 
               <!-- Basic Information -->
               <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label for="name" class="block text-sm font-medium text-gray-200 mb-2">
+                  <label for="name" class="block text-sm font-medium text-dark-200 mb-2">
                     Meno a priezvisko *
                   </label>
                   <input
@@ -131,13 +138,13 @@
                     v-model="form.name"
                     type="text"
                     required
-                    class="w-full px-3 py-2 border border-gray-600 bg-secondary-800 text-white rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                    class="w-full px-3 py-2 border border-dark-700 bg-dark-800 text-white rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                     placeholder="Zadajte svoje meno"
                   />
                 </div>
 
                 <div>
-                  <label for="email" class="block text-sm font-medium text-gray-300 mb-2">
+                  <label for="email" class="block text-sm font-medium text-dark-300 mb-2">
                     Emailová adresa *
                   </label>
                   <input
@@ -145,76 +152,76 @@
                     v-model="form.email"
                     type="email"
                     required
-                    class="w-full px-3 py-2 border border-gray-600 bg-gray-800/50 text-white rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent backdrop-blur-sm"
+                    class="w-full px-3 py-2 border border-dark-700 bg-dark-800/50 text-white rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent backdrop-blur-sm"
                     placeholder="Zadajte svoju emailovú adresu"
                   />
                 </div>
 
                 <div>
-                  <label for="phone" class="block text-sm font-medium text-gray-300 mb-2">
+                  <label for="phone" class="block text-sm font-medium text-dark-300 mb-2">
                     Telefónne číslo
                   </label>
                   <input
                     id="phone"
                     v-model="form.phone"
                     type="tel"
-                    class="w-full px-3 py-2 border border-gray-600 bg-gray-800/50 text-white rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent backdrop-blur-sm"
+                    class="w-full px-3 py-2 border border-dark-700 bg-dark-800/50 text-white rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent backdrop-blur-sm"
                     placeholder="Zadajte svoje telefónne číslo"
                   />
                 </div>
 
                 <div>
-                  <label for="location" class="block text-sm font-medium text-gray-300 mb-2">
+                  <label for="location" class="block text-sm font-medium text-dark-300 mb-2">
                     Lokalita
                   </label>
                   <input
                     id="location"
                     v-model="form.location"
                     type="text"
-                    class="w-full px-3 py-2 border border-gray-600 bg-secondary-800 text-white rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                    class="w-full px-3 py-2 border border-dark-700 bg-dark-800 text-white rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                     placeholder="Mesto, krajina"
                   />
                 </div>
               </div>
 
               <div>
-                <label for="bio" class="block text-sm font-medium text-gray-300 mb-2">
+                <label for="bio" class="block text-sm font-medium text-dark-300 mb-2">
                   O mne
                 </label>
                 <textarea
                   id="bio"
                   v-model="form.bio"
                   rows="4"
-                  class="w-full px-3 py-2 border border-gray-600 bg-secondary-800 text-white rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                  class="w-full px-3 py-2 border border-dark-700 bg-dark-800 text-white rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                   placeholder="Povedzte nám o sebe a svojich YouTube cieľoch..."
                 ></textarea>
               </div>
 
               <!-- YouTube Information -->
-              <div class="border-t border-gray-200 pt-6">
+              <div class="border-t border-dark-700 pt-6">
                 <h3 class="text-lg font-medium text-white mb-4">Informácie o YouTube kanáli</h3>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                    <label for="youtube_channel" class="block text-sm font-medium text-gray-300 mb-2">
+                    <label for="youtube_channel" class="block text-sm font-medium text-dark-300 mb-2">
                       URL YouTube kanála
                     </label>
                     <input
                       id="youtube_channel"
                       v-model="form.youtube_channel"
                       type="url"
-                      class="w-full px-3 py-2 border border-gray-600 bg-secondary-800 text-white rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                      class="w-full px-3 py-2 border border-dark-700 bg-dark-800 text-white rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                       placeholder="https://youtube.com/@vaškanál"
                     />
                   </div>
 
                   <div>
-                    <label for="subscriber_count" class="block text-sm font-medium text-gray-300 mb-2">
+                    <label for="subscriber_count" class="block text-sm font-medium text-dark-300 mb-2">
                       Súčasný počet odberateľov
                     </label>
                     <select
                       id="subscriber_count"
                       v-model="form.subscriber_count"
-                      class="w-full px-3 py-2 border border-gray-600 bg-secondary-800 text-white rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                      class="w-full px-3 py-2 border border-dark-700 bg-dark-800 text-white rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                     >
                       <option value="">Vyberte rozsah</option>
                       <option value="0-100">0 - 100</option>
@@ -226,13 +233,13 @@
                   </div>
 
                   <div>
-                    <label for="content_niche" class="block text-sm font-medium text-gray-300 mb-2">
+                    <label for="content_niche" class="block text-sm font-medium text-dark-300 mb-2">
                       Oblasť obsahu
                     </label>
                     <select
                       id="content_niche"
                       v-model="form.content_niche"
-                      class="w-full px-3 py-2 border border-gray-600 bg-secondary-800 text-white rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                      class="w-full px-3 py-2 border border-dark-700 bg-dark-800 text-white rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                     >
                       <option value="">Vyberte oblasť</option>
                       <option value="gaming">Gaming</option>
@@ -250,13 +257,13 @@
                   </div>
 
                   <div>
-                    <label for="goals" class="block text-sm font-medium text-gray-300 mb-2">
+                    <label for="goals" class="block text-sm font-medium text-dark-300 mb-2">
                       Hlavný cieľ
                     </label>
                     <select
                       id="goals"
                       v-model="form.goals"
-                      class="w-full px-3 py-2 border border-gray-600 bg-secondary-800 text-white rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                      class="w-full px-3 py-2 border border-dark-700 bg-dark-800 text-white rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                     >
                       <option value="">Vyberte cieľ</option>
                       <option value="monetization">Monetizácia</option>
@@ -271,11 +278,11 @@
               </div>
 
               <!-- Form Actions -->
-              <div class="border-t border-gray-200 pt-6 flex justify-between">
+              <div class="border-t border-dark-700 pt-6 flex justify-between">
                 <button
                   type="button"
                   @click="resetForm"
-                  class="px-4 py-2 border border-gray-600 rounded-lg text-gray-300 hover:bg-secondary-700 transition duration-200"
+                  class="px-4 py-2 border border-dark-600 rounded-lg text-dark-300 hover:bg-dark-800 transition duration-200"
                 >
                   Resetovať zmeny
                 </button>
@@ -291,16 +298,16 @@
           </div>
 
           <!-- Security Tab -->
-          <div v-else-if="activeTab === 'security'" class="bg-secondary-surface border border-gray-700/50 rounded-2xl p-6">
+          <div v-else-if="activeTab === 'security'" class="bg-dark-900 border border-dark-800 rounded-2xl p-6">
             <h2 class="text-xl font-bold text-white mb-6">Zabezpečenie účtu</h2>
             
             <div class="space-y-6">
               <!-- Change Password -->
-              <div class="border border-gray-600/50 bg-secondary-800 rounded-xl p-4">
+              <div class="border border-dark-700 bg-dark-800 rounded-xl p-4">
                 <div class="flex items-center justify-between mb-4">
                   <div>
                     <h3 class="text-lg font-medium text-white">Zmena hesla</h3>
-                    <p class="text-sm text-gray-300">Aktualizujte heslo svojho účtu</p>
+                    <p class="text-sm text-dark-300">Aktualizujte heslo svojho účtu</p>
                   </div>
                   <button
                     @click="showPasswordForm = !showPasswordForm"
@@ -312,7 +319,7 @@
 
                 <form v-if="showPasswordForm" @submit.prevent="updatePassword" class="space-y-4">
                   <div>
-                    <label for="current_password" class="block text-sm font-medium text-gray-200 mb-2">
+                    <label for="current_password" class="block text-sm font-medium text-dark-200 mb-2">
                       Súčasné heslo
                     </label>
                     <input
@@ -320,12 +327,12 @@
                       v-model="passwordForm.current_password"
                       type="password"
                       required
-                      class="w-full px-3 py-2 border border-gray-600 bg-secondary-800 text-white rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                      class="w-full px-3 py-2 border border-dark-700 bg-dark-800 text-white rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                     />
                   </div>
 
                   <div>
-                    <label for="new_password" class="block text-sm font-medium text-gray-300 mb-2">
+                    <label for="new_password" class="block text-sm font-medium text-dark-300 mb-2">
                       Nové heslo
                     </label>
                     <input
@@ -333,12 +340,12 @@
                       v-model="passwordForm.new_password"
                       type="password"
                       required
-                      class="w-full px-3 py-2 border border-gray-600 bg-secondary-800 text-white rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                      class="w-full px-3 py-2 border border-dark-700 bg-dark-800 text-white rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                     />
                   </div>
 
                   <div>
-                    <label for="confirm_password" class="block text-sm font-medium text-gray-300 mb-2">
+                    <label for="confirm_password" class="block text-sm font-medium text-dark-300 mb-2">
                       Potvrdiť nové heslo
                     </label>
                     <input
@@ -346,7 +353,7 @@
                       v-model="passwordForm.confirm_password"
                       type="password"
                       required
-                      class="w-full px-3 py-2 border border-gray-600 bg-secondary-800 text-white rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                      class="w-full px-3 py-2 border border-dark-700 bg-dark-800 text-white rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                     />
                   </div>
 
@@ -354,7 +361,7 @@
                     <button
                       type="button"
                       @click="showPasswordForm = false"
-                      class="px-4 py-2 border border-gray-600 rounded-lg text-gray-300 hover:bg-secondary-700 transition duration-200"
+                      class="px-4 py-2 border border-dark-600 rounded-lg text-dark-300 hover:bg-dark-800 transition duration-200"
                     >
                       Zrušiť
                     </button>
@@ -371,10 +378,10 @@
 
               <!-- Account Actions -->
               <div class="space-y-4">
-                <div class="flex items-center justify-between p-4 border border-gray-700 rounded-lg">
+                <div class="flex items-center justify-between p-4 border border-dark-700 rounded-lg">
                   <div>
                     <h4 class="text-sm font-medium text-white">Správa relácií</h4>
-                    <p class="text-sm text-gray-400">Odhlásiť sa zo všetkých zariadení a prehliadačov</p>
+                    <p class="text-sm text-dark-400">Odhlásiť sa zo všetkých zariadení a prehliadačov</p>
                   </div>
                   <button 
                     @click="logoutAllDevices"
@@ -384,10 +391,10 @@
                   </button>
                 </div>
 
-                <div class="flex items-center justify-between p-4 border border-gray-700 rounded-lg">
+                <div class="flex items-center justify-between p-4 border border-dark-700 rounded-lg">
                   <div>
                     <h4 class="text-sm font-medium text-white">Stiahnuť údaje</h4>
-                    <p class="text-sm text-gray-400">Stiahnite kópiu údajov svojho účtu</p>
+                    <p class="text-sm text-dark-400">Stiahnite kópiu údajov svojho účtu</p>
                   </div>
                   <button 
                     @click="exportData"
@@ -414,7 +421,7 @@
           </div>
 
           <!-- Notifications Tab -->
-          <div v-else-if="activeTab === 'notifications'" class="bg-secondary-surface border border-gray-700/50 rounded-2xl p-6">
+          <div v-else-if="activeTab === 'notifications'" class="bg-dark-900 border border-dark-800 rounded-2xl p-6">
             <h2 class="text-xl font-bold text-white mb-6">Nastavenia notifikácií</h2>
             
             <form @submit.prevent="updateNotifications" class="space-y-6">
@@ -424,9 +431,9 @@
                     id="email_notifications"
                     v-model="form.email_notifications"
                     type="checkbox"
-                    class="h-4 w-4 text-primary-500 focus:ring-primary-500 border-gray-600 bg-gray-800 rounded"
+                    class="h-4 w-4 text-primary-500 focus:ring-primary-500 border-dark-600 bg-dark-800 rounded"
                   />
-                  <label for="email_notifications" class="ml-3 text-sm text-gray-200">
+                  <label for="email_notifications" class="ml-3 text-sm text-dark-200">
                     Emailové notifikácie o nových kurzoch a aktualizáciách
                   </label>
                 </div>
@@ -436,9 +443,9 @@
                     id="course_reminders"
                     v-model="form.course_reminders"
                     type="checkbox"
-                    class="h-4 w-4 text-primary-500 focus:ring-primary-500 border-gray-600 bg-gray-800 rounded"
+                    class="h-4 w-4 text-primary-500 focus:ring-primary-500 border-dark-600 bg-dark-800 rounded"
                   />
-                  <label for="course_reminders" class="ml-3 text-sm text-gray-300">
+                  <label for="course_reminders" class="ml-3 text-sm text-dark-300">
                     Pripomienky pokroku v kurzoch
                   </label>
                 </div>
@@ -448,15 +455,15 @@
                     id="marketing_emails"
                     v-model="form.marketing_emails"
                     type="checkbox"
-                    class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
+                    class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-dark-300 rounded"
                   />
-                  <label for="marketing_emails" class="ml-3 text-sm text-gray-300">
+                  <label for="marketing_emails" class="ml-3 text-sm text-dark-300">
                     Marketingové emaily a špeciálne ponuky
                   </label>
                 </div>
               </div>
 
-              <div class="border-t border-gray-200 pt-6">
+              <div class="border-t border-dark-700 pt-6">
                 <button
                   type="submit"
                   :disabled="loading"
@@ -469,19 +476,19 @@
           </div>
 
           <!-- Certificates Tab -->
-          <div v-else-if="activeTab === 'certificates'" class="bg-secondary-surface border border-gray-700/50 rounded-2xl p-6">
+          <div v-else-if="activeTab === 'certificates'" class="bg-dark-900 border border-dark-800 rounded-2xl p-6">
             <h2 class="text-xl font-bold text-white mb-6">Moje certifikáty</h2>
             
             <div v-if="certificates.length > 0" class="space-y-4">
               <div
                 v-for="certificate in certificates"
                 :key="certificate.id"
-                class="border border-gray-700 bg-secondary-800 rounded-xl p-4 hover:bg-secondary-700 transition duration-200"
+                class="border border-dark-700 bg-dark-800 rounded-xl p-4 hover:bg-dark-700 transition duration-200"
               >
                 <div class="flex items-center justify-between">
                   <div>
                     <h3 class="font-medium text-white">{{ certificate.course_title }}</h3>
-                    <p class="text-sm text-gray-300">
+                    <p class="text-sm text-dark-300">
                       Dokončené {{ formatDate(certificate.completed_at) }}
                     </p>
                   </div>
@@ -505,27 +512,27 @@
           </div>
 
           <!-- Purchase History Tab -->
-          <div v-else-if="activeTab === 'purchases'" class="bg-secondary-surface border border-gray-700/50 rounded-2xl p-6">
+          <div v-else-if="activeTab === 'purchases'" class="bg-dark-900 border border-dark-800 rounded-2xl p-6">
             <h2 class="text-xl font-bold text-white mb-6">História nákupov</h2>
             
             <div v-if="purchases.length > 0" class="overflow-x-auto">
               <table class="w-full text-left">
                 <thead>
-                  <tr class="border-b border-gray-700">
-                    <th class="pb-3 text-sm font-medium text-gray-400">Kurz</th>
-                    <th class="pb-3 text-sm font-medium text-gray-400">Dátum</th>
-                    <th class="pb-3 text-sm font-medium text-gray-400">Cena</th>
-                    <th class="pb-3 text-sm font-medium text-gray-400">Stav</th>
-                    <th class="pb-3 text-sm font-medium text-gray-400"></th>
+                  <tr class="border-b border-dark-700">
+                    <th class="pb-3 text-sm font-medium text-dark-400">Kurz</th>
+                    <th class="pb-3 text-sm font-medium text-dark-400">Dátum</th>
+                    <th class="pb-3 text-sm font-medium text-dark-400">Cena</th>
+                    <th class="pb-3 text-sm font-medium text-dark-400">Stav</th>
+                    <th class="pb-3 text-sm font-medium text-dark-400"></th>
                   </tr>
                 </thead>
-                <tbody class="divide-y divide-gray-700">
+                <tbody class="divide-y divide-dark-700">
                   <tr v-for="purchase in purchases" :key="purchase.id" class="group">
                     <td class="py-4 pr-4">
                       <div class="font-medium text-white">{{ purchase.course.title }}</div>
-                      <div class="text-xs text-gray-500">ID: {{ purchase.transaction_id || purchase.id }}</div>
+                      <div class="text-xs text-dark-500">ID: {{ purchase.transaction_id || purchase.id }}</div>
                     </td>
-                    <td class="py-4 text-sm text-gray-300">
+                    <td class="py-4 text-sm text-dark-300">
                       {{ formatDate(purchase.created_at) }}
                     </td>
                     <td class="py-4 text-sm text-white font-medium">

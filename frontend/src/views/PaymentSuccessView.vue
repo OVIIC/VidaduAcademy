@@ -137,6 +137,7 @@
 import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
+import { useEnrollmentStore } from '@/stores/enrollment'
 import { api } from '@/services/api'
 
 export default {
@@ -191,14 +192,22 @@ export default {
       }
     }
 
-    onMounted(() => {
+    onMounted(async () => {
       // Initialize auth if needed
       if (!authStore.isAuthenticated) {
         authStore.initializeAuth()
       }
       
       // Load payment details
-      loadPaymentDetails()
+      await loadPaymentDetails()
+      
+      // Force refresh of courses in enrollment store to update dashboard immediately
+      if (authStore.isAuthenticated) {
+        // We import it here or use global import if available, but for now we'll rely on global store instantiation or proper DI if needed.
+        // But better is to import it at top. Let's fix imports first if needed.
+        const enrollmentStore = useEnrollmentStore()
+        await enrollmentStore.loadMyCourses(true)
+      }
       
       // Auto-redirect after 4 seconds
       setTimeout(() => {

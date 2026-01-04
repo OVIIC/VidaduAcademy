@@ -1,10 +1,17 @@
 <template>
-  <div class="min-h-screen bg-secondary-800 text-white py-8">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+  <div class="min-h-screen bg-dark-950 text-white py-8 relative overflow-hidden">
+    <!-- Background Effects -->
+    <div class="fixed inset-0 overflow-hidden pointer-events-none z-0">
+        <div class="absolute -top-[500px] -left-1/4 w-[1000px] h-[1000px] bg-primary-600/20 rounded-full blur-[120px] opacity-30 animate-pulse-slow"></div>
+        <div class="absolute top-[40%] -right-1/4 w-[800px] h-[800px] bg-secondary-600/10 rounded-full blur-[100px] opacity-30 animate-pulse-slow delay-500"></div>
+        <div class="absolute -bottom-[200px] -left-1/4 w-[800px] h-[800px] bg-primary-600/20 rounded-full blur-[120px] opacity-30 animate-pulse-slow delay-1000"></div>
+        <div class="absolute top-0 left-0 w-full h-full bg-[url('/images/grid-pattern.svg')] bg-repeat opacity-[0.03]"></div>
+    </div>
+    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <!-- Header -->
       <div class="mb-8">
-        <h1 class="text-3xl font-bold text-white">Moje kurzy</h1>
-        <p class="mt-2 text-gray-300">Pokračujte vo svojom vzdelávaní</p>
+        <h1 class="text-3xl font-black text-white">Moje kurzy</h1>
+        <p class="mt-2 text-dark-300 font-extralight">Pokračujte vo svojom vzdelávaní</p>
       </div>
 
       <!-- Success Message -->
@@ -65,8 +72,8 @@
             :class="[
               'py-2 px-1 border-b-2 font-medium text-sm transition duration-200',
               activeTab === tab.key
-                ? 'border-primary-500 text-primary-600'
-                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300',
+                ? 'border-primary-500 text-primary-400'
+                : 'border-transparent text-dark-400 hover:text-white hover:border-dark-700',
             ]"
           >
             {{ tab.label }}
@@ -74,8 +81,8 @@
               :class="[
                 'ml-2 py-0.5 px-2 rounded-full text-xs',
                 activeTab === tab.key
-                  ? 'bg-primary-100 text-primary-600'
-                  : 'bg-gray-100 text-gray-600',
+                  ? 'bg-primary-500/10 text-primary-400'
+                  : 'bg-dark-800 text-dark-300',
               ]"
             >
               {{ getTabCount(tab.key) }}
@@ -131,10 +138,10 @@
             d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
           />
         </svg>
-        <h3 class="mt-2 text-sm font-medium text-gray-900">
+        <h3 class="mt-2 text-sm font-medium text-white">
           {{ getEmptyStateTitle() }}
         </h3>
-        <p class="mt-1 text-sm text-gray-500">
+        <p class="mt-1 text-sm text-dark-400">
           {{ getEmptyStateDescription() }}
         </p>
         <div class="mt-6">

@@ -58,7 +58,7 @@
           <transition name="hero-content-fade" mode="out-in">
             <div :key="selectedCourse?.id || 'default'" class="max-w-3xl mt-16">
               <!-- Course Title (Large Disney+ style) -->
-              <h1 class="text-3xl md:text-5xl lg:text-6xl font-bold mb-6 leading-none tracking-tight text-white drop-shadow-2xl">
+              <h1 class="text-3xl md:text-5xl lg:text-6xl font-black mb-6 leading-none tracking-tight text-white drop-shadow-2xl">
                 {{ selectedCourse?.title || 'Načítavajú sa kurzy...' }}
               </h1>
 
@@ -221,7 +221,7 @@
         <!-- Filter Bar -->
         <div class="mb-8 space-y-4">
           <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <h2 class="text-2xl md:text-3xl font-bold text-white">Všetky kurzy</h2>
+            <h2 class="text-2xl md:text-3xl font-black text-white">Všetky kurzy</h2>
             
             <!-- Search Input -->
             <div class="relative flex-grow md:max-w-md">
@@ -242,42 +242,45 @@
           <div class="flex flex-col md:flex-row gap-4 items-center justify-between bg-dark-900 p-4 rounded-2xl border border-dark-800">
             <div class="flex flex-wrap gap-3 w-full md:w-auto">
               <!-- Difficulty Filter -->
-              <select 
+              <CustomSelect
                 v-model="selectedDifficulty"
-                @change="handleFilterChange"
-                class="bg-dark-800 text-white border border-dark-700 rounded-lg py-2 px-3 text-sm focus:ring-primary-500 focus:border-primary-500"
-              >
-                <option value="">Všetky úrovne</option>
-                <option value="beginner">Začiatočník</option>
-                <option value="intermediate">Pokročilý</option>
-                <option value="advanced">Expert</option>
-              </select>
+                :options="difficultyOptions"
+                placeholder="Všetky úrovne"
+                class="w-full sm:w-48"
+                multiple
+                @update:modelValue="handleFilterChange"
+              />
+
+              <!-- Category Filter -->
+              <CustomSelect
+                v-model="selectedCategory"
+                :options="categoryOptions"
+                placeholder="Všetky kategórie"
+                class="w-full sm:w-48"
+                multiple
+                @update:modelValue="handleFilterChange"
+              />
 
               <!-- Price Filter -->
-              <select 
+              <CustomSelect
                 v-model="selectedPrice"
-                @change="handleFilterChange"
-                class="bg-dark-800 text-white border border-dark-700 rounded-lg py-2 px-3 text-sm focus:ring-primary-500 focus:border-primary-500"
-              >
-                <option value="">Všetky ceny</option>
-                <option value="free">Zadarmo</option>
-                <option value="paid">Platené</option>
-              </select>
+                :options="priceOptions"
+                placeholder="Všetky ceny"
+                class="w-full sm:w-48"
+                @update:modelValue="handleFilterChange"
+              />
+
+              <!-- Sort -->
+              <CustomSelect
+                v-model="selectedSort"
+                :options="sortOptions"
+                placeholder="Zoradiť podľa"
+                class="w-full sm:w-48"
+                @update:modelValue="handleFilterChange"
+              />
             </div>
 
             <div class="flex items-center gap-3 w-full md:w-auto justify-end">
-              <span class="text-dark-400 text-sm">Zoradiť podľa:</span>
-              <select 
-                v-model="selectedSort"
-                @change="handleFilterChange"
-                class="bg-dark-800 text-white border border-dark-700 rounded-lg py-2 px-3 text-sm focus:ring-primary-500 focus:border-primary-500"
-              >
-                <option value="created_at_desc">Najnovšie</option>
-                <option value="price_asc">Cena: Najnižšia</option>
-                <option value="price_desc">Cena: Najvyššia</option>
-                <option value="title_asc">Názov: A-Z</option>
-              </select>
-
               <button
                 @click="resetFilters"
                 class="text-dark-400 hover:text-white text-sm underline ml-2"
@@ -411,6 +414,7 @@
   </div>
 </template>
 <script setup>
+import CustomSelect from '@/components/ui/CustomSelect.vue'
 import { ref, onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { paymentService } from '@/services'
@@ -436,13 +440,49 @@ const checkoutCourse = ref(null)
 
 // Filters state
 const searchQuery = ref('')
-const selectedDifficulty = ref('')
+const selectedDifficulty = ref([])
 const selectedPrice = ref('')
+const selectedCategory = ref([])
 const selectedSort = ref('created_at_desc')
+const categories = computed(() => courseStore.categories)
+
+// Options for CustomSelect
+const difficultyOptions = [
+  { value: 'beginner', label: 'Začiatočník' },
+  { value: 'intermediate', label: 'Pokročilý' },
+  { value: 'advanced', label: 'Expert' }
+]
+
+const priceOptions = [
+  { value: '', label: 'Všetky ceny' },
+  { value: 'paid', label: 'Platené' },
+  { value: 'free', label: 'Zadarmo' }
+]
+
+const sortOptions = [
+  { value: 'created_at_desc', label: 'Najnovšie' },
+  { value: 'created_at_asc', label: 'Najstaršie' },
+  { value: 'price_asc', label: 'Najlacnejšie' },
+  { value: 'price_desc', label: 'Najdrahšie' },
+  { value: 'difficulty_asc', label: 'Najľahšie' },
+  { value: 'difficulty_desc', label: 'Najťažšie' }
+]
+
+const categoryOptions = computed(() => {
+  const opts = []
+  if (categories.value) {
+    opts.push(...categories.value.map(c => ({
+      value: c.slug,
+      label: c.name,
+      count: c.courses_count
+    })))
+  }
+  return opts
+})
 
 // Computed property to check if any filters are active
 const hasActiveFilters = computed(() => {
-  return searchQuery.value || selectedDifficulty.value || selectedPrice.value || selectedSort.value !== 'created_at_desc'
+  return searchQuery.value || selectedDifficulty.value.length > 0 || selectedPrice.value || selectedCategory.value.length > 0 || selectedSort.value !== 'created_at_desc'
 })
 
 // Selected course for hero section (Disney+ style)
@@ -548,36 +588,33 @@ const handleFilterChange = () => {
 const applyFilters = () => {
   const filters = {
     search: searchQuery.value,
-    difficulty: selectedDifficulty.value,
-    sort_by: 'created_at', // Default
-    sort_order: 'desc' // Default
+  }
+
+  // Handle difficulty filter
+  if (selectedDifficulty.value.length > 0) {
+    filters.difficulty = selectedDifficulty.value
+  }
+
+  // Handle category filter
+  if (selectedCategory.value.length > 0) {
+    filters.category = selectedCategory.value
   }
 
   // Handle price filter
   if (selectedPrice.value === 'free') {
     filters.max_price = 0
   } else if (selectedPrice.value === 'paid') {
-    filters.min_price = 0.01
+    filters.min_price = 0.01 // Assuming strictly paid
   }
 
-  // Handle sort
+  // Handle sort (always single select)
   if (selectedSort.value) {
-    // eslint-disable-next-line no-unused-vars
-    const [field, direction] = selectedSort.value.split('_')
-    
-    if (selectedSort.value === 'created_at_desc') {
-      filters.sort_by = 'created_at'
-      filters.sort_order = 'desc'
-    } else if (selectedSort.value === 'price_asc') {
-      filters.sort_by = 'price'
-      filters.sort_order = 'asc'
-    } else if (selectedSort.value === 'price_desc') {
-      filters.sort_by = 'price'
-      filters.sort_order = 'desc'
-    } else if (selectedSort.value === 'title_asc') {
-      filters.sort_by = 'title'
-      filters.sort_order = 'asc'
-    }
+    filters.sort_by = selectedSort.value === 'created_at_desc' || selectedSort.value === 'created_at_asc' ? 'created_at' : 
+                      selectedSort.value === 'price_asc' || selectedSort.value === 'price_desc' ? 'price' :
+                      selectedSort.value === 'difficulty_asc' || selectedSort.value === 'difficulty_desc' ? 'difficulty_level' :
+                      selectedSort.value === 'title_asc' ? 'title' : 'created_at'
+                      
+    filters.sort_order = selectedSort.value.includes('_asc') ? 'asc' : 'desc'
   }
 
   courseStore.updateFilters(filters)
@@ -586,8 +623,9 @@ const applyFilters = () => {
 // Reset filters
 const resetFilters = () => {
   searchQuery.value = ''
-  selectedDifficulty.value = ''
+  selectedDifficulty.value = []
   selectedPrice.value = ''
+  selectedCategory.value = []
   selectedSort.value = 'created_at_desc'
   courseStore.clearFilters()
 }
@@ -605,6 +643,7 @@ const loadCourses = async () => {
     if (import.meta.env.DEV) console.log('Loading courses via course store...')
     
     await courseStore.fetchCourses()
+    await courseStore.fetchCategories()
     
     if (import.meta.env.DEV) console.log('Courses loaded:', courses.value.length)
     

@@ -10,6 +10,7 @@ use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Widgets;
+use Filament\Support\Colors\Color;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
@@ -27,10 +28,29 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->login()
+            ->brandName('VidaduAcademy')
+            ->font('Inter')
             ->colors([
                 'primary' => '#ED6F55',
+                'gray' => [
+                    50 => '#f5f4f7',
+                    100 => '#e8e6eb',
+                    200 => '#d0cdd9',
+                    300 => '#aba6bf',
+                    400 => '#837da1',
+                    500 => '#645d85',
+                    600 => '#4e4869',
+                    700 => '#3e3954',
+                    800 => '#3B3157',
+                    900 => '#252238',
+                    950 => '#151321',
+                ],
             ])
+            ->darkMode(true) // Force dark mode if possible, or sets preference
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
+            ->pages([
+                \App\Filament\Pages\Dashboard::class,
+            ])
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
             ->widgets([
                 Widgets\AccountWidget::class,

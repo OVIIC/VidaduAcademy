@@ -22,6 +22,7 @@ class Course extends Model
         'currency',
         'thumbnail',
         'status',
+        'category_id',
         'instructor_id',
         'duration_minutes',
         'difficulty_level',
@@ -40,6 +41,11 @@ class Course extends Model
     public function instructor(): BelongsTo
     {
         return $this->belongsTo(User::class, 'instructor_id');
+    }
+
+    public function category(): BelongsTo
+    {
+        return $this->belongsTo(Category::class);
     }
 
     public function lessons(): HasMany

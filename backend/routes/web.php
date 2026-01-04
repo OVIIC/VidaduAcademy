@@ -28,6 +28,11 @@ Route::get('/test', function () {
 
 
 
-Route::get('/admin', function () {
-    return redirect('/admin/login');
-});
+// Route::get('/admin', function () {
+//     return redirect('/admin/login');
+// });
+
+// FIX: Explicitly define the dashboard route name to prevent crash
+// Route::get('/admin/dashboard-fix', function () {
+//     return redirect('/admin');
+// })->name('filament.admin.pages.dashboard');

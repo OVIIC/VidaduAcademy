@@ -78,6 +78,14 @@ export const courseService = {
     }, 10 * 60 * 1000) // Cache for 10 minutes
   },
 
+  async getCategories() {
+    const cacheKey = apiCache.generateKey('/categories')
+    return cachedApiCall(cacheKey, async () => {
+      const response = await api.get('/categories')
+      return response.data
+    }, 60 * 60 * 1000) // Cache for 1 hour
+  },
+
 
 }
 

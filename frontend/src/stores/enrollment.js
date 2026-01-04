@@ -159,9 +159,31 @@ export const useEnrollmentStore = defineStore('enrollment', {
       }
     },
 
-    clearCourses() {
+    async clearCourses() {
       this.myCourses = []
       this.lastUpdated = null
+    },
+
+    updateCourseProgress(courseData) {
+      if (!courseData || !courseData.id) return
+
+      const index = this.myCourses.findIndex(c => c.id === courseData.id)
+      if (index !== -1) {
+        // Update existing course in list
+        this.myCourses[index] = {
+          ...this.myCourses[index],
+          ...courseData,
+          enrollment_data: {
+            ...this.myCourses[index].enrollment_data,
+            progress_percentage: courseData.progress_percentage
+          }
+        }
+        if (import.meta.env.DEV) console.log('Store - Course progress updated locally:', courseData.title)
+      } else {
+        // If course not found in list (shouldn't happen for enrolled course), try to reload
+        if (import.meta.env.DEV) console.warn('Store - Course to update not found, reloading all...')
+        this.loadMyCourses(true)
+      }
     },
   },
 })

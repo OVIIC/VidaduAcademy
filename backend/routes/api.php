@@ -44,6 +44,8 @@ Route::prefix('courses')->group(function () {
     Route::get('/{slug}', [CourseController::class, 'show']);
 });
 
+Route::get('/categories', [\App\Http\Controllers\Api\CategoryController::class, 'index']);
+
 // Stripe webhook (public, no auth required)
 Route::post('/webhook/stripe', [PaymentController::class, 'webhook'])->name('stripe.webhook');
 

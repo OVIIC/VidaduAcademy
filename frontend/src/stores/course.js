@@ -19,12 +19,14 @@ export const useCourseStore = defineStore('course', {
     },
     filters: {
       search: '',
-      difficulty: '',
+      difficulty: [],
+      category: [],
       min_price: null,
       max_price: null,
       sort_by: 'created_at',
       sort_order: 'desc',
     },
+    categories: [],
   }),
 
   getters: {
@@ -46,6 +48,15 @@ export const useCourseStore = defineStore('course', {
   },
 
   actions: {
+    async fetchCategories() {
+      try {
+        const response = await courseService.getCategories()
+        this.categories = response
+      } catch (error) {
+        console.error('Failed to fetch categories:', error)
+      }
+    },
+
     async fetchCourses(params = {}) {
       if (import.meta.env.DEV) console.log('fetchCourses called with params:', params)
       this.loading = true
@@ -111,7 +122,8 @@ export const useCourseStore = defineStore('course', {
     clearFilters() {
       this.filters = {
         search: '',
-        difficulty: '',
+        difficulty: [],
+        category: [],
         min_price: null,
         max_price: null,
         sort_by: 'created_at',
@@ -133,6 +145,7 @@ export const useCourseStore = defineStore('course', {
       // Fetch fresh data
       await this.fetchCourses({ page: 1 })
       await this.fetchFeaturedCourses()
+      await this.fetchCategories()
       
       if (import.meta.env.DEV) console.log('Courses refreshed from server')
     },

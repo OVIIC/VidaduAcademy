@@ -50,6 +50,23 @@ class CourseResource extends Resource
                 Forms\Components\Select::make('instructor_id')
                     ->relationship('instructor', 'name')
                     ->required(),
+                Forms\Components\Select::make('category_id')
+                    ->relationship('category', 'name')
+                    ->searchable()
+                    ->preload()
+                    ->createOptionForm([
+                        Forms\Components\TextInput::make('name')
+                            ->required()
+                            ->maxLength(255)
+                            ->live(onBlur: true)
+                            ->afterStateUpdated(fn (string $operation, $state, Forms\Set $set) => $operation === 'create' ? $set('slug', \Illuminate\Support\Str::slug($state)) : null),
+                        Forms\Components\TextInput::make('slug')
+                            ->required()
+                            ->maxLength(255)
+                            ->unique('categories', 'slug'),
+                        Forms\Components\Textarea::make('description')
+                            ->maxLength(65535),
+                    ]),
                 Forms\Components\TextInput::make('duration_minutes')
                     ->required()
                     ->numeric()
@@ -94,6 +111,10 @@ class CourseResource extends Resource
                 Tables\Columns\TextColumn::make('title')
                     ->searchable()
                     ->sortable(),
+                Tables\Columns\TextColumn::make('category.name')
+                    ->label('Category')
+                    ->sortable()
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('instructor.name')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('price')

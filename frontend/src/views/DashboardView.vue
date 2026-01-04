@@ -1,38 +1,56 @@
 <template>
-  <div class="min-h-screen bg-secondary-800 text-white py-8">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+  <div class="min-h-screen bg-dark-950 text-white font-sans selection:bg-primary-500 selection:text-white">
+    <!-- Background Effects -->
+    <div class="fixed inset-0 overflow-hidden pointer-events-none z-0">
+        <div class="absolute -top-[500px] -left-1/4 w-[1000px] h-[1000px] bg-primary-600/20 rounded-full blur-[120px] opacity-30 animate-pulse-slow"></div>
+        <!-- Middle Blob -->
+        <div class="absolute top-[40%] -right-1/4 w-[800px] h-[800px] bg-secondary-600/10 rounded-full blur-[100px] opacity-30 animate-pulse-slow delay-500"></div>
+        <!-- Bottom Blob -->
+        <div class="absolute -bottom-[200px] -left-1/4 w-[800px] h-[800px] bg-primary-600/20 rounded-full blur-[120px] opacity-30 animate-pulse-slow delay-1000"></div>
+        <div class="absolute top-0 left-0 w-full h-full bg-[url('/images/grid-pattern.svg')] bg-repeat opacity-[0.03]"></div>
+    </div>
+
+    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pt-24">
       <!-- Header -->
-      <div class="mb-8">
-        <h1 class="text-3xl font-bold text-white">Vitajte späť, {{ user?.name }}!</h1>
-        <p class="mt-2 text-gray-300">Pokračujte vo svojej vzdelávacej ceste</p>
+      <div class="mb-12">
+        <h1 class="text-3xl sm:text-4xl font-black text-white mb-2">Vitajte späť, {{ user?.name }}!</h1>
+        <p class="text-xl text-dark-300 font-extralight">Pokračujte vo svojej vzdelávacej ceste</p>
       </div>
 
       <!-- Stats Cards -->
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <div class="bg-secondary-surface backdrop-blur-xl border border-gray-700/50 rounded-2xl p-6">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+        <div class="group bg-dark-900 border border-dark-800 hover:border-primary-500/30 rounded-3xl p-6 transition-all duration-300 hover:bg-dark-800/50">
           <div class="flex items-center">
-            <img src="/images/enrolled-courses-3d.jpg" alt="Zapísané kurzy" class="w-24 h-24 object-contain" />
-            <div class="ml-4">
-              <h2 class="text-sm text-gray-300">Zapísané kurzy</h2>
-              <p class="text-2xl font-bold text-white">{{ enrolledCourses.length }}</p>
+            <div class="w-20 h-20 rounded-2xl bg-gradient-to-br from-primary-500/10 to-purple-500/10 flex items-center justify-center mr-6 group-hover:scale-110 transition-transform duration-300">
+                <img src="/images/enrolled-courses-3d.jpg" alt="Zapísané kurzy" class="w-16 h-16 object-contain" />
+            </div>
+            <div>
+              <h2 class="text-sm text-dark-400 font-bold uppercase tracking-wider mb-1">Zapísané kurzy</h2>
+              <p class="text-3xl font-black text-white">{{ enrolledCourses.length }}</p>
             </div>
           </div>
         </div>
-        <div class="bg-secondary-surface backdrop-blur-xl border border-gray-700/50 rounded-2xl p-6">
+        
+        <div class="group bg-dark-900 border border-dark-800 hover:border-secondary-500/30 rounded-3xl p-6 transition-all duration-300 hover:bg-dark-800/50">
           <div class="flex items-center">
-            <img src="/images/completed-courses-3d.png" alt="Dokončené" class="w-24 h-24 object-contain" />
-            <div class="ml-4">
-              <h2 class="text-sm text-gray-300">Dokončené</h2>
-              <p class="text-2xl font-bold text-white">{{ completedCourses }}</p>
+            <div class="w-20 h-20 rounded-2xl bg-gradient-to-br from-secondary-500/10 to-orange-500/10 flex items-center justify-center mr-6 group-hover:scale-110 transition-transform duration-300">
+                <img src="/images/completed-courses-3d.png" alt="Dokončené" class="w-16 h-16 object-contain" />
+            </div>
+            <div>
+              <h2 class="text-sm text-dark-400 font-bold uppercase tracking-wider mb-1">Dokončené</h2>
+              <p class="text-3xl font-black text-white">{{ completedCourses }}</p>
             </div>
           </div>
         </div>
-        <div class="bg-secondary-surface backdrop-blur-xl border border-gray-700/50 rounded-2xl p-6">
+
+        <div class="group bg-dark-900 border border-dark-800 hover:border-emerald-500/30 rounded-3xl p-6 transition-all duration-300 hover:bg-dark-800/50">
           <div class="flex items-center">
-            <img src="/images/certificates-3d.png" alt="Certifikáty" class="w-24 h-24 object-contain" />
-            <div class="ml-4">
-              <h2 class="text-sm text-gray-300">Certifikáty</h2>
-              <p class="text-2xl font-bold text-white">{{ certificates }}</p>
+             <div class="w-20 h-20 rounded-2xl bg-gradient-to-br from-emerald-500/10 to-green-500/10 flex items-center justify-center mr-6 group-hover:scale-110 transition-transform duration-300">
+                <img src="/images/certificates-3d.png" alt="Certifikáty" class="w-16 h-16 object-contain" />
+            </div>
+            <div>
+              <h2 class="text-sm text-dark-400 font-bold uppercase tracking-wider mb-1">Certifikáty</h2>
+              <p class="text-3xl font-black text-white">{{ certificates }}</p>
             </div>
           </div>
         </div>
@@ -42,8 +60,8 @@
         <!-- Main Content -->
         <div class="lg:col-span-2">
           <!-- Continue Learning -->
-          <div class="bg-secondary-surface backdrop-blur-xl border border-gray-700/50 rounded-2xl p-6">
-            <h2 class="text-xl font-bold text-white mb-4">Pokračovať v učení</h2>
+          <div class="bg-dark-900 border border-dark-800 rounded-3xl p-8 mb-8">
+            <h2 class="text-2xl font-black text-white mb-6">Pokračovať v učení</h2>
             
             <!-- Loading -->
             <div v-if="loading" class="flex justify-center py-8">
@@ -54,30 +72,32 @@
               <div
                 v-for="course in recentCourses"
                 :key="course.id"
-                class="bg-gradient-to-br from-gray-800/40 via-secondary-900/30 to-gray-800/50 backdrop-blur-xl border border-gray-700/50 rounded-xl p-4 hover:border-primary-500/50 transition duration-200"
+                class="group bg-dark-800/30 border border-dark-700/50 rounded-2xl p-5 hover:border-primary-500/30 transition-all duration-300 hover:bg-dark-800/80"
               >
-                <div class="flex items-center justify-between">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                   <div class="flex-1">
-                    <h3 class="font-medium text-white mb-1">{{ course.title }}</h3>
-                    <div class="w-full bg-gray-700/50 rounded-full h-2 mb-2">
-                      <div
-                        class="bg-primary-500 h-2 rounded-full"
-                        :style="{ width: `${course.progress}%` }"
-                      ></div>
+                    <h3 class="font-bold text-white mb-2 text-lg">{{ course.title }}</h3>
+                    <div class="flex items-center gap-4 mb-2">
+                        <div class="w-full max-w-xs bg-dark-700/50 rounded-full h-2">
+                            <div
+                                class="bg-gradient-to-r from-primary-500 to-secondary-500 h-2 rounded-full transition-all duration-500 ease-out"
+                                :style="{ width: `${course.progress}%` }"
+                            ></div>
+                        </div>
+                        <span class="text-sm text-dark-300 font-medium whitespace-nowrap">{{ course.progress }}%</span>
                     </div>
-                    <p class="text-sm text-gray-300">{{ course.progress }}% dokončené</p>
                   </div>
-                  <div class="ml-4">
+                  <div class="flex-shrink-0">
                     <router-link
                       v-if="course.progress < 100"
                       :to="{ name: 'CourseStudy', params: { slug: course.slug } }"
-                      class="bg-primary-500 hover:bg-primary-600 text-white px-4 py-2 rounded-xl text-sm font-medium transition duration-200"
+                      class="inline-block w-full sm:w-auto text-center px-6 py-3 bg-primary-600 hover:bg-primary-500 text-white rounded-xl text-sm font-bold transition-all shadow-lg hover:shadow-primary-500/25"
                     >
                       Pokračovať
                     </router-link>
                     <div
                       v-else
-                      class="bg-gray-700 text-gray-400 px-4 py-2 rounded-xl text-sm font-medium cursor-not-allowed"
+                      class="inline-block w-full sm:w-auto text-center px-6 py-3 bg-dark-700 text-dark-300 rounded-xl text-sm font-bold cursor-not-allowed"
                     >
                       Nedostupné
                     </div>
@@ -86,16 +106,18 @@
               </div>
             </div>
 
-            <div v-else class="text-center py-8">
-              <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-              </svg>
-              <h3 class="mt-2 text-sm font-medium text-gray-200">Zatiaľ žiadne kurzy</h3>
-              <p class="mt-1 text-sm text-gray-400">Začnite zapísaním do svojho prvého kurzu.</p>
-              <div class="mt-6">
+            <div v-else class="text-center py-12">
+               <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-dark-800 flex items-center justify-center">
+                    <svg class="h-8 w-8 text-dark-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                    </svg>
+               </div>
+              <h3 class="mt-2 text-lg font-bold text-white">Zatiaľ žiadne kurzy</h3>
+              <p class="mt-1 text-dark-300 font-light">Začnite zapísaním do svojho prvého kurzu.</p>
+              <div class="mt-8">
                 <router-link
                   to="/courses"
-                  class="inline-flex items-center px-4 py-2 bg-primary-500 hover:bg-primary-600 text-white rounded-xl text-sm font-medium transition duration-200"
+                  class="px-8 py-4 bg-primary-600 hover:bg-primary-500 text-white font-bold rounded-2xl transition-all shadow-lg hover:shadow-primary-500/25 inline-flex"
                 >
                   Prehliadať kurzy
                 </router-link>
@@ -104,12 +126,12 @@
           </div>
 
           <!-- Your Courses Section -->
-          <div class="bg-secondary-surface backdrop-blur-xl border border-gray-700/50 rounded-2xl p-6 mt-8">
-            <div class="flex items-center justify-between mb-6">
-              <h2 class="text-xl font-bold text-white">Tvoje kurzy</h2>
+          <div class="bg-dark-900 border border-dark-800 rounded-3xl p-8">
+            <div class="flex items-center justify-between mb-8">
+              <h2 class="text-2xl font-black text-white">Tvoje kurzy</h2>
               <router-link
                 to="/my-courses"
-                class="text-primary-400 hover:text-primary-300 text-sm font-medium"
+                class="px-4 py-2 text-sm font-bold text-dark-300 bg-dark-800 rounded-xl hover:bg-dark-700 hover:text-white transition-all"
               >
                 Zobraziť všetky
               </router-link>
@@ -125,7 +147,8 @@
               <div
                 v-for="course in enrolledCourses.slice(0, 4)"
                 :key="course.id"
-                class="bg-gradient-to-br from-gray-800/40 via-secondary-900/30 to-gray-800/50 backdrop-blur-xl border border-gray-700/50 rounded-xl p-4 hover:border-primary-500/50 transition duration-200"
+                class="group bg-dark-800/30 border border-dark-700/50 rounded-2xl p-4 hover:border-primary-500/30 transition-all duration-300 hover:bg-dark-800/80 cursor-pointer"
+                @click="$router.push({ name: 'CourseStudy', params: { slug: course.slug } })"
               >
                 <div class="flex items-start space-x-4">
                   <!-- Course Thumbnail -->
@@ -134,41 +157,34 @@
                       v-if="course.thumbnail"
                       :src="course.thumbnail"
                       :alt="course.title"
-                      class="w-16 h-12 object-cover rounded-xl"
+                      class="w-20 h-20 object-cover rounded-xl shadow-md group-hover:shadow-primary-500/10 transition-shadow"
                     >
                     <div
                       v-else
-                      class="w-16 h-12 bg-gradient-to-br from-primary-500 to-secondary-500 rounded-xl flex items-center justify-center"
+                      class="w-20 h-20 bg-gradient-to-br from-primary-600 to-secondary-600 rounded-xl flex items-center justify-center shadow-md"
                     >
-                      <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                      <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
                         <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
                       </svg>
                     </div>
                   </div>
                   
                   <!-- Course Info -->
-                  <div class="flex-1 min-w-0">
-                    <h3 class="font-medium text-white truncate mb-1">{{ course.title }}</h3>
-                    <p v-if="course.instructor?.name" class="text-sm text-gray-300 mb-2">{{ course.instructor.name }}</p>
+                  <div class="flex-1 min-w-0 py-1">
+                    <h3 class="font-bold text-white truncate mb-1 group-hover:text-primary-400 transition-colors">{{ course.title }}</h3>
+                    <p v-if="course.instructor?.name" class="text-xs text-dark-400 font-medium uppercase tracking-wider mb-3">{{ course.instructor.name }}</p>
                     
                     <!-- Progress Bar -->
-                    <div class="w-full bg-gray-700/50 rounded-full h-2 mb-2">
+                    <div class="w-full bg-dark-700/50 rounded-full h-1.5 mb-2">
                       <div
-                        class="bg-primary-500 h-2 rounded-full transition-all duration-300"
+                        class="bg-gradient-to-r from-primary-500 to-secondary-500 h-1.5 rounded-full transition-all duration-300"
                         :style="{ width: `${course.enrollment_data?.progress_percentage || 0}%` }"
                       ></div>
                     </div>
                     <div class="flex items-center justify-between">
-                      <span class="text-xs text-gray-400">
+                      <span class="text-xs text-dark-300 font-medium">
                         {{ course.enrollment_data?.progress_percentage || 0 }}% dokončené
                       </span>
-                      <router-link
-                        v-if="course.slug"
-                        :to="{ name: 'CourseStudy', params: { slug: course.slug } }"
-                        class="text-xs text-primary-400 hover:text-primary-300 font-medium"
-                      >
-                        Otvoriť →
-                      </router-link>
                     </div>
                   </div>
                 </div>
@@ -176,16 +192,18 @@
             </div>
             
             <!-- Empty State -->
-            <div v-else class="text-center py-8">
-              <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
-              </svg>
-              <h3 class="mt-2 text-sm font-medium text-gray-200">Žiadne zakúpené kurzy</h3>
-              <p class="mt-1 text-sm text-gray-400">Začnite objavovaním našich kurzov.</p>
+            <div v-else class="text-center py-12">
+                <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-dark-800 flex items-center justify-center">
+                   <svg class="h-8 w-8 text-dark-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+                    </svg>
+                </div>
+              <h3 class="mt-2 text-lg font-bold text-white">Žiadne zakúpené kurzy</h3>
+              <p class="mt-1 text-dark-300 font-light">Začnite objavovaním našich kurzov.</p>
               <div class="mt-6">
                 <router-link
                   to="/courses"
-                  class="inline-flex items-center px-4 py-2 bg-primary-500 hover:bg-primary-600 text-white rounded-xl text-sm font-medium transition duration-200"
+                  class="px-6 py-3 bg-dark-800/50 hover:bg-dark-800 text-white font-bold rounded-xl border border-dark-700 hover:border-dark-600 transition-all text-sm inline-flex items-center"
                 >
                   Prehliadať kurzy
                 </router-link>
@@ -197,24 +215,24 @@
         <!-- Sidebar -->
         <div class="lg:col-span-1">
           <!-- Quick Actions -->
-          <div class="bg-secondary-surface backdrop-blur-xl border border-gray-700/50 rounded-2xl p-6">
-            <h3 class="text-lg font-semibold text-white mb-4">Rýchle akcie</h3>
+          <div class="bg-dark-900 border border-dark-800 rounded-3xl p-6 sticky top-24">
+            <h3 class="text-xl font-black text-white mb-6">Rýchle akcie</h3>
             <div class="space-y-3">
               <router-link
                 to="/courses"
-                class="w-full bg-primary-500 hover:bg-primary-600 text-white px-4 py-2 rounded-xl text-sm font-medium transition duration-200 block text-center"
+                class="w-full bg-primary-600 hover:bg-primary-500 text-white px-5 py-3.5 rounded-xl text-sm font-bold transition-all shadow-lg hover:shadow-primary-500/25 block text-center transform hover:-translate-y-0.5"
               >
                 Prehliadať kurzy
               </router-link>
               <router-link
                 to="/my-courses"
-                class="w-full bg-gradient-to-br from-gray-800/40 via-secondary-900/30 to-gray-800/50 backdrop-blur-xl border border-gray-700/50 hover:border-primary-500/50 text-gray-200 px-4 py-2 rounded-xl text-sm font-medium transition duration-200 block text-center"
+                class="w-full bg-dark-800/50 hover:bg-dark-800 border border-dark-700 hover:border-dark-600 text-white px-5 py-3.5 rounded-xl text-sm font-bold transition-all block text-center backdrop-blur-sm"
               >
                 Moje kurzy
               </router-link>
               <router-link
                 to="/profile"
-                class="w-full bg-gradient-to-br from-gray-800/40 via-secondary-900/30 to-gray-800/50 backdrop-blur-xl border border-gray-700/50 hover:border-primary-500/50 text-gray-200 px-4 py-2 rounded-xl text-sm font-medium transition duration-200 block text-center"
+                class="w-full bg-dark-800/50 hover:bg-dark-800 border border-dark-700 hover:border-dark-600 text-white px-5 py-3.5 rounded-xl text-sm font-bold transition-all block text-center backdrop-blur-sm"
               >
                 Upraviť profil
               </router-link>
@@ -287,3 +305,33 @@ onMounted(() => {
   loadDashboardData()
 })
 </script>
+
+<style scoped>
+/* Animations */
+@keyframes bounce {
+  0%, 100% { transform: translateY(-5%); animation-timing-function: cubic-bezier(0.8, 0, 1, 1); }
+  50% { transform: translateY(0); animation-timing-function: cubic-bezier(0, 0, 0.2, 1); }
+}
+
+@keyframes pulse-slow {
+  0%, 100% { opacity: 0.3; transform: scale(1); }
+  50% { opacity: 0.2; transform: scale(1.1); }
+}
+
+.animate-pulse-slow {
+  animation: pulse-slow 8s infinite ease-in-out;
+}
+
+.delay-500 { animation-delay: 0.5s; }
+.delay-1000 { animation-delay: 1s; }
+
+/* Marquee Animation */
+.marquee-container {
+  animation: marquee 40s linear infinite;
+}
+
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+</style>

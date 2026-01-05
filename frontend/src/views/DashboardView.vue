@@ -276,22 +276,19 @@
 
 <script setup>
 import { computed, onMounted, ref, watch } from 'vue'
-import { useRouter, useRoute } from 'vue-router'
+import { useRoute } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import { useEnrollmentStore } from '@/stores/enrollment'
 import { useCourseStore } from '@/stores/course'
-import { paymentService } from '@/services'
-import { useToast } from 'vue-toastification'
+import { usePurchase } from '@/composables/usePurchase'
 import CourseCatalog from '@/components/course/CourseCatalog.vue'
 import CourseDetail from '@/components/course/CourseDetail.vue'
 import CheckoutLoadingModal from '@/components/ui/CheckoutLoadingModal.vue'
 
-const router = useRouter()
 const route = useRoute()
 const authStore = useAuthStore()
 const enrollmentStore = useEnrollmentStore()
 const courseStore = useCourseStore()
-const toast = useToast()
 
 const user = computed(() => authStore.user)
 
@@ -322,51 +319,12 @@ const handleCatalogSelect = async (course) => {
     }
 }
 
-// Purchase logic (duplicated for now, or could use composable)
-const showCheckoutLoading = ref(false)
-const checkoutCourse = ref(null)
+const { loading: showCheckoutLoading, checkoutCourse, handlePurchase: startPurchase } = usePurchase()
 
-const handlePurchase = async (course) => {
-  if (!authStore.user) {
-    toast.info('Pre nákup kurzu sa musíte prihlásiť.')
-    router.push('/login')
-    return
-  }
-
-  const isPurchased = enrollmentStore.hasPurchasedCourse(course.id)
-  
-  if (isPurchased) {
-    toast.info('Tento kurz už máte zakúpený a nachádza sa v sekcii "Moje kurzy".')
-    return
-  }
-
-  try {
-    checkoutCourse.value = course
-    showCheckoutLoading.value = true
-    
+const handlePurchase = (course) => {
     const successUrl = `${window.location.origin}/payment/success?session_id={CHECKOUT_SESSION_ID}`
-    const cancelUrl = `${window.location.origin}/dashboard` // Return to dashboard
-    
-    // Note: Stripe Checkout redirects away, so state will be lost. 
-    // That's standard.
-    const response = await paymentService.createCheckoutSession(course.id, successUrl, cancelUrl)
-    
-    if (response.checkout_url) {
-      window.location.href = response.checkout_url
-    } else {
-      throw new Error('No checkout URL received')
-    }
-  } catch (error) {
-    console.error('Error creating checkout session:', error)
-    
-    showCheckoutLoading.value = false
-    checkoutCourse.value = null
-    
-    if (import.meta.env.DEV) {
-        const checkoutUrl = `/checkout?courseTitle=${encodeURIComponent(course.title)}&coursePrice=${course.price}&courseId=${course.id}&courseSlug=${encodeURIComponent(course.slug)}`
-        router.push(checkoutUrl)
-    }
-  }
+    const cancelUrl = `${window.location.origin}/dashboard`
+    startPurchase(course, successUrl, cancelUrl)
 }
 
 // Loading state

@@ -1,49 +1,15 @@
 # Build stage
-FROM node:18-alpine AS build
-
-# Set environment variables for build optimization
-ENV NODE_OPTIONS=--max-old-space-size=4096
-ENV NPM_CONFIG_TIMEOUT=300000
-ENV NPM_CONFIG_FETCH_RETRY_MINTIMEOUT=20000
-ENV NPM_CONFIG_FETCH_RETRY_MAXTIMEOUT=120000
-ENV NPM_CONFIG_FETCH_RETRIES=5
-
+FROM node:20-alpine as build-stage
 WORKDIR /app
-
-# Copy package files
 COPY package*.json ./
-
-# Install ALL dependencies with timeout fix
-RUN npm config set registry https://registry.npmjs.org/ && \
-    npm config set timeout 300000 && \
-    npm config set fetch-retry-mintimeout 20000 && \
-    npm config set fetch-retry-maxtimeout 120000 && \
-    npm config set fetch-retries 5 && \
-    for i in 1 2 3; do \
-        npm install && break || { \
-            echo "npm install failed, retry $i/3"; \
-            npm cache clean --force; \
-            sleep 15; \
-        } \
-    done
-
-# Copy source code
+RUN npm ci
 COPY . .
-
-# Build the app
 RUN npm run build
 
 # Production stage
-FROM nginx:alpine AS production
-
-# Copy built app to nginx
-COPY --from=build /app/dist /usr/share/nginx/html
-
-# Copy nginx config
-COPY nginx.conf /etc/nginx/conf.d/default.conf
-
-# Expose port
+FROM nginx:stable-alpine as production-stage
+COPY --from=build-stage /app/dist /usr/share/nginx/html
+# Copy custom nginx config if we create one later
+# COPY nginx.conf /etc/nginx/conf.d/default.conf
 EXPOSE 80
-
-# Start nginx
 CMD ["nginx", "-g", "daemon off;"]

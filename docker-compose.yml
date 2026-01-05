@@ -1,0 +1,96 @@
+services:
+  app:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    image: vidaduacademy-app
+    container_name: vidadu-app
+    restart: unless-stopped
+    working_dir: /var/www
+    volumes:
+      - ./backend:/var/www
+    environment:
+      APP_ENV: production
+    networks:
+      - vidadu-network
+
+  worker:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    image: vidaduacademy-worker
+    container_name: vidadu-worker
+    restart: unless-stopped
+    working_dir: /var/www
+    command: php artisan queue:work --tries=3 --timeout=90
+    volumes:
+      - ./backend:/var/www
+    networks:
+      - vidadu-network
+    depends_on:
+      - app
+      - redis
+      - db
+
+  scheduler:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    image: vidaduacademy-scheduler
+    container_name: vidadu-scheduler
+    restart: unless-stopped
+    working_dir: /var/www
+    command: php artisan schedule:work
+    volumes:
+      - ./backend:/var/www
+    networks:
+      - vidadu-network
+    depends_on:
+      - app
+
+  web:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    image: vidaduacademy-web
+    container_name: vidadu-web
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    volumes:
+      - ./frontend/dist:/usr/share/nginx/html
+    networks:
+      - vidadu-network
+    depends_on:
+      - app
+
+  db:
+    image: mysql:8.0
+    container_name: vidadu-db
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_USER: ${DB_USERNAME}
+      SERVICE_TAGS: dev
+      SERVICE_NAME: mysql
+    volumes:
+      - dbdata:/var/lib/mysql/
+    networks:
+      - vidadu-network
+
+  redis:
+    image: redis:alpine
+    container_name: vidadu-redis
+    restart: unless-stopped
+    networks:
+      - vidadu-network
+
+networks:
+  vidadu-network:
+    driver: bridge
+
+volumes:
+  dbdata:
+    driver: local

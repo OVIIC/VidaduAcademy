@@ -68,41 +68,36 @@
 </template>
 <script setup>
 import { ref, onMounted, computed } from 'vue'
-import { useRouter, useRoute } from 'vue-router'
-import { paymentService } from '@/services'
+import { useRoute } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import { useEnrollmentStore } from '@/stores/enrollment'
 import { useCourseStore } from '@/stores/course'
-import { useToast } from 'vue-toastification'
+import { usePurchase } from '@/composables/usePurchase'
 import CheckoutLoadingModal from '@/components/ui/CheckoutLoadingModal.vue'
 import CourseCatalog from '@/components/course/CourseCatalog.vue'
 import CourseDetail from '@/components/course/CourseDetail.vue'
 
-const router = useRouter()
 const route = useRoute()
 const authStore = useAuthStore()
 const enrollmentStore = useEnrollmentStore()
 const courseStore = useCourseStore()
-const toast = useToast()
 
 // Use course store
 const courses = computed(() => courseStore.courses)
 // loading state is handled inside CourseCatalog for the grid, 
 // but we might use it here if we wanted to show a global loader, 
 // though CourseCatalog handles its own loading.
-const showCheckoutLoading = ref(false)
-const checkoutCourse = ref(null)
+const { loading: purchaseLoading, checkoutCourse, handlePurchase: startPurchase } = usePurchase()
 
-// Selected course for hero section (Disney+ style)
+const showCheckoutLoading = computed(() => purchaseLoading.value)
+
 const selectedCourse = ref(null)
 
-// Computed current course index
 const currentCourseIndex = computed(() => {
   if (!selectedCourse.value || !courses.value.length) return -1
   return courses.value.findIndex(c => c.id === selectedCourse.value.id)
 })
 
-// Navigate to previous/next course
 const navigateCourse = (direction) => {
   const currentIndex = currentCourseIndex.value
   if (currentIndex === -1) return
@@ -119,18 +114,15 @@ const navigateCourse = (direction) => {
   }
 }
 
-// Course selection (smooth transition to hero)
 const selectCourse = async (course) => {
   if (import.meta.env.DEV) console.log('Selecting course:', course.title)
   selectedCourse.value = course
   
-  // Smooth scroll to top to show the new hero
   window.scrollTo({
     top: 0,
     behavior: 'smooth'
   })
   
-  // Update details if needed
   try {
      const fullCourse = await courseStore.fetchCourse(course.slug)
      selectedCourse.value = { ...selectedCourse.value, ...fullCourse }
@@ -146,7 +138,6 @@ const loadCourses = async () => {
     
     if (import.meta.env.DEV) console.log('Courses loaded:', courses.value.length)
     
-    // Check for query param to select specific course
     if (route.query.slug) {
       const found = courses.value.find(c => c.slug === route.query.slug)
       if (found) {
@@ -155,13 +146,11 @@ const loadCourses = async () => {
       }
     }
     
-    // Set first course as selected for hero if no course is selected
     if (courses.value.length > 0 && !selectedCourse.value) {
       selectedCourse.value = courses.value[0]
       if (import.meta.env.DEV) console.log('Set first course as hero:', selectedCourse.value.title)
     }
     
-    // Load purchase status for each course if user is authenticated
     if (authStore.user && courses.value.length > 0) {
       await loadPurchaseStatus()
     }
@@ -180,51 +169,10 @@ const loadPurchaseStatus = async () => {
   }
 }
 
-const handlePurchase = async (course) => {
-  if (!authStore.user) {
-    toast.info('Pre nákup kurzu sa musíte prihlásiť.')
-    router.push('/login')
-    return
-  }
-
-  // Check if course is already purchased
-  const isPurchased = enrollmentStore.hasPurchasedCourse(course.id)
-  
-  if (isPurchased) {
-    toast.info('Tento kurz už máte zakúpený a nachádza sa v sekcii "Moje kurzy".')
-    return
-  }
-
-  try {
-    // Show loading modal
-    checkoutCourse.value = course
-    showCheckoutLoading.value = true
-    
-    if (import.meta.env.DEV) console.log('Creating Stripe checkout session for course:', course.title)
-    
-    // Try to create Stripe checkout session
-    const successUrl = `${window.location.origin}/payment/success?session_id={CHECKOUT_SESSION_ID}`
-    const cancelUrl = `${window.location.origin}/courses?cancelled=true`
-    const response = await paymentService.createCheckoutSession(course.id, successUrl, cancelUrl)
-    
-    if (response.checkout_url) {
-      // Redirect to Stripe Checkout
-      window.location.href = response.checkout_url
-    } else {
-      throw new Error('No checkout URL received')
-    }
-  } catch (error) {
-    console.error('Error creating checkout session:', error)
-    
-    // Hide loading modal on error
-    showCheckoutLoading.value = false
-    checkoutCourse.value = null
-    
-    // Fallback to our simulator for development
-    if (import.meta.env.DEV) console.log('Falling back to simulator checkout')
-    const checkoutUrl = `/checkout?courseTitle=${encodeURIComponent(course.title)}&coursePrice=${course.price}&courseId=${course.id}&courseSlug=${encodeURIComponent(course.slug)}`
-    router.push(checkoutUrl)
-  }
+const handlePurchase = (course) => {
+  const successUrl = `${window.location.origin}/payment/success?session_id={CHECKOUT_SESSION_ID}`
+  const cancelUrl = `${window.location.origin}/courses?cancelled=true`
+  startPurchase(course, successUrl, cancelUrl)
 }
 
 onMounted(() => {

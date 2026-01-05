@@ -1,14 +1,6 @@
 <template>
-  <div class="min-h-screen bg-dark-950 text-white font-sans selection:bg-primary-500 selection:text-white">
-    <!-- Background Effects -->
-    <div class="fixed inset-0 overflow-hidden pointer-events-none z-0">
-        <div class="absolute -top-[500px] -left-1/4 w-[1000px] h-[1000px] bg-primary-600/20 rounded-full blur-[120px] opacity-30 animate-pulse-slow"></div>
-        <!-- Middle Blob -->
-        <div class="absolute top-[40%] -right-1/4 w-[800px] h-[800px] bg-secondary-600/10 rounded-full blur-[100px] opacity-30 animate-pulse-slow delay-500"></div>
-        <!-- Bottom Blob -->
-        <div class="absolute -bottom-[200px] -left-1/4 w-[800px] h-[800px] bg-primary-600/20 rounded-full blur-[120px] opacity-30 animate-pulse-slow delay-1000"></div>
-        <div class="absolute top-0 left-0 w-full h-full bg-[url('/images/grid-pattern.svg')] bg-repeat opacity-[0.03]"></div>
-    </div>
+  <div class="text-white font-sans selection:bg-primary-500 selection:text-white">
+
 
     <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pt-24">
       <!-- Header (Hidden in Detail View for immersive experience or handled inside Detail) -->
@@ -27,7 +19,7 @@
             <div class="group bg-dark-900 border border-dark-800 hover:border-primary-500/30 rounded-3xl p-6 transition-all duration-300 hover:bg-dark-800/50">
             <div class="flex items-center">
                 <div class="w-20 h-20 rounded-2xl bg-gradient-to-br from-primary-500/10 to-purple-500/10 flex items-center justify-center mr-6 group-hover:scale-110 transition-transform duration-300">
-                    <img src="/images/enrolled-courses-3d.jpg" alt="Zapísané kurzy" class="w-16 h-16 object-contain" />
+                    <BookOpenIcon class="w-10 h-10 text-primary-400" />
                 </div>
                 <div>
                 <h2 class="text-sm text-dark-400 font-bold uppercase tracking-wider mb-1">Zapísané kurzy</h2>
@@ -39,7 +31,7 @@
             <div class="group bg-dark-900 border border-dark-800 hover:border-secondary-500/30 rounded-3xl p-6 transition-all duration-300 hover:bg-dark-800/50">
             <div class="flex items-center">
                 <div class="w-20 h-20 rounded-2xl bg-gradient-to-br from-secondary-500/10 to-orange-500/10 flex items-center justify-center mr-6 group-hover:scale-110 transition-transform duration-300">
-                    <img src="/images/completed-courses-3d.png" alt="Dokončené" class="w-16 h-16 object-contain" />
+                    <CheckBadgeIcon class="w-10 h-10 text-secondary-400" />
                 </div>
                 <div>
                 <h2 class="text-sm text-dark-400 font-bold uppercase tracking-wider mb-1">Dokončené</h2>
@@ -51,7 +43,7 @@
             <div class="group bg-dark-900 border border-dark-800 hover:border-emerald-500/30 rounded-3xl p-6 transition-all duration-300 hover:bg-dark-800/50">
             <div class="flex items-center">
                 <div class="w-20 h-20 rounded-2xl bg-gradient-to-br from-emerald-500/10 to-green-500/10 flex items-center justify-center mr-6 group-hover:scale-110 transition-transform duration-300">
-                    <img src="/images/certificates-3d.png" alt="Certifikáty" class="w-16 h-16 object-contain" />
+                    <AcademicCapIcon class="w-10 h-10 text-emerald-400" />
                 </div>
                 <div>
                 <h2 class="text-sm text-dark-400 font-bold uppercase tracking-wider mb-1">Certifikáty</h2>
@@ -284,6 +276,7 @@ import { usePurchase } from '@/composables/usePurchase'
 import CourseCatalog from '@/components/course/CourseCatalog.vue'
 import CourseDetail from '@/components/course/CourseDetail.vue'
 import CheckoutLoadingModal from '@/components/ui/CheckoutLoadingModal.vue'
+import { BookOpenIcon, CheckBadgeIcon, AcademicCapIcon } from '@heroicons/vue/24/outline'
 
 const route = useRoute()
 const authStore = useAuthStore()

@@ -1,13 +1,7 @@
 <template>
-  <div class="min-h-screen bg-dark-950 text-white py-8 relative overflow-hidden">
-    <!-- Background Effects -->
-    <div class="fixed inset-0 overflow-hidden pointer-events-none z-0">
-        <div class="absolute -top-[500px] -left-1/4 w-[1000px] h-[1000px] bg-primary-600/20 rounded-full blur-[120px] opacity-30 animate-pulse-slow"></div>
-        <div class="absolute top-[40%] -right-1/4 w-[800px] h-[800px] bg-secondary-600/10 rounded-full blur-[100px] opacity-30 animate-pulse-slow delay-500"></div>
-        <div class="absolute -bottom-[200px] -left-1/4 w-[800px] h-[800px] bg-primary-600/20 rounded-full blur-[120px] opacity-30 animate-pulse-slow delay-1000"></div>
-        <div class="absolute top-0 left-0 w-full h-full bg-[url('/images/grid-pattern.svg')] bg-repeat opacity-[0.03]"></div>
-    </div>
+  <div class="py-8 relative overflow-hidden">
     <div class="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+
       <!-- Header -->
       <div class="mb-8">
         <h1 class="text-3xl font-black text-white">Profil používateľa</h1>

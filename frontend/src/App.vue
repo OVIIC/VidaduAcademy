@@ -142,8 +142,8 @@ body {
 }
 
 /* Focus styles for accessibility */
-*:focus {
-  outline: 2px solid #6366f1;
+*:focus-visible {
+  outline: 2px solid #ED6F55;
   outline-offset: 2px;
 }
 

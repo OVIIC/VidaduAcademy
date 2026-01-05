@@ -1,6 +1,6 @@
 <template>
   <aside 
-    class="relative z-30 m-4 h-[calc(100vh-2rem)] hidden md:flex flex-col shrink-0 transition-all duration-300 ease-in-out p-4 rounded-3xl border border-dark-700/50 bg-dark-900/80 backdrop-blur-xl shadow-2xl"
+    class="relative z-30 m-4 h-[calc(100vh-2rem)] hidden md:flex flex-col shrink-0 transition-all duration-300 ease-in-out p-4 rounded-3xl border border-dark-700/50 bg-dark-900/80 backdrop-blur-xl shadow-2xl select-none"
     :class="[isCollapsed ? 'w-24' : 'w-72']"
   >
     <!-- Header -->
@@ -38,7 +38,7 @@
         <a
           :href="href"
           @click="navigate"
-          class="group flex items-center px-4 py-3 text-sm font-medium rounded-2xl transition-all duration-300 whitespace-nowrap relative overflow-hidden focus:outline-none"
+          class="group flex items-center px-4 py-3 text-sm font-medium rounded-2xl transition-all duration-300 whitespace-nowrap relative overflow-hidden focus:outline-none focus:ring-0"
           :class="[
             isItemActive(item.href)
               ? 'bg-white/10 text-white shadow-inner'

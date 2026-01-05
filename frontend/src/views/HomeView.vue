@@ -82,7 +82,7 @@
                 Najdetailnejšie kurzy ktoré nájdeš online
             </h2>
             <p class="text-sm text-dark-50 font-extralight">
-                Vidadu tím má za sebou 15 rokov práce s top tvorcami. Naše skúsenosti sme pretavili do praktických kurzov pre každého, kto to s tvorbou myslí vážne.
+                Odhalili sme stratégie, ktoré fungujú tým najlepším, a zabalili ich do zrozumiteľnej formy. Žiadna zbytočná teória, iba funkčné postupy.
             </p>
             </div>
 

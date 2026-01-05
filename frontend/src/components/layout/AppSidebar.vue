@@ -33,14 +33,14 @@
         :key="item.name"
         :to="item.href"
         custom
-        v-slot="{ href, navigate, isActive }"
+        v-slot="{ href, navigate }"
       >
         <a
           :href="href"
           @click="navigate"
           class="group flex items-center px-4 py-3 text-sm font-medium rounded-2xl transition-all duration-300 whitespace-nowrap relative overflow-hidden focus:outline-none"
           :class="[
-            isActive
+            isItemActive(item.href)
               ? 'bg-white/10 text-white shadow-inner'
               : 'text-gray-400 hover:bg-white/5 hover:text-white',
             isCollapsed ? 'justify-center px-0 w-12 h-12 mx-auto' : ''
@@ -51,7 +51,7 @@
             :is="item.icon" 
             class="h-5 w-5 flex-shrink-0 transition-colors duration-200"
             :class="[
-              isActive ? 'text-white' : 'text-gray-500 group-hover:text-white',
+              isItemActive(item.href) ? 'text-white' : 'text-gray-500 group-hover:text-white',
               isCollapsed ? '' : 'mr-3'
             ]"
           />
@@ -143,17 +143,19 @@
 
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import { 
   HomeIcon, 
   BookOpenIcon, 
   UserIcon,
   ChevronLeftIcon,
-  ChevronRightIcon
+  ChevronRightIcon,
+  Squares2X2Icon
 } from '@heroicons/vue/24/outline'
 
 const router = useRouter()
+const route = useRoute()
 const authStore = useAuthStore()
 const isCollapsed = ref(false)
 const showUserMenu = ref(false)
@@ -165,9 +167,28 @@ const toggleCollapse = () => {
 
 const navigation = [
   { name: 'Dashboard', href: '/dashboard', icon: HomeIcon },
+  { name: 'Katalóg kurzov', href: '/dashboard?tab=catalog', icon: Squares2X2Icon },
   { name: 'Moje kurzy', href: '/my-courses', icon: BookOpenIcon },
   { name: 'Profil', href: '/profile', icon: UserIcon },
 ]
+
+const isItemActive = (href) => {
+  // If href contains query params, check full match
+  if (href.includes('?')) {
+    const [path, query] = href.split('?')
+    const params = new URLSearchParams(query)
+    const tab = params.get('tab')
+    return route.path === path && route.query.tab === tab
+  }
+  
+  // Special case for Dashboard root (should act as 'overview' default)
+  if (href === '/dashboard') {
+    return route.path === '/dashboard' && (!route.query.tab || route.query.tab === 'overview')
+  }
+
+  // Default exact match on path (or starts with for subroutes, but here paths are distinct)
+  return route.path.startsWith(href)
+}
 
 const userInitials = computed(() => {
   const name = authStore.user?.name || ''

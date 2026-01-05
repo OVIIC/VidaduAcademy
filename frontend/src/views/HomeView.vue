@@ -174,7 +174,7 @@
             <!-- Feature 1 -->
             <div class="group p-8 rounded-3xl bg-dark-900 border border-dark-800 hover:border-primary-500/30 transition-all duration-300 hover:bg-dark-800/50">
                 <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary-500/20 to-purple-500/20 flex items-center justify-center mb-8 group-hover:scale-110 transition-transform duration-300">
-                <UserGroupIcon class="w-8 h-8 text-primary-400" />
+                <TrophyIcon class="w-8 h-8 text-primary-400" />
                 </div>
                 <h3 class="text-2xl font-bold text-white mb-4">15 rokov v prvej línii</h3>
                 <p class="text-dark-300 leading-relaxed font-extralight">
@@ -185,7 +185,7 @@
             <!-- Feature 2 -->
             <div class="group p-8 rounded-3xl bg-dark-900 border border-dark-800 hover:border-primary-500/30 transition-all duration-300 hover:bg-dark-800/50">
                 <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500/20 to-cyan-500/20 flex items-center justify-center mb-8 group-hover:scale-110 transition-transform duration-300">
-                <ChartBarIcon class="w-8 h-8 text-blue-400" />
+                <RocketLaunchIcon class="w-8 h-8 text-blue-400" />
                 </div>
                 <h3 class="text-2xl font-bold text-white mb-4">Prax nad teóriu</h3>
                 <p class="text-dark-300 leading-relaxed font-extralight">
@@ -196,7 +196,7 @@
             <!-- Feature 3 -->
             <div class="group p-8 rounded-3xl bg-dark-900 border border-dark-800 hover:border-primary-500/30 transition-all duration-300 hover:bg-dark-800/50">
                 <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-green-500/20 to-emerald-500/20 flex items-center justify-center mb-8 group-hover:scale-110 transition-transform duration-300">
-                <ShieldCheckIcon class="w-8 h-8 text-emerald-400" />
+                <CubeTransparentIcon class="w-8 h-8 text-emerald-400" />
                 </div>
                 <h3 class="text-2xl font-bold text-white mb-4">Kompletný ekosystém</h3>
                 <p class="text-dark-300 leading-relaxed font-extralight">
@@ -430,9 +430,9 @@ import { ref, onMounted, onUnmounted, computed } from 'vue'
 import {
   ArrowRightIcon,
   PlayCircleIcon,
-  UserGroupIcon,
-  ChartBarIcon,
-  ShieldCheckIcon,
+  TrophyIcon,
+  RocketLaunchIcon,
+  CubeTransparentIcon,
   ChevronDownIcon,
   UserPlusIcon,
   AcademicCapIcon

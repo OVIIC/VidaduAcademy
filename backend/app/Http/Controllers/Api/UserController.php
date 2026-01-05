@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Log;
 
 class UserController extends Controller
 {
@@ -110,7 +111,7 @@ class UserController extends Controller
         // Get completed courses as certificates
         $certificates = $user->enrollments()
             ->with('course')
-            ->where('progress', 100)
+            ->where('progress_percentage', 100)
             ->get()
             ->map(function ($enrollment) {
                 return [
@@ -143,53 +144,37 @@ class UserController extends Controller
             ->where('progress_percentage', 100)
             ->firstOrFail();
 
-        // Generate a simple HTML certificate
-        $html = '
-            <!DOCTYPE html>
-            <html>
-            <head>
-                <meta charset="utf-8">
-                <title>Certificate of Completion</title>
-                <style>
-                    body { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; text-align: center; padding: 50px; background: #f0f2f5; }
-                    .certificate { max-width: 800px; margin: 0 auto; background: white; padding: 60px; border: 20px solid #3b82f6; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
-                    .header { font-size: 40px; font-weight: bold; color: #1e3a8a; margin-bottom: 20px; }
-                    .sub-header { font-size: 24px; color: #6b7280; margin-bottom: 40px; }
-                    .recipient { font-size: 48px; font-weight: bold; color: #111827; margin-bottom: 20px; border-bottom: 2px solid #e5e7eb; display: inline-block; padding-bottom: 10px; }
-                    .course-name { font-size: 32px; font-weight: bold; color: #3b82f6; margin-bottom: 40px; }
-                    .date { font-size: 18px; color: #6b7280; margin-top: 60px; }
-                    .signature { margin-top: 60px; display: flex; justify-content: space-around; }
-                    .sig-line { border-top: 1px solid #9ca3af; width: 200px; padding-top: 10px; font-size: 16px; color: #4b5563; }
-                    @media print {
-                        body { background: white; padding: 0; }
-                        .certificate { border: 10px solid #3b82f6; box-shadow: none; }
-                    }
-                </style>
-            </head>
-            <body>
-                <div class="certificate">
-                    <div class="header">CERTIFICATE OF COMPLETION</div>
-                    <div class="sub-header">This is to certify that</div>
-                    <div class="recipient">' . htmlspecialchars($user->name) . '</div>
-                    <div class="sub-header">has successfully completed the course</div>
-                    <div class="course-name">' . htmlspecialchars($enrollment->course->title) . '</div>
-                    <div class="date">Completed on ' . $enrollment->completed_at->format('F j, Y') . '</div>
-                    
-                    <div class="signature">
-                        <div class="sig-block">
-                            <div class="sig-line">VidaduAcademy Instructor</div>
-                        </div>
-                        <div class="sig-block">
-                            <div class="sig-line">Director of Education</div>
-                        </div>
-                    </div>
-                </div>
-                <script>window.print();</script>
-            </body>
-            </html>
-        ';
+        $data = [
+            'student_name' => $user->name,
+            'course_title' => $enrollment->course->title,
+            'date' => $enrollment->completed_at ? $enrollment->completed_at->format('d.m.Y') : now()->format('d.m.Y'),
+            'certificate_id' => 'VID-' . strtoupper(substr(md5($enrollment->id), 0, 8)),
+        ];
 
-        return response($html);
+        // If 'view' is present, just show the HTML (for debugging)
+        if ($request->has('view')) {
+            return view('certificates.premium', $data);
+        }
+
+        try {
+            $pdf = \Spatie\Browsershot\Browsershot::html(view('certificates.premium', $data)->render())
+                ->setOption('args', ['--no-sandbox', '--disable-setuid-sandbox'])
+                ->windowSize(1123, 794) // A4 Landscape at ~96 DPI
+                ->format('A4')
+                ->landscape()
+                ->margins(0, 0, 0, 0)
+                ->showBackground()
+                ->pdf();
+                
+            return response($pdf)
+                ->header('Content-Type', 'application/pdf')
+                ->header('Content-Disposition', 'attachment; filename="certificate-' . $enrollment->course->slug . '.pdf"');
+        } catch (\Exception $e) {
+            \Log::error('Certificate PDF generation failed: ' . $e->getMessage());
+            
+            // Fallback to HTML if PDF fails (e.g. node missing)
+            return response(view('certificates.premium', $data)->render());
+        }
     }
 
     /**

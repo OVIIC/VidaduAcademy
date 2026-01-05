@@ -493,7 +493,7 @@
                     </p>
                   </div>
                   <button
-                    @click="downloadCertificate(certificate.id)"
+                    @click="downloadCertificate(certificate.id, certificate.course_slug)"
                     class="bg-primary-500 hover:bg-primary-600 text-white px-4 py-2 rounded-xl text-sm font-medium transition duration-200"
                   >
                     Stiahnuť
@@ -778,14 +778,31 @@ export default {
       }
     }
 
-    const downloadCertificate = async (certificateId) => {
+    const downloadCertificate = async (certificateId, courseSlug) => {
       try {
-        const response = await api.get(`/user/certificate/${certificateId}/download`)
-        if (import.meta.env.DEV) console.log('Certificate download:', response.data)
+        const response = await api.get(`/user/certificate/${certificateId}/download`, {
+          responseType: 'blob', // Important for handling binary data
+        })
         
-        toast.info('Funkcia sťahovania certifikátov bude čoskoro implementovaná.')
+        // Create a URL for the blob
+        const url = window.URL.createObjectURL(new Blob([response.data]))
+        const link = document.createElement('a')
+        link.href = url
+        
+        // Set filename
+        const filename = `certificate-${courseSlug || 'download'}.pdf`
+        link.setAttribute('download', filename)
+        
+        // Append to body, click, and cleanup
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
+        window.URL.revokeObjectURL(url)
+        
+        toast.success('Certifikát bol úspešne stiahnutý!')
       } catch (error) {
         console.error('Error downloading certificate:', error)
+        toast.error('Nepodarilo sa stiahnuť certifikát.')
       }
     }
 

@@ -89,7 +89,10 @@ class AuthController extends Controller
                 );
                 
                 return response()->json([
-                    'message' => 'A user with this email already exists.'
+                    'message' => 'The given data was invalid.',
+                    'errors' => [
+                        'email' => ['A user with this email already exists.']
+                    ]
                 ], 422);
             }
 

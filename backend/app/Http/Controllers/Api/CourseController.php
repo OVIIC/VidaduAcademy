@@ -43,8 +43,8 @@ class CourseController extends Controller
                 } else {
                     // Fallback to LIKE search
                     $query->where(function ($q) use ($search) {
-                        $q->where('title', 'ILIKE', "%{$search}%")
-                          ->orWhere('description', 'ILIKE', "%{$search}%");
+                        $q->where('title', 'LIKE', "%{$search}%")
+                          ->orWhere('description', 'LIKE', "%{$search}%");
                     });
                 }
             }
@@ -222,9 +222,9 @@ class CourseController extends Controller
                           ->orWhere('title', 'LIKE', "%{$searchTerm}%");
                 } else {
                     $query->where(function ($q) use ($searchTerm) {
-                        $q->where('title', 'ILIKE', "%{$searchTerm}%")
-                          ->orWhere('description', 'ILIKE', "%{$searchTerm}%")
-                          ->orWhere('short_description', 'ILIKE', "%{$searchTerm}%");
+                        $q->where('title', 'LIKE', "%{$searchTerm}%")
+                          ->orWhere('description', 'LIKE', "%{$searchTerm}%")
+                          ->orWhere('short_description', 'LIKE', "%{$searchTerm}%");
                     });
                 }
             }

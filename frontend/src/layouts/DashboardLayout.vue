@@ -1,14 +1,6 @@
 <template>
   <div class="h-screen flex bg-dark-950 overflow-hidden relative">
-    <!-- Background Effects (Persistent) -->
-    <div class="fixed inset-0 overflow-hidden pointer-events-none z-0">
-        <div class="absolute -top-[500px] -left-1/4 w-[1000px] h-[1000px] bg-primary-600/20 rounded-full blur-[120px] opacity-30 animate-pulse-slow"></div>
-        <!-- Middle Blob -->
-        <div class="absolute top-[40%] -right-1/4 w-[800px] h-[800px] bg-secondary-600/10 rounded-full blur-[100px] opacity-30 animate-pulse-slow delay-500"></div>
-        <!-- Bottom Blob -->
-        <div class="absolute -bottom-[200px] -left-1/4 w-[800px] h-[800px] bg-primary-600/20 rounded-full blur-[120px] opacity-30 animate-pulse-slow delay-1000"></div>
-        <div class="absolute top-0 left-0 w-full h-full bg-[url('/images/grid-pattern.svg')] bg-repeat opacity-[0.03]"></div>
-    </div>
+
     <AppSidebar class="hidden md:flex" />
     
     <div class="flex-1 flex flex-col min-w-0 overflow-hidden">

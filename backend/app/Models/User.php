@@ -90,16 +90,13 @@ class User extends Authenticatable
 
     public function hasPurchased(Course $course): bool
     {
-        // Check if user has completed purchase AND is currently enrolled
-        $hasCompletedPurchase = $this->purchases()
+        // Check if user has completed purchase
+        // We do NOT check for enrollment here, as the controller uses this check
+        // to automatically recreate enrollment if it's missing for a paid user
+        return $this->purchases()
             ->where('course_id', $course->id)
             ->where('status', 'completed')
             ->exists();
-        
-        $isCurrentlyEnrolled = $this->isEnrolledIn($course);
-        
-        // User has access only if they both purchased and are enrolled
-        return $hasCompletedPurchase && $isCurrentlyEnrolled;
     }
 
     /**

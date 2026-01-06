@@ -1,0 +1,28 @@
+{
+email your-email@example.com
+}
+
+your-domain.com {
+encode zstd gzip
+
+    # Serve Laravel public storage files
+    handle /storage/* {
+        root * /var/www/public
+        file_server
+    }
+
+    # Handle API routes and other Laravel specific paths
+    @laravel {
+        path /api/* /sanctum/* /up
+    }
+    handle @laravel {
+        root * /var/www/public
+        php_fastcgi app:9000
+    }
+
+    # Everything else routes to the Vue frontend (served by Nginx)
+    handle {
+        reverse_proxy web:80
+    }
+
+}

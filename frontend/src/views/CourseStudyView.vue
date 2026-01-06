@@ -1,14 +1,6 @@
 <template>
   <div class="min-h-screen bg-dark-950 text-white font-sans selection:bg-primary-500 selection:text-white">
-    <!-- Background Effects -->
-    <div class="fixed inset-0 overflow-hidden pointer-events-none z-0">
-        <div class="absolute -top-[500px] -left-1/4 w-[1000px] h-[1000px] bg-primary-600/20 rounded-full blur-[120px] opacity-30 animate-pulse-slow"></div>
-        <!-- Middle Blob -->
-        <div class="absolute top-[40%] -right-1/4 w-[800px] h-[800px] bg-secondary-600/10 rounded-full blur-[100px] opacity-30 animate-pulse-slow delay-500"></div>
-        <!-- Bottom Blob -->
-        <div class="absolute -bottom-[200px] -left-1/4 w-[800px] h-[800px] bg-primary-600/20 rounded-full blur-[120px] opacity-30 animate-pulse-slow delay-1000"></div>
-        <div class="absolute top-0 left-0 w-full h-full bg-[url('/images/grid-pattern.svg')] bg-repeat opacity-[0.03]"></div>
-    </div>
+
 
     <div class="relative z-10">
       <!-- Loading -->
@@ -450,6 +442,13 @@ import { useToast } from 'vue-toastification'
 import { learningService, authService } from '@/services'
 import { useEnrollmentStore } from '@/stores/enrollment'
 
+const props = defineProps({
+  slug: {
+    type: String,
+    default: ''
+  }
+})
+
 const route = useRoute()
 const toast = useToast()
 
@@ -514,8 +513,14 @@ const selectedLessonIndex = computed(() => {
 const loadCourseContent = async () => {
   loading.value = true
   try {
-    if (import.meta.env.DEV) console.log('Loading course content for slug:', route.params.slug)
-    const response = await learningService.getCourseContent(route.params.slug)
+    const courseSlug = props.slug || route?.params?.slug
+    if (import.meta.env.DEV) console.log('Loading course content for slug:', courseSlug)
+    
+    if (!courseSlug) {
+      throw new Error('Course slug is missing')
+    }
+
+    const response = await learningService.getCourseContent(courseSlug)
     if (import.meta.env.DEV) console.log('Course content response:', response)
     
     course.value = response.course || response

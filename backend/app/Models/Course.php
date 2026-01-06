@@ -122,4 +122,24 @@ class Course extends Model
         
         return $decoded;
     }
+
+    public function getThumbnailAttribute($value)
+    {
+        if (!$value) {
+            return null;
+        }
+
+        // Check if it's already a complete URL
+        if (filter_var($value, FILTER_VALIDATE_URL) || str_starts_with($value, 'http')) {
+            return $value;
+        }
+
+        // Fix for broken Unsplash URLs (missing domain) caused by some data import/truncation
+        if (str_starts_with($value, 'photo-')) {
+            return 'https://images.unsplash.com/' . $value;
+        }
+
+        // Otherwise assume it's a local storage path and return full URL
+        return asset('storage/' . $value);
+    }
 }

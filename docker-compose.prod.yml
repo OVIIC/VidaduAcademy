@@ -1,0 +1,116 @@
+version: "3.8"
+
+services:
+  app:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    image: vidaduacademy-app
+    container_name: vidadu-app
+    restart: always
+    working_dir: /var/www
+    volumes:
+      - ./backend:/var/www
+    environment:
+      APP_ENV: production
+      APP_DEBUG: "false"
+      APP_URL: "https://${DOMAIN_NAME:-vidadu.sk}"
+
+      # SQLite Configuration
+      DB_CONNECTION: sqlite
+      DB_DATABASE: /var/www/database/database.sqlite
+
+      # Driver adjustments for low RAM
+      BROADCAST_DRIVER: log
+      CACHE_DRIVER: file
+      FILESYSTEM_DISK: local
+      QUEUE_CONNECTION: database
+      SESSION_DRIVER: file
+      SESSION_LIFETIME: 120
+
+    networks:
+      - vidadu-network
+
+  worker:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    image: vidaduacademy-worker
+    container_name: vidadu-worker
+    restart: always
+    working_dir: /var/www
+    command: php artisan queue:work --tries=3 --timeout=90
+    volumes:
+      - ./backend:/var/www
+    environment:
+      APP_ENV: production
+      DB_CONNECTION: sqlite
+      DB_DATABASE: /var/www/database/database.sqlite
+      CACHE_DRIVER: file
+      QUEUE_CONNECTION: database
+      SESSION_DRIVER: file
+    networks:
+      - vidadu-network
+    depends_on:
+      - app
+
+  scheduler:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    image: vidaduacademy-scheduler
+    container_name: vidadu-scheduler
+    restart: always
+    working_dir: /var/www
+    command: php artisan schedule:work
+    volumes:
+      - ./backend:/var/www
+    environment:
+      APP_ENV: production
+      DB_CONNECTION: sqlite
+      DB_DATABASE: /var/www/database/database.sqlite
+    networks:
+      - vidadu-network
+    depends_on:
+      - app
+
+  web:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    image: vidaduacademy-web
+    container_name: vidadu-web
+    restart: always
+    volumes:
+      - ./frontend/dist:/usr/share/nginx/html
+    networks:
+      - vidadu-network
+    depends_on:
+      - app
+
+  caddy:
+    image: caddy:latest
+    container_name: vidadu-caddy
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - ./frontend/dist:/usr/share/caddy
+      - ./backend:/var/www # Mount backend to serve storage/public files
+      - caddy_data:/data
+      - caddy_config:/config
+    networks:
+      - vidadu-network
+    depends_on:
+      - web
+      - app
+
+networks:
+  vidadu-network:
+    driver: bridge
+
+volumes:
+  caddy_data:
+  caddy_config:

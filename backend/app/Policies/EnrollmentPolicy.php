@@ -28,7 +28,7 @@ class EnrollmentPolicy
 
         if ($user->can('view enrollments')) {
             // Check if the enrollment belongs to a course taught by this instructor
-            $course = Course::find($enrollment->course_id);
+            $course = $enrollment->course;
             return $course && $course->instructor_id === $user->id;
         }
 
@@ -54,7 +54,7 @@ class EnrollmentPolicy
 
         if ($user->can('edit enrollments')) {
             // Check if the enrollment belongs to a course taught by this instructor
-            $course = Course::find($enrollment->course_id);
+            $course = $enrollment->course;
             return $course && $course->instructor_id === $user->id;
         }
 
@@ -72,7 +72,7 @@ class EnrollmentPolicy
 
         if ($user->can('delete enrollments')) {
             // Check if the enrollment belongs to a course taught by this instructor
-            $course = Course::find($enrollment->course_id);
+            $course = $enrollment->course;
             return $course && $course->instructor_id === $user->id;
         }
 

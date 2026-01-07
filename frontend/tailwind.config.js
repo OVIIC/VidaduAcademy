@@ -1,3 +1,6 @@
+import forms from '@tailwindcss/forms'
+import typography from '@tailwindcss/typography'
+
 /** @type {import('tailwindcss').Config} */
 export default {
   content: [
@@ -21,37 +24,58 @@ export default {
     extend: {
       colors: {
         primary: {
-          50: '#fef2f0',
-          100: '#fde4e0',
-          200: '#fcccc6',
-          300: '#f9a89e',
-          400: '#f47866',
-          500: '#ED6F55',
-          600: '#e55a41',
-          700: '#d34626',
-          800: '#b03621',
-          900: '#92301f',
-          950: '#50170d',
+          50: '#fff5f3',
+          100: '#ffe8e4',
+          200: '#ffd4cc',
+          300: '#ffb2a6',
+          400: '#ff8575',
+          500: '#ED6F55', // Updated Brand Orange
+          600: '#db563c',
+          700: '#b83e26',
+          800: '#993322',
+          900: '#7f2d20',
+          950: '#45150e',
         },
         secondary: {
-          50: '#f7f6f9',
-          100: '#efebf3',
-          200: '#e1dbe9',
-          300: '#cbbfd8',
-          400: '#af9bc2',
-          500: '#957aac',
-          600: '#7d6195',
-          700: '#6b507e',
-          800: '#5a4369',
-          900: '#3B3157',
-          950: '#2a1f3a',
+          50: '#f5f4f7',
+          100: '#e8e6eb',
+          200: '#d0cdd9',
+          300: '#aba6bf',
+          400: '#837da1',
+          500: '#645d85',
+          600: '#4e4869',
+          700: '#3e3954', // Card background
+          800: '#3B3157', // Main background
+          900: '#252238', // Darker background
+          950: '#151321',
+          surface: '#585070', // Custom surface color
+        },
+        dark: {
+          50: '#f6f6f7',
+          100: '#eef0f2',
+          200: '#dce0e5',
+          300: '#c0c6d0',
+          400: '#9fa8b8',
+          500: '#7e899f',
+          600: '#606a7f',
+          700: '#495162',
+          800: '#3B3157', // Match Main Background
+          900: '#252238', // Match Darker Background
+          950: '#151321',
+        },
+        brand: {
+          yellow: '#f9c851',
+          green: '#90e0c4',
+          blue: '#5d9cec',
+          pink: '#ff8fb1',
         },
         youtube: {
           red: '#FF0000',
         },
       },
       fontFamily: {
-        sans: ['Inter', 'system-ui', 'sans-serif'],
+        sans: ['SetupSans', 'Inter', 'system-ui', 'sans-serif'],
+        setup: ['SetupSans', 'Inter', 'system-ui', 'sans-serif'],
       },
       spacing: {
         '18': '4.5rem',
@@ -118,7 +142,7 @@ export default {
     },
   },
   plugins: [
-    require('@tailwindcss/forms'),
-    require('@tailwindcss/typography'),
+    forms,
+    typography,
   ],
 }

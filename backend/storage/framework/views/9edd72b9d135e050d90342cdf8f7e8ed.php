@@ -1,21 +1,28 @@
-<?php $attributes ??= new \Illuminate\View\ComponentAttributeBag; ?>
-<?php foreach($attributes->onlyProps([
+<?php $attributes ??= new \Illuminate\View\ComponentAttributeBag;
+
+$__newAttributes = [];
+$__propNames = \Illuminate\View\ComponentAttributeBag::extractPropNames(([
     'footer' => null,
     'header' => null,
     'headerGroups' => null,
     'reorderable' => false,
     'reorderAnimationDuration' => 300,
-]) as $__key => $__value) {
-    $$__key = $$__key ?? $__value;
-} ?>
-<?php $attributes = $attributes->exceptProps([
-    'footer' => null,
-    'header' => null,
-    'headerGroups' => null,
-    'reorderable' => false,
-    'reorderAnimationDuration' => 300,
-]); ?>
-<?php foreach (array_filter(([
+]));
+
+foreach ($attributes->all() as $__key => $__value) {
+    if (in_array($__key, $__propNames)) {
+        $$__key = $$__key ?? $__value;
+    } else {
+        $__newAttributes[$__key] = $__value;
+    }
+}
+
+$attributes = new \Illuminate\View\ComponentAttributeBag($__newAttributes);
+
+unset($__propNames);
+unset($__newAttributes);
+
+foreach (array_filter(([
     'footer' => null,
     'header' => null,
     'headerGroups' => null,
@@ -23,12 +30,15 @@
     'reorderAnimationDuration' => 300,
 ]), 'is_string', ARRAY_FILTER_USE_KEY) as $__key => $__value) {
     $$__key = $$__key ?? $__value;
-} ?>
-<?php $__defined_vars = get_defined_vars(); ?>
-<?php foreach ($attributes as $__key => $__value) {
+}
+
+$__defined_vars = get_defined_vars();
+
+foreach ($attributes->all() as $__key => $__value) {
     if (array_key_exists($__key, $__defined_vars)) unset($$__key);
-} ?>
-<?php unset($__defined_vars); ?>
+}
+
+unset($__defined_vars); ?>
 
 <table
     <?php echo e($attributes->class(['fi-ta-table w-full table-auto divide-y divide-gray-200 text-start dark:divide-white/5'])); ?>

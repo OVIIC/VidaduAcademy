@@ -1,5 +1,5 @@
 <template>
-  <div id="app" class="min-h-screen flex flex-col">
+  <div id="app">
     <!-- Skip to main content link for accessibility -->
     <a 
       href="#main-content" 
@@ -8,26 +8,19 @@
       Preskočiť na hlavný obsah
     </a>
     
-    <AppNavigationMobile />
-    
-    <main id="main-content" class="flex-1 pt-16 pb-safe-bottom">
-      <!-- pt-16 compenzuje fixed navigation výšku -->
+    <component :is="layout">
       <router-view v-slot="{ Component, route }">
         <transition 
           name="page-transition" 
-          mode="out-in"
           @enter="onPageEnter"
           @leave="onPageLeave"
         >
           <component :is="Component" :key="route.path" />
         </transition>
       </router-view>
-    </main>
+    </component>
     
-    <AppFooter />
-    
-    <!-- Performance Dashboard (development only) -->
-    <PerformanceDashboard v-if="isDevelopment" />
+
     
     <!-- Global Loading Overlay -->
     <div 
@@ -46,34 +39,40 @@
 import { onMounted, computed, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
-import { useThemeStore } from '@/stores/theme'
-import AppNavigationMobile from '@/components/layout/AppNavigationMobile.vue'
-import AppFooter from '@/components/layout/AppFooter.vue'
-import PerformanceDashboard from '@/components/debug/PerformanceDashboard.vue'
+import DefaultLayout from '@/layouts/DefaultLayout.vue'
+import DashboardLayout from '@/layouts/DashboardLayout.vue'
+
 
 const route = useRoute()
 const authStore = useAuthStore()
-const themeStore = useThemeStore()
+
+// Layout resolution
+const layout = computed(() => {
+  const layoutName = route.meta.layout || 'default'
+  
+  switch (layoutName) {
+    case 'dashboard':
+      return DashboardLayout
+
+    default:
+      return DefaultLayout
+  }
+})
 
 // Global loading state
 const isGlobalLoading = ref(false)
 
-// Show performance dashboard only in development
-const isDevelopment = computed(() => {
-  return import.meta.env.DEV || import.meta.env.VITE_SHOW_PERFORMANCE === 'true'
-})
-
 // Page transition handlers
-const onPageEnter = (el) => {
+const onPageEnter = () => {
   // Trigger any enter animations
 }
 
-const onPageLeave = (el) => {
+const onPageLeave = () => {
   // Cleanup any leaving page resources
 }
 
 // Watch for route changes to handle loading states
-watch(route, (to, from) => {
+watch(route, (to) => {
   // Optional: Show loading for certain route transitions
   if (to.meta?.requiresLoading) {
     isGlobalLoading.value = true
@@ -87,23 +86,12 @@ onMounted(() => {
   // Initialize auth state from localStorage
   authStore.initializeAuth()
   
-  // Initialize theme system
-  themeStore.initializeTheme()
-  
   // Add viewport meta tag for mobile optimization
   if (!document.querySelector('meta[name="viewport"]')) {
     const viewport = document.createElement('meta')
     viewport.name = 'viewport'
     viewport.content = 'width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes'
     document.head.appendChild(viewport)
-  }
-  
-  // Add theme color for mobile browsers (will be updated by theme store)
-  if (!document.querySelector('meta[name="theme-color"]')) {
-    const themeColor = document.createElement('meta')
-    themeColor.name = 'theme-color'
-    themeColor.content = '#6366f1' // Initial color, updated by theme
-    document.head.appendChild(themeColor)
   }
 })
 </script>
@@ -120,19 +108,26 @@ body {
 }
 
 /* Page transitions */
-.page-transition-enter-active,
+/* Reveal effect: New page is instant (underneath), Old page fades out (on top) */
+.page-transition-enter-active {
+  z-index: 0;
+}
+
 .page-transition-leave-active {
-  transition: all 0.3s ease;
+  transition: opacity 0.3s ease;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 10;
 }
 
 .page-transition-enter-from {
-  opacity: 0;
-  transform: translateY(10px);
+  opacity: 1;
 }
 
 .page-transition-leave-to {
   opacity: 0;
-  transform: translateY(-10px);
 }
 
 /* Safe area insets for mobile devices */
@@ -147,8 +142,8 @@ body {
 }
 
 /* Focus styles for accessibility */
-*:focus {
-  outline: 2px solid #6366f1;
+*:focus-visible {
+  outline: 2px solid #ED6F55;
   outline-offset: 2px;
 }
 

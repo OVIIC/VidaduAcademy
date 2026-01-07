@@ -29,7 +29,12 @@ class LearningController extends Controller
         $user = Auth::user();
 
         // Check if user has access to this course
-        if (!$user->hasPurchased($course) && !$user->isEnrolledIn($course)) {
+        $canAccess = $user->hasPurchased($course) || 
+                     $user->isEnrolledIn($course) || 
+                     $user->id === $course->instructor_id || 
+                     $user->hasRole('admin');
+
+        if (!$canAccess) {
             return response()->json([
                 'error' => 'You do not have access to this course'
             ], 403);

@@ -13,13 +13,11 @@ const router = createRouter({
     {
       path: '/courses',
       name: 'Courses',
-      component: () => import('@/views/CoursesViewMobile.vue'),
+      component: () => import('@/views/CoursesView.vue'),
     },
     {
       path: '/course/:slug',
-      name: 'CourseDetail',
-      component: () => import('@/views/CourseDetailView.vue'),
-      props: true,
+      redirect: '/courses',
     },
     {
       path: '/login',
@@ -34,22 +32,28 @@ const router = createRouter({
       meta: { requiresGuest: true },
     },
     {
+      path: '/auth/callback/:provider',
+      name: 'SocialCallback',
+      component: () => import('@/views/auth/SocialCallbackView.vue'),
+      meta: { requiresGuest: true },
+    },
+    {
       path: '/dashboard',
       name: 'Dashboard',
       component: () => import('@/views/DashboardView.vue'),
-      meta: { requiresAuth: true },
+      meta: { requiresAuth: true, layout: 'dashboard' },
     },
     {
       path: '/my-courses',
       name: 'MyCourses',
       component: () => import('@/views/MyCoursesView.vue'),
-      meta: { requiresAuth: true },
+      meta: { requiresAuth: true, layout: 'dashboard' },
     },
     {
       path: '/study/:slug',
       name: 'CourseStudy',
       component: () => import('@/views/CourseStudyView.vue'),
-      meta: { requiresAuth: true },
+      meta: { requiresAuth: true, layout: 'dashboard' },
       props: true,
     },
     {
@@ -58,20 +62,7 @@ const router = createRouter({
       component: () => import('@/views/checkout/StripeCheckoutView.vue'),
       meta: { requiresAuth: true },
     },
-    {
-      path: '/learn/:courseSlug',
-      name: 'Learn',
-      component: () => import('@/views/LearnView.vue'),
-      meta: { requiresAuth: true },
-      props: true,
-    },
-    {
-      path: '/learn/:courseSlug/:lessonSlug',
-      name: 'Lesson',
-      component: () => import('@/views/LessonView.vue'),
-      meta: { requiresAuth: true },
-      props: true,
-    },
+
     {
       path: '/payment/success',
       name: 'PaymentSuccess',
@@ -83,8 +74,10 @@ const router = createRouter({
       path: '/profile',
       name: 'Profile',
       component: () => import('@/views/ProfileView.vue'),
-      meta: { requiresAuth: true },
+      meta: { requiresAuth: true, layout: 'dashboard' },
     },
+
+
     {
       path: '/:pathMatch(.*)*',
       name: 'NotFound',
@@ -109,6 +102,20 @@ router.beforeEach((to, from, next) => {
       next({ name: 'Login', query: { redirect: to.fullPath } })
     } else if (to.meta.requiresGuest && authStore.isAuthenticated) {
       next({ name: 'Dashboard' })
+    } else if (to.meta.roles) {
+      // Check for role requirements
+      const hasRequiredRole = to.meta.roles.some(role => authStore.hasRole(role))
+      
+      // Special check for instructor boolean flag if role is missing
+      const isInstructorOverride = to.meta.roles.includes('instructor') && authStore.isInstructor
+      
+      if (hasRequiredRole || isInstructorOverride) {
+        next()
+      } else {
+        // Redirect to dashboard if unauthorized
+        console.warn('Unauthorized access to role-protected route', to.path)
+        next({ name: 'Dashboard' })
+      }
     } else {
       next()
     }

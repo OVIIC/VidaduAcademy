@@ -34,7 +34,7 @@ class SecurityMiddlewareTest extends TestCase
 
         // Make multiple failed login attempts
         for ($i = 0; $i < 6; $i++) {
-            $response = $this->postJson('/api/login', [
+            $response = $this->postJson('/api/auth/login', [
                 'email' => $email,
                 'password' => $password
             ]);
@@ -59,7 +59,7 @@ class SecurityMiddlewareTest extends TestCase
             'password_confirmation' => 'password123'
         ];
 
-        $response = $this->postJson('/api/register', $maliciousData);
+        $response = $this->postJson('/api/auth/register', $maliciousData);
 
         $response->assertStatus(403);
         $response->assertJson([
@@ -75,7 +75,7 @@ class SecurityMiddlewareTest extends TestCase
             'password' => 'password123'
         ];
 
-        $response = $this->postJson('/api/login', $maliciousData);
+        $response = $this->postJson('/api/auth/login', $maliciousData);
 
         $response->assertStatus(403);
     }
@@ -88,7 +88,7 @@ class SecurityMiddlewareTest extends TestCase
             'password' => Hash::make('validpassword123')
         ]);
 
-        $response = $this->postJson('/api/login', [
+        $response = $this->postJson('/api/auth/login', [
             'email' => 'legitimate@example.com',
             'password' => 'validpassword123'
         ]);
@@ -104,6 +104,8 @@ class SecurityMiddlewareTest extends TestCase
     /** @test */
     public function it_handles_account_lockout()
     {
+        $this->withoutMiddleware([\App\Http\Middleware\CustomRateLimiter::class]);
+
         $user = User::factory()->create([
             'email' => 'lockout@example.com',
             'password' => Hash::make('correctpassword')
@@ -111,21 +113,21 @@ class SecurityMiddlewareTest extends TestCase
 
         // Make 5 failed attempts to trigger lockout
         for ($i = 0; $i < 5; $i++) {
-            $this->postJson('/api/login', [
+            $this->postJson('/api/auth/login', [
                 'email' => 'lockout@example.com',
                 'password' => 'wrongpassword'
             ]);
         }
 
         // Now try with correct password - should be locked out
-        $response = $this->postJson('/api/login', [
+        $response = $this->postJson('/api/auth/login', [
             'email' => 'lockout@example.com',
             'password' => 'correctpassword'
         ]);
 
         $response->assertStatus(423);
         $response->assertJson([
-            'message' => 'Account temporarily locked due to multiple failed login attempts. Please try again later.'
+            'message' => 'Account is temporarily locked due to multiple failed login attempts.'
         ]);
     }
 
@@ -144,10 +146,10 @@ class SecurityMiddlewareTest extends TestCase
             ]
         ];
 
-        $response = $this->postJson('/api/security/csp-violation', $violationReport);
+        $response = $this->postJson('/api/security/violations', $violationReport);
 
-        $response->assertStatus(200);
-        $response->assertJson(['status' => 'received']);
+        $response->assertStatus(201);
+        $response->assertJson(['status' => 'logged']);
         
         // Verify the violation was logged
         $this->assertDatabaseHas('security_logs', [
@@ -165,10 +167,10 @@ class SecurityMiddlewareTest extends TestCase
         $this->actingAs($user, 'sanctum');
 
         // Test with suspicious new password
-        $response = $this->postJson('/api/change-password', [
+        $response = $this->putJson('/api/auth/change-password', [
             'current_password' => 'oldpassword123',
-            'new_password' => '<script>alert("XSS")</script>',
-            'new_password_confirmation' => '<script>alert("XSS")</script>'
+            'password' => '<script>alert("XSS")</script>',
+            'password_confirmation' => '<script>alert("XSS")</script>'
         ]);
 
         $response->assertStatus(403);
@@ -185,10 +187,10 @@ class SecurityMiddlewareTest extends TestCase
 
         // Make multiple password change attempts with wrong current password
         for ($i = 0; $i < 4; $i++) {
-            $response = $this->postJson('/api/change-password', [
+            $response = $this->putJson('/api/auth/change-password', [
                 'current_password' => 'wrongpassword',
-                'new_password' => 'newpassword123',
-                'new_password_confirmation' => 'newpassword123'
+                'password' => 'newpassword123',
+                'password_confirmation' => 'newpassword123'
             ]);
 
             if ($i < 3) {
@@ -205,8 +207,9 @@ class SecurityMiddlewareTest extends TestCase
         parent::setUp();
         
         // Clear rate limiters before each test
-        RateLimiter::clear('login:127.0.0.1');
-        RateLimiter::clear('register:127.0.0.1');
-        RateLimiter::clear('password-change:1');
+        // Clear rate limiters before each test
+        RateLimiter::clear('login');
+        RateLimiter::clear('registration');
+        RateLimiter::clear('password_change');
     }
 }

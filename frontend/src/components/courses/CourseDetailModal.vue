@@ -170,7 +170,6 @@
 <script setup>
 import { computed, ref } from 'vue'
 import { useAuthStore } from '@/stores/auth'
-import { useRouter } from 'vue-router'
 import { useToast } from 'vue-toastification'
 import AuthModal from '@/components/auth/AuthModal.vue'
 import CheckoutLoadingModal from '@/components/ui/CheckoutLoadingModal.vue'
@@ -197,7 +196,7 @@ const props = defineProps({
 const emit = defineEmits(['close', 'purchase'])
 
 const authStore = useAuthStore()
-const router = useRouter()
+
 const toast = useToast()
 const showAuthModalFlag = ref(false)
 
@@ -209,11 +208,6 @@ const closeModal = () => {
 
 const showAuthModal = () => {
   showAuthModalFlag.value = true
-}
-
-const goToLogin = () => {
-  closeModal()
-  router.push('/login')
 }
 
 const purchaseCourse = () => {

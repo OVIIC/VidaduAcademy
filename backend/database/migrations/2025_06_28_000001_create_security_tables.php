@@ -11,6 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
+        Schema::dropIfExists('security_logs');
         Schema::create('security_logs', function (Blueprint $table) {
             $table->id();
             $table->string('event_type', 50)->index(); // login, logout, purchase, enrollment, etc.
@@ -18,7 +19,7 @@ return new class extends Migration
             $table->unsignedBigInteger('user_id')->nullable()->index();
             $table->string('ip_address', 45)->index(); // IPv6 support
             $table->string('user_agent', 500)->nullable();
-            $table->string('action', 100); // specific action performed
+            $table->string('action', 100)->default('unknown'); // specific action performed
             $table->json('metadata')->nullable(); // additional context data
             $table->string('resource_type', 50)->nullable(); // course, user, payment, etc.
             $table->unsignedBigInteger('resource_id')->nullable();

@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Log;
 
 class UserController extends Controller
 {
@@ -110,7 +111,7 @@ class UserController extends Controller
         // Get completed courses as certificates
         $certificates = $user->enrollments()
             ->with('course')
-            ->where('progress', 100)
+            ->where('progress_percentage', 100)
             ->get()
             ->map(function ($enrollment) {
                 return [
@@ -131,22 +132,49 @@ class UserController extends Controller
     /**
      * Download certificate for completed course
      */
+    /**
+     * Download certificate for completed course
+     */
     public function downloadCertificate(Request $request, $enrollmentId)
     {
         $user = $request->user();
         $enrollment = $user->enrollments()
             ->with('course')
             ->where('id', $enrollmentId)
-            ->where('progress', 100)
+            ->where('progress_percentage', 100)
             ->firstOrFail();
 
-        // For now, return a simple PDF or redirect to certificate generation service
-        // This would typically generate a PDF certificate
-        return response()->json([
-            'message' => 'Certificate download functionality will be implemented',
-            'enrollment' => $enrollment,
-            'download_url' => '#' // Placeholder for actual certificate download
-        ]);
+        $data = [
+            'student_name' => $user->name,
+            'course_title' => $enrollment->course->title,
+            'date' => $enrollment->completed_at ? $enrollment->completed_at->format('d.m.Y') : now()->format('d.m.Y'),
+            'certificate_id' => 'VID-' . strtoupper(substr(md5($enrollment->id), 0, 8)),
+        ];
+
+        // If 'view' is present, just show the HTML (for debugging)
+        if ($request->has('view')) {
+            return view('certificates.premium', $data);
+        }
+
+        try {
+            $pdf = \Spatie\Browsershot\Browsershot::html(view('certificates.premium', $data)->render())
+                ->setOption('args', ['--no-sandbox', '--disable-setuid-sandbox'])
+                ->windowSize(1123, 794) // A4 Landscape at ~96 DPI
+                ->format('A4')
+                ->landscape()
+                ->margins(0, 0, 0, 0)
+                ->showBackground()
+                ->pdf();
+                
+            return response($pdf)
+                ->header('Content-Type', 'application/pdf')
+                ->header('Content-Disposition', 'attachment; filename="certificate-' . $enrollment->course->slug . '.pdf"');
+        } catch (\Exception $e) {
+            \Log::error('Certificate PDF generation failed: ' . $e->getMessage());
+            
+            // Fallback to HTML if PDF fails (e.g. node missing)
+            return response(view('certificates.premium', $data)->render());
+        }
     }
 
     /**

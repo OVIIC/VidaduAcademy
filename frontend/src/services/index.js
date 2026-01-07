@@ -30,10 +30,27 @@ export const authService = {
     return response.data
   },
 
+  async logoutAll() {
+    const response = await api.post('/auth/logout-all')
+    return response.data
+  },
+
   async getUser() {
     const response = await api.get('/user')
     return response.data
   },
+
+  async getCertificate(enrollmentId) {
+    const response = await api.get(`/user/certificate/${enrollmentId}/download`, {
+      responseType: 'blob' // Important for handling binary/html data if we were doing PDF, but for HTML view we might just want to open window
+    })
+    return response.data
+  },
+
+  // Helper to get the URL for opening in new tab
+  getCertificateUrl(enrollmentId) {
+    return `${api.defaults.baseURL}/user/certificate/${enrollmentId}/download`
+  }
 }
 
 export const courseService = {
@@ -42,7 +59,7 @@ export const courseService = {
     return cachedApiCall(cacheKey, async () => {
       const response = await api.get('/courses', { params })
       return response.data
-    }, 10 * 60 * 1000) // Cache for 10 minutes
+    }, 1 * 60 * 1000) // Cache for 1 minute
   },
 
   async getCourse(slug) {
@@ -61,13 +78,15 @@ export const courseService = {
     }, 10 * 60 * 1000) // Cache for 10 minutes
   },
 
-  async getCoursesByInstructor(instructorId) {
-    const cacheKey = apiCache.generateKey(`/courses/instructor/${instructorId}`)
+  async getCategories() {
+    const cacheKey = apiCache.generateKey('/categories')
     return cachedApiCall(cacheKey, async () => {
-      const response = await api.get(`/courses/instructor/${instructorId}`)
+      const response = await api.get('/categories')
       return response.data
-    }, 15 * 60 * 1000) // Cache for 15 minutes
+    }, 60 * 60 * 1000) // Cache for 1 hour
   },
+
+
 }
 
 export const paymentService = {
@@ -92,6 +111,11 @@ export const paymentService = {
     } catch (error) {
       return { has_purchased: false, is_enrolled: false }
     }
+  },
+
+  async simulatePurchase(courseId) {
+    const response = await api.post('/payments/simulate', { course_id: courseId })
+    return response.data
   },
 }
 

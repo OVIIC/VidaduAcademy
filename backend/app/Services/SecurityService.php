@@ -135,6 +135,8 @@ class SecurityService
             '/1\s*=\s*1/i',
             
             // XSS patterns
+            '/<script\b[^>]*>/i',
+            '/<\\\\?\/script>/i',
             '/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/mi',
             '/javascript\s*:/i',
             '/on\w+\s*=/i',

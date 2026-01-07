@@ -1,4 +1,5 @@
 // VidaduAcademy Service Worker
+/* eslint-env serviceworker */
 const CACHE_NAME = 'vidadu-academy-v1.0.1'
 const STATIC_CACHE_NAME = 'vidadu-static-v1.0.1'
 const DYNAMIC_CACHE_NAME = 'vidadu-dynamic-v1.0.1'
@@ -22,6 +23,8 @@ const API_CACHE_PATTERNS = [
 const CACHE_BLACKLIST = [
   /\/api\/auth\/login/,
   /\/api\/auth\/logout/,
+  /\/auth\/callback/,
+  /\/auth\/social/,
   /\/api\/payments/,
   /\/payment\/success/,
   /\/admin/,
@@ -301,7 +304,7 @@ async function getOfflineEnrollments() {
   return []
 }
 
-async function removeOfflineEnrollment(id) {
+async function removeOfflineEnrollment() {
   // Implementation for removing offline enrollment
 }
 
@@ -310,7 +313,7 @@ async function getOfflineProgress() {
   return []
 }
 
-async function removeOfflineProgress(id) {
+async function removeOfflineProgress() {
   // Implementation for removing offline progress
 }
 

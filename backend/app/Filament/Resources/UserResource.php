@@ -48,6 +48,12 @@ class UserResource extends Resource
                     ->required(fn (string $context): bool => $context === 'create')
                     ->dehydrated(fn ($state) => filled($state))
                     ->maxLength(255),
+                Forms\Components\Select::make('roles')
+                    ->label('Rola')
+                    ->relationship('roles', 'name')
+                    ->multiple()
+                    ->preload()
+                    ->searchable(),
             ]);
     }
 
@@ -81,6 +87,18 @@ class UserResource extends Resource
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('purchases_sum_amount')
+                    ->label('Celkovo minuté')
+                    ->sum('purchases', 'amount')
+                    ->money('EUR')
+                    ->sortable()
+                    ->placeholder('0,00 €'),
+                Tables\Columns\TextColumn::make('enrollments_count')
+                    ->counts('enrollments')
+                    ->label('Aktívne kurzy')
+                    ->badge()
+                    ->color('primary')
+                    ->sortable(),
             ])
             ->filters([
                 Tables\Filters\Filter::make('email_verified')
@@ -89,6 +107,9 @@ class UserResource extends Resource
                 Tables\Filters\Filter::make('email_not_verified')
                     ->label('Email neoverený')
                     ->query(fn (Builder $query): Builder => $query->whereNull('email_verified_at')),
+                Tables\Filters\Filter::make('has_purchases')
+                    ->label('Iba platiaci')
+                    ->query(fn (Builder $query): Builder => $query->has('purchases', '>', 0)),
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),

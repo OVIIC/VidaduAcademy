@@ -1,254 +1,473 @@
 <template>
-  <nav class="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-50">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="flex justify-between items-center h-16">
+  <!-- Scroll detector area -->
+  <div 
+    ref="scrollDetector"
+    class="fixed top-0 left-0 right-0 h-20 z-40 pointer-events-none"
+  ></div>
+  
+  <nav 
+    ref="navigation"
+    class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 ease-in-out px-4 pt-4"
+    :class="{ 
+      'nav-hidden': isNavHidden, 
+      'nav-visible': !isNavHidden
+    }"
+    role="navigation"
+    aria-label="Hlavná navigácia"
+  >
+    <div 
+      class="mx-auto max-w-5xl transition-all duration-300"
+      :class="[
+        isScrolled ? 'w-full' : 'w-full'
+      ]"
+    >
+      <div 
+        class="bg-dark-950/80 backdrop-blur-xl border border-white/10 shadow-2xl rounded-full px-6 py-3 flex items-center justify-between transition-all duration-300 relative overflow-hidden group"
+      >
+
+
         <!-- Logo -->
-        <div class="flex items-center">
-          <router-link to="/" class="flex items-center space-x-2">
-            <div class="w-8 h-8 bg-gradient-to-r from-primary-600 to-secondary-600 rounded-lg flex items-center justify-center">
-              <span class="text-white font-bold text-sm">V</span>
-            </div>
-            <span class="text-lg sm:text-xl font-bold text-gray-900 hidden xs:block">VidaduAcademy</span>
-            <span class="text-lg font-bold text-gray-900 block xs:hidden">VA</span>
-          </router-link>
-        </div>
+        <router-link 
+          to="/" 
+          class="flex items-center space-x-2 text-xl font-bold text-white hover:text-primary-400 transition-colors z-10 focus:outline-none"
+          aria-label="VidaduAcademy domov"
+        >
+          <div class="w-8 h-8 bg-gradient-to-br from-primary-500 to-secondary-500 rounded-full flex items-center justify-center shadow-lg shadow-primary-500/20">
+            <span class="text-white font-bold text-sm">V</span>
+          </div>
+          <span class="hidden xs:inline tracking-tight font-display">Vidadu</span>
+        </router-link>
 
         <!-- Desktop Navigation -->
-        <div class="hidden md:block">
-          <div class="ml-10 flex items-baseline space-x-8">
-            <router-link
-              to="/"
-              class="text-gray-900 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
-              :class="{ 'text-primary-600': $route.name === 'Home' }"
-            >
-              Domov
-            </router-link>
-            <router-link
-              to="/courses"
-              class="text-gray-900 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
-              :class="{ 'text-primary-600': $route.name === 'Courses' }"
-            >
-              Kurzy
-            </router-link>
-            <router-link
-              v-if="authStore.isAuthenticated"
-              to="/my-courses"
-              class="text-gray-900 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
-              :class="{ 'text-primary-600': $route.name === 'MyCourses' }"
-            >
-              Moje kurzy
-            </router-link>
-          </div>
+        <div class="hidden md:flex items-center absolute left-1/2 -translate-x-1/2">
+          <ul class="flex items-center space-x-1 bg-white/5 rounded-full px-2 py-1 border border-white/5">
+            <li>
+              <router-link 
+                to="/" 
+                class="nav-pill"
+                :class="{ 'nav-pill-active': $route.name === 'Home' }"
+              >
+                Domov
+              </router-link>
+            </li>
+            <li>
+              <router-link 
+                to="/courses" 
+                class="nav-pill"
+                :class="{ 'nav-pill-active': $route.name === 'Courses' }"
+              >
+                Kurzy
+              </router-link>
+            </li>
+          </ul>
         </div>
 
-        <!-- User Menu / Auth Buttons -->
-        <div class="flex items-center space-x-4">
-          <!-- Search (Desktop) -->
-          <div class="hidden md:block">
-            <div class="relative">
-              <input
-                v-model="searchQuery"
-                @keyup.enter="performSearch"
-                type="text"
-                placeholder="Hľadať kurzy..."
-                class="input-field w-64 pl-10 pr-4 py-2"
-              >
-              <MagnifyingGlassIcon class="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
-            </div>
-          </div>
-
-          <!-- Authenticated User Menu -->
-          <div v-if="authStore.isAuthenticated" class="relative">
-            <Menu as="div" class="relative inline-block text-left">
-              <div>
-                <MenuButton class="flex items-center space-x-2 bg-white rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
-                  <div class="w-8 h-8 bg-primary-600 rounded-full flex items-center justify-center">
-                    <span class="text-white text-sm font-medium">
-                      {{ authStore.userInitials }}
-                    </span>
-                  </div>
-                  <ChevronDownIcon class="h-4 w-4 text-gray-400" />
-                </MenuButton>
-              </div>
-
-              <transition
-                enter-active-class="transition ease-out duration-100"
-                enter-from-class="transform opacity-0 scale-95"
-                enter-to-class="transform opacity-100 scale-100"
-                leave-active-class="transition ease-in duration-75"
-                leave-from-class="transform opacity-100 scale-100"
-                leave-to-class="transform opacity-0 scale-95"
-              >
-                <MenuItems class="absolute right-0 mt-2 w-56 origin-top-right bg-white divide-y divide-gray-100 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                  <div class="px-4 py-3">
-                    <p class="text-sm">Prihlásený ako</p>
-                    <p class="text-sm font-medium text-gray-900 truncate">
-                      {{ authStore.user?.email }}
-                    </p>
-                  </div>
-                  
-                  <div class="py-1">
-                    <MenuItem v-slot="{ active }">
-                      <router-link
-                        to="/dashboard"
-                        :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm']"
-                      >
-                        Nástenka
-                      </router-link>
-                    </MenuItem>
-                    <MenuItem v-slot="{ active }">
-                      <router-link
-                        to="/profile"
-                        :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm']"
-                      >
-                        Profil
-                      </router-link>
-                    </MenuItem>
-                  </div>
-                  
-                  <div class="py-1">
-                    <MenuItem v-slot="{ active }">
-                      <button
-                        @click="handleLogout"
-                        :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block w-full text-left px-4 py-2 text-sm']"
-                      >
-                        Odhlásiť sa
-                      </button>
-                    </MenuItem>
-                  </div>
-                </MenuItems>
-              </transition>
-            </Menu>
-          </div>
-
-          <!-- Guest Buttons -->
-          <div v-else class="flex items-center space-x-2">
-            <router-link to="/login" class="btn-secondary">
-              Prihlásiť sa
-            </router-link>
-            <router-link to="/register" class="btn-primary">
-              Zaregistrovať sa
-            </router-link>
-          </div>
-
-          <!-- Mobile Menu Button -->
-          <div class="md:hidden">
-            <button
-              @click="mobileMenuOpen = !mobileMenuOpen"
-              class="bg-gray-50 p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary-500"
+        <!-- Auth Section - Desktop -->
+        <div class="hidden md:flex items-center space-x-3 z-10">
+          <template v-if="authStore.isAuthenticated">
+            <router-link 
+              to="/dashboard" 
+              class="flex items-center gap-2 text-sm font-medium text-gray-300 hover:text-white transition-colors focus:outline-none"
             >
-              <Bars3Icon v-if="!mobileMenuOpen" class="h-6 w-6" />
-              <XMarkIcon v-else class="h-6 w-6" />
+              <div class="w-8 h-8 rounded-full bg-dark-800 border border-dark-700 flex items-center justify-center">
+                 <UserIcon class="w-4 h-4" />
+              </div>
+            </router-link>
+            <button 
+              @click="handleLogout"
+              class="text-sm font-medium text-gray-400 hover:text-red-400 transition-colors focus:outline-none"
+            >
+              Odhlásiť
             </button>
-          </div>
+          </template>
+          <template v-else>
+            <router-link 
+              to="/login" 
+              class="text-sm font-medium text-gray-300 hover:text-white transition-colors px-3 py-2 focus:outline-none"
+            >
+              Prihlásiť
+            </router-link>
+            <router-link 
+              to="/register" 
+              class="btn-glow text-sm px-4 py-2 rounded-full bg-[rgb(237,111,85)] text-white font-medium hover:shadow-lg hover:shadow-primary-500/25 transition-all duration-300 flex items-center gap-2 focus:outline-none"
+            >
+              <span>Registrácia</span>
+              <ArrowRightIcon class="w-4 h-4" />
+            </router-link>
+          </template>
+        </div>
+
+        <!-- Mobile Menu Button -->
+        <div class="md:hidden flex items-center gap-4 z-10">
+          <button 
+            @click="toggleMobileMenu"
+            class="relative w-10 h-10 flex items-center justify-center rounded-full hover:bg-white/5 transition-colors focus:outline-none"
+            :aria-expanded="isMobileMenuOpen"
+            aria-controls="mobile-menu"
+            aria-label="Otvoriť hlavné menu"
+          >
+            <div class="hamburger-icon">
+              <span 
+                class="hamburger-line"
+                :class="{ 'hamburger-line-active-1': isMobileMenuOpen }"
+              ></span>
+              <span 
+                class="hamburger-line"
+                :class="{ 'hamburger-line-active-2': isMobileMenuOpen }"
+              ></span>
+              <span 
+                class="hamburger-line"
+                :class="{ 'hamburger-line-active-3': isMobileMenuOpen }"
+              ></span>
+            </div>
+          </button>
         </div>
       </div>
     </div>
 
     <!-- Mobile Menu -->
-    <div v-show="mobileMenuOpen" class="md:hidden">
-      <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white border-t border-gray-200">
-        <!-- Mobile Search -->
-        <div class="px-3 py-2">
-          <input
-            v-model="searchQuery"
-            @keyup.enter="performSearch"
-            type="text"
-            placeholder="Hľadať kurzy..."
-            class="input-field w-full pl-10 pr-4 py-2"
+    <transition 
+      name="mobile-menu"
+      @enter="onMobileMenuEnter"
+      @leave="onMobileMenuLeave"
+    >        
+      <div 
+        v-if="isMobileMenuOpen"
+        id="mobile-menu"
+        class="md:hidden absolute top-full left-4 right-4 mt-2 bg-dark-900/95 backdrop-blur-xl border border-white/10 rounded-3xl overflow-hidden shadow-2xl origin-top"
+      >
+        <div class="p-4 space-y-2">
+          <!-- Main Navigation -->
+          <router-link 
+            to="/" 
+            @click="closeMobileMenu"
+            class="mobile-nav-link focus:outline-none"
+            :class="{ 'mobile-nav-link-active': $route.name === 'Home' }"
           >
-        </div>
+            <HomeIcon class="w-5 h-5" />
+            <span>Domov</span>
+          </router-link>
+          
+          <router-link 
+            to="/courses" 
+            @click="closeMobileMenu"
+            class="mobile-nav-link focus:outline-none"
+            :class="{ 'mobile-nav-link-active': $route.name === 'Courses' }"
+          >
+            <AcademicCapIcon class="w-5 h-5" />
+            <span>Kurzy</span>
+          </router-link>
 
-        <router-link
-          to="/"
-          @click="mobileMenuOpen = false"
-          class="text-gray-900 hover:text-primary-600 block px-3 py-2 rounded-md text-base font-medium"
-        >
-          Domov
-        </router-link>
-        <router-link
-          to="/courses"
-          @click="mobileMenuOpen = false"
-          class="text-gray-900 hover:text-primary-600 block px-3 py-2 rounded-md text-base font-medium"
-        >
-          Kurzy
-        </router-link>
-        
-        <template v-if="authStore.isAuthenticated">
-          <router-link
-            to="/my-courses"
-            @click="mobileMenuOpen = false"
-            class="text-gray-900 hover:text-primary-600 block px-3 py-2 rounded-md text-base font-medium"
-          >
-            Moje kurzy
-          </router-link>
-          <router-link
-            to="/dashboard"
-            @click="mobileMenuOpen = false"
-            class="text-gray-900 hover:text-primary-600 block px-3 py-2 rounded-md text-base font-medium"
-          >
-            Nástenka
-          </router-link>
-          <button
-            @click="handleLogout"
-            class="text-gray-900 hover:text-primary-600 block w-full text-left px-3 py-2 rounded-md text-base font-medium"
-          >
-            Odhlásiť sa
-          </button>
-        </template>
-        
-        <template v-else>
-          <router-link
-            to="/login"
-            @click="mobileMenuOpen = false"
-            class="text-gray-900 hover:text-primary-600 block px-3 py-2 rounded-md text-base font-medium"
-          >
-            Prihlásiť sa
-          </router-link>
-          <router-link
-            to="/register"
-            @click="mobileMenuOpen = false"
-            class="text-gray-900 hover:text-primary-600 block px-3 py-2 rounded-md text-base font-medium"
-          >
-            Zaregistrovať sa
-          </router-link>
-        </template>
+          <!-- Divider -->
+          <div class="border-t border-white/10 my-4"></div>
+
+          <!-- Auth Section -->
+          <template v-if="authStore.isAuthenticated">
+            <router-link 
+              to="/dashboard" 
+              @click="closeMobileMenu"
+              class="mobile-nav-link"
+            >
+              <UserIcon class="w-5 h-5" />
+              <span>Môj účet</span>
+            </router-link>
+            
+            <button 
+              @click="handleLogout"
+              class="mobile-nav-link w-full text-red-400 hover:bg-red-900/20 hover:text-red-300 focus:outline-none"
+            >
+              <ArrowRightOnRectangleIcon class="w-5 h-5" />
+              <span>Odhlásiť sa</span>
+            </button>
+          </template>
+          
+          <template v-else>
+            <router-link 
+              to="/login" 
+              @click="closeMobileMenu"
+              class="mobile-nav-link"
+            >
+              <ArrowRightOnRectangleIcon class="w-5 h-5" />
+              <span>Prihlásiť sa</span>
+            </router-link>
+            
+            <router-link 
+              to="/register" 
+              @click="closeMobileMenu"
+              class="flex items-center justify-center gap-2 w-full py-3 mt-4 bg-[rgb(237,111,85)] rounded-xl font-medium text-white shadow-lg active:scale-95 transition-transform focus:outline-none"
+            >
+              <span>Zaregistrovať sa</span>
+              <ArrowRightIcon class="w-4 h-4" />
+            </router-link>
+          </template>
+        </div>
       </div>
-    </div>
+    </transition>
   </nav>
+
+  <!-- Mobile Menu Overlay -->
+  <transition name="overlay">
+    <div 
+      v-if="isMobileMenuOpen"
+      class="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 md:hidden"
+      @click="closeMobileMenu"
+      aria-hidden="true"
+    ></div>
+  </transition>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/vue'
-import {
-  Bars3Icon,
-  XMarkIcon,
-  MagnifyingGlassIcon,
-  ChevronDownIcon,
-} from '@heroicons/vue/24/outline'
 import { useAuthStore } from '@/stores/auth'
+import {
+  HomeIcon,
+  AcademicCapIcon,
+  UserIcon,
+  ArrowRightOnRectangleIcon,
+  ArrowRightIcon
+} from '@heroicons/vue/24/outline'
 
 const router = useRouter()
 const authStore = useAuthStore()
 
-const mobileMenuOpen = ref(false)
-const searchQuery = ref('')
+// Navigation state
+const navigation = ref(null)
+const scrollDetector = ref(null)
+const isNavHidden = ref(false)
+const isScrolled = ref(false)
+const lastScrollY = ref(0)
+const scrollThreshold = 100
 
-const handleLogout = async () => {
-  await authStore.logout()
-  router.push('/')
-  mobileMenuOpen.value = false
+// Mobile menu state
+const isMobileMenuOpen = ref(false)
+
+// Navigation Methods
+const showNavigation = () => {
+  isNavHidden.value = false
 }
 
-const performSearch = () => {
-  if (searchQuery.value.trim()) {
-    router.push({
-      name: 'Courses',
-      query: { search: searchQuery.value.trim() }
-    })
-    mobileMenuOpen.value = false
+const hideNavigation = () => {
+  if (!isMobileMenuOpen.value) {
+    isNavHidden.value = true
   }
 }
+
+const handleScroll = () => {
+  const currentScrollY = window.scrollY
+  
+  // Show navigation if scrolling up or at top
+  if (currentScrollY < lastScrollY.value || currentScrollY < scrollThreshold) {
+    showNavigation()
+  } 
+  // Hide navigation if scrolling down and past threshold
+  else if (currentScrollY > scrollThreshold && currentScrollY > lastScrollY.value) {
+    hideNavigation()
+  }
+  
+  isScrolled.value = currentScrollY > 20
+  lastScrollY.value = currentScrollY
+}
+
+// Mobile menu methods
+const toggleMobileMenu = () => {
+  isMobileMenuOpen.value = !isMobileMenuOpen.value
+  
+  // Prevent body scroll when menu is open
+  if (isMobileMenuOpen.value) {
+    document.body.style.overflow = 'hidden'
+  } else {
+    document.body.style.overflow = ''
+  }
+}
+
+const closeMobileMenu = () => {
+  isMobileMenuOpen.value = false
+  document.body.style.overflow = ''
+}
+
+const handleLogout = async () => {
+  try {
+    await authStore.logout()
+    closeMobileMenu()
+    router.push('/')
+  } catch (error) {
+    console.error('Logout error:', error)
+  }
+}
+
+// Transition handlers
+const onMobileMenuEnter = (el) => {
+  el.style.opacity = '0'
+  el.style.transform = 'translateY(-10px) scale(0.95)'
+  // Force reflow
+  el.offsetHeight
+  
+  el.style.transition = 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)'
+  el.style.opacity = '1'
+  el.style.transform = 'translateY(0) scale(1)'
+}
+
+const onMobileMenuLeave = (el) => {
+  el.style.transition = 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)'
+  el.style.opacity = '0'
+  el.style.transform = 'translateY(-10px) scale(0.95)'
+}
+
+// Handle escape key
+const handleKeydown = (event) => {
+  if (event.key === 'Escape' && isMobileMenuOpen.value) {
+    closeMobileMenu()
+  }
+}
+
+// Lifecycle
+onMounted(() => {
+  document.addEventListener('keydown', handleKeydown)
+  window.addEventListener('scroll', handleScroll, { passive: true })
+  lastScrollY.value = window.scrollY
+})
+
+onUnmounted(() => {
+  document.removeEventListener('keydown', handleKeydown)
+  window.removeEventListener('scroll', handleScroll)
+  document.body.style.overflow = '' // Cleanup
+})
+
+// Close menu on route change
+router.afterEach(() => {
+  closeMobileMenu()
+})
 </script>
+
+<style scoped>
+/* Navigation Fade Animation */
+.nav-visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.nav-hidden {
+  opacity: 0;
+  transform: translateY(-150%);
+  pointer-events: none;
+}
+
+/* Nav Pills */
+.nav-pill {
+  @apply text-gray-400;
+  display: inline-block;
+  padding: 0.5rem 1.25rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  border-radius: 9999px;
+  transition: all 0.2s ease-in-out;
+  @apply focus:outline-none;
+}
+
+.nav-pill:hover {
+  @apply text-white bg-white/5;
+}
+
+.nav-pill-active {
+  @apply text-white bg-white/10 shadow-inner;
+  font-weight: 600;
+}
+
+/* Mobile Nav Links */
+.mobile-nav-link {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  @apply text-gray-300;
+  font-weight: 500;
+  border-radius: 0.75rem;
+  transition: all 0.2s;
+  @apply focus:outline-none;
+}
+
+.mobile-nav-link:hover {
+  @apply text-white bg-white/5;
+}
+
+.mobile-nav-link-active {
+  @apply text-primary-400 bg-primary-500/10;
+  font-weight: 600;
+}
+
+/* Hamburger Menu Animation */
+.hamburger-icon {
+  position: relative;
+  width: 1.25rem;
+  height: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.hamburger-line {
+  display: block;
+  width: 1.25rem;
+  height: 2px;
+  @apply bg-white rounded-full;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.hamburger-line:nth-child(1) {
+  margin-bottom: 4px;
+}
+
+.hamburger-line:nth-child(2) {
+  margin-bottom: 4px;
+}
+
+.hamburger-line-active-1 {
+  transform: rotate(45deg) translateY(4px) translateX(4px);
+  width: 1.4rem;
+}
+
+.hamburger-line-active-2 {
+  opacity: 0;
+  transform: translateX(-10px);
+}
+
+.hamburger-line-active-3 {
+  transform: rotate(-45deg) translateY(-4px) translateX(4px);
+  width: 1.4rem;
+}
+
+/* Overlay Transitions */
+.overlay-enter-active,
+.overlay-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.overlay-enter-from,
+.overlay-leave-to {
+  opacity: 0;
+}
+
+.btn-glow {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-glow::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg, transparent 0%, rgba(255,255,255,0.2) 50%, transparent 100%);
+  transform: translateX(-100%);
+  transition: transform 0.6s;
+}
+
+.btn-glow:hover::after {
+  transform: translateX(100%);
+}
+</style>

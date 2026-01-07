@@ -1,5 +1,7 @@
-<?php $attributes ??= new \Illuminate\View\ComponentAttributeBag; ?>
-<?php foreach($attributes->onlyProps([
+<?php $attributes ??= new \Illuminate\View\ComponentAttributeBag;
+
+$__newAttributes = [];
+$__propNames = \Illuminate\View\ComponentAttributeBag::extractPropNames(([
     'availableHeight' => null,
     'availableWidth' => null,
     'flip' => true,
@@ -12,24 +14,22 @@
     'teleport' => false,
     'trigger' => null,
     'width' => null,
-]) as $__key => $__value) {
-    $$__key = $$__key ?? $__value;
-} ?>
-<?php $attributes = $attributes->exceptProps([
-    'availableHeight' => null,
-    'availableWidth' => null,
-    'flip' => true,
-    'maxHeight' => null,
-    'offset' => 8,
-    'placement' => null,
-    'shift' => false,
-    'size' => false,
-    'sizePadding' => 16,
-    'teleport' => false,
-    'trigger' => null,
-    'width' => null,
-]); ?>
-<?php foreach (array_filter(([
+]));
+
+foreach ($attributes->all() as $__key => $__value) {
+    if (in_array($__key, $__propNames)) {
+        $$__key = $$__key ?? $__value;
+    } else {
+        $__newAttributes[$__key] = $__value;
+    }
+}
+
+$attributes = new \Illuminate\View\ComponentAttributeBag($__newAttributes);
+
+unset($__propNames);
+unset($__newAttributes);
+
+foreach (array_filter(([
     'availableHeight' => null,
     'availableWidth' => null,
     'flip' => true,
@@ -44,12 +44,15 @@
     'width' => null,
 ]), 'is_string', ARRAY_FILTER_USE_KEY) as $__key => $__value) {
     $$__key = $$__key ?? $__value;
-} ?>
-<?php $__defined_vars = get_defined_vars(); ?>
-<?php foreach ($attributes as $__key => $__value) {
+}
+
+$__defined_vars = get_defined_vars();
+
+foreach ($attributes->all() as $__key => $__value) {
     if (array_key_exists($__key, $__defined_vars)) unset($$__key);
-} ?>
-<?php unset($__defined_vars); ?>
+}
+
+unset($__defined_vars); ?>
 
 <?php
     use Filament\Support\Enums\MaxWidth;

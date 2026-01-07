@@ -203,7 +203,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 
 const props = defineProps({
   videoUrl: String,
@@ -252,22 +252,22 @@ const sortedNotes = computed(() => {
 // Video control functions
 const togglePlayPause = () => {
   // Would use YouTube API here
-  console.log('Toggle play/pause')
+  if (import.meta.env.DEV) console.log('Toggle play/pause')
 }
 
 const skip = (seconds) => {
   // Would use YouTube API here
-  console.log('Skip', seconds, 'seconds')
+  if (import.meta.env.DEV) console.log('Skip', seconds, 'seconds')
 }
 
 const seekToBeginning = () => {
   // Would use YouTube API here
-  console.log('Seek to beginning')
+  if (import.meta.env.DEV) console.log('Seek to beginning')
 }
 
 const seekToTime = (time) => {
   // Would use YouTube API here
-  console.log('Seek to', time)
+  if (import.meta.env.DEV) console.log('Seek to', time)
 }
 
 const seekToBookmark = (time) => {
@@ -403,7 +403,7 @@ onMounted(() => {
   if (savedProgress) {
     const progress = JSON.parse(savedProgress)
     // Would seek to saved position using YouTube API
-    console.log('Restored progress:', progress)
+    if (import.meta.env.DEV) console.log('Restored progress:', progress)
   }
 })
 </script>

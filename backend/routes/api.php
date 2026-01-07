@@ -9,7 +9,7 @@ use App\Http\Controllers\Api\LearningController;
 use App\Http\Controllers\Api\EnrollmentController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\AuthController;
-use App\Http\Controllers\Api\StripeWebhookController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -44,11 +44,13 @@ Route::prefix('courses')->group(function () {
     Route::get('/{slug}', [CourseController::class, 'show']);
 });
 
+Route::get('/categories', [\App\Http\Controllers\Api\CategoryController::class, 'index']);
+
 // Stripe webhook (public, no auth required)
 Route::post('/webhook/stripe', [PaymentController::class, 'webhook'])->name('stripe.webhook');
 
 // Payment verification (public, no auth required)
-Route::post('/payments/verify', [PaymentVerificationController::class, 'verifyPayment'])->name('payments.verify');
+Route::post('/payments/verify', [PaymentController::class, 'verifyPayment'])->name('payments.verify');
 
 // Protected routes
 Route::middleware('auth:sanctum')->group(function () {
@@ -68,6 +70,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/checkout', [PaymentController::class, 'createCheckoutSession']);
         Route::get('/history', [PaymentController::class, 'purchaseHistory']);
         Route::get('/course/{courseId}/status', [PaymentController::class, 'checkCoursePurchaseStatus']);
+        Route::post('/simulate', [PaymentController::class, 'simulatePurchase']);
     });
 
     // Learning routes
@@ -98,14 +101,16 @@ Route::prefix('auth')->group(function () {
         Route::put('/change-password', [AuthController::class, 'changePassword'])
             ->middleware('rate.limit:password_change,3,60'); // 3 attempts per hour
     });
+
+    // Social Auth
+    Route::get('/{provider}/redirect', [\App\Http\Controllers\Api\SocialAuthController::class, 'redirectToProvider']);
+    Route::get('/{provider}/callback', [\App\Http\Controllers\Api\SocialAuthController::class, 'handleProviderCallback']);
+    Route::post('/social/exchange', [\App\Http\Controllers\Api\SocialAuthController::class, 'exchangeToken']);
 });
 
 // Security reporting endpoint
-Route::post('/security/violations', function (Request $request) {
-    // Log CSP violations and other security events from frontend
-    \Log::warning('Frontend security violation', $request->all());
-    return response()->json(['status' => 'logged']);
-})->middleware('rate.limit:security_reports,10,1');
+Route::post('/security/violations', [\App\Http\Controllers\Api\Admin\SecurityLogController::class, 'store'])
+    ->middleware('rate.limit:security_reports,10,1');
 
 // Enrollment routes (admin/instructor only)
 Route::middleware(['auth:sanctum'])->prefix('enrollments')->group(function () {
@@ -116,6 +121,15 @@ Route::middleware(['auth:sanctum'])->prefix('enrollments')->group(function () {
     Route::get('/course/{course}/students', [EnrollmentController::class, 'getCourseEnrollments']);
 });
 
-// Stripe webhook (must be before auth middleware)
-Route::post('/stripe/webhook', [StripeWebhookController::class, 'handleWebhook'])
-    ->name('stripe.webhook.v2');
+// Admin Routes
+Route::middleware(['auth:sanctum', 'role:admin'])->prefix('admin')->group(function () {
+    Route::apiResource('users', \App\Http\Controllers\Api\Admin\AdminUserController::class);
+    Route::get('security-logs', [\App\Http\Controllers\Api\Admin\SecurityLogController::class, 'index']);
+});
+
+// Instructor Routes
+Route::middleware(['auth:sanctum', 'role:instructor'])->prefix('instructor')->group(function () {
+    Route::apiResource('courses', \App\Http\Controllers\Api\Instructor\InstructorCourseController::class);
+});
+
+

@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Validation\Rules\Password;
 
 class AuthController extends Controller
 {
@@ -72,7 +73,7 @@ class AuthController extends Controller
             ]);
 
             $request->validate([
-                'password' => ['required', 'string', 'min:8', 'confirmed', 'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/'],
+                'password' => ['required', 'string', 'confirmed', Password::min(8)->mixedCase()->numbers()->symbols()],
             ]);
 
             // Check if user already exists
@@ -88,7 +89,10 @@ class AuthController extends Controller
                 );
                 
                 return response()->json([
-                    'message' => 'A user with this email already exists.'
+                    'message' => 'The given data was invalid.',
+                    'errors' => [
+                        'email' => ['A user with this email already exists.']
+                    ]
                 ], 422);
             }
 
@@ -110,6 +114,7 @@ class AuthController extends Controller
             return response()->json([
                 'message' => 'Registration successful',
                 'user' => $user->only(['id', 'name', 'email']),
+                'roles' => $user->getRoleNames(),
                 'token' => $token
             ], 201);
 
@@ -209,6 +214,7 @@ class AuthController extends Controller
         return response()->json([
             'message' => 'Login successful',
             'user' => $user->only(['id', 'name', 'email', 'is_instructor']),
+            'roles' => $user->getRoleNames(),
             'token' => $token
         ]);
     }
@@ -249,7 +255,8 @@ class AuthController extends Controller
                 'id', 'name', 'email', 'phone', 'location', 'bio', 
                 'avatar', 'website', 'youtube_channel', 'subscribers_count',
                 'content_niche', 'goals', 'is_instructor', 'is_active'
-            ])
+            ]),
+            'roles' => $user->getRoleNames()
         ]);
     }
 
@@ -259,15 +266,39 @@ class AuthController extends Controller
     public function changePassword(Request $request): JsonResponse
     {
         $user = $request->user();
-        
+
+        // Ensure the user is authenticated
+        if (!$user) {
+            return response()->json([
+                'message' => 'Unauthenticated'
+            ], 401);
+        }
+
+        // Detect suspicious activity before validation
+        if ($this->securityService->detectSuspiciousActivity(
+            $request->getContent(),
+            $request->userAgent(),
+            $request->ip()
+        )) {
+            // Log without assuming a user ID
+            $this->auditService->logSuspiciousActivity(
+                'suspicious_password_change',
+                $request,
+                $request->getContent(),
+                9
+            );
+            return response()->json([
+                'message' => 'Password change request blocked due to security concerns.'
+            ], 403);
+        }
+
         $request->validate([
             'current_password' => ['required', 'string'],
             'password' => [
-                'required', 
-                'string', 
-                'min:8', 
+                'required',
+                'string',
+                'min:8',
                 'confirmed',
-                'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/',
                 'different:current_password'
             ],
         ]);
@@ -281,10 +312,9 @@ class AuthController extends Controller
                 'warning',
                 ['ip' => $request->ip()]
             );
-            
             return response()->json([
                 'message' => 'Current password is incorrect'
-            ], 422);
+            ], 400);
         }
 
         // Update password
@@ -293,7 +323,12 @@ class AuthController extends Controller
         ]);
 
         // Revoke all existing tokens except current
-        $user->tokens()->where('id', '!=', $request->user()->currentAccessToken()->id)->delete();
+        $currentToken = $request->user()->currentAccessToken();
+        if ($currentToken) {
+            $user->tokens()->where('id', '!=', $currentToken->id)->delete();
+        } else {
+            $user->tokens()->delete();
+        }
 
         // Log password change
         $this->auditService->logSecurityEvent(

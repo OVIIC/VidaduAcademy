@@ -9,6 +9,9 @@ class SecurityLog extends Model
 {
     use HasFactory;
 
+    const CREATED_AT = 'created_at';
+    const UPDATED_AT = null;
+
     protected $fillable = [
         'event_type',
         'severity',
@@ -21,34 +24,16 @@ class SecurityLog extends Model
         'resource_id',
         'is_suspicious',
         'notes',
-        'created_at'
     ];
 
     protected $casts = [
         'metadata' => 'array',
         'is_suspicious' => 'boolean',
-        'created_at' => 'datetime'
+        'created_at' => 'datetime',
     ];
-
-    public $timestamps = false;
 
     public function user()
     {
         return $this->belongsTo(User::class);
-    }
-
-    public function scopeSuspicious($query)
-    {
-        return $query->where('is_suspicious', true);
-    }
-
-    public function scopeByEventType($query, string $eventType)
-    {
-        return $query->where('event_type', $eventType);
-    }
-
-    public function scopeByDateRange($query, $startDate, $endDate)
-    {
-        return $query->whereBetween('created_at', [$startDate, $endDate]);
     }
 }

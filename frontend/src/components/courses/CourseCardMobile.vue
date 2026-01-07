@@ -134,13 +134,12 @@ import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { 
   StarIcon, 
-  ClockIcon, 
   AcademicCapIcon, 
   CalendarIcon 
 } from '@heroicons/vue/24/outline'
 import LazyImage from '@/components/ui/LazyImage.vue'
 import { useAuthStore } from '@/stores/auth'
-import { courseService } from '@/services'
+
 
 const props = defineProps({
   course: {
@@ -228,8 +227,8 @@ const handleCourseAction = async () => {
       return
     }
     
-    // Navigate to course detail for purchase
-    router.push(`/course/${props.course.slug}`)
+    // Navigate to courses page (details are shown there)
+    router.push('/courses')
   }
 }
 </script>

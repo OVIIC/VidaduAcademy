@@ -1,3 +1,5 @@
+import { ref, computed, watch } from 'vue'
+
 // Debounce utility for performance optimization
 export function debounce(func, wait, immediate = false) {
   let timeout

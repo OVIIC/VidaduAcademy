@@ -21,7 +21,7 @@
 </template>
 
 <script setup>
-import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { throttle } from '@/utils/performance'
 
 const props = defineProps({

@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class Course extends Model
 {
@@ -21,6 +22,7 @@ class Course extends Model
         'currency',
         'thumbnail',
         'status',
+        'category_id',
         'instructor_id',
         'duration_minutes',
         'difficulty_level',
@@ -34,13 +36,16 @@ class Course extends Model
         'price' => 'decimal:2',
         'featured' => 'boolean',
         'published_at' => 'datetime',
-        'what_you_will_learn' => 'array',
-        'requirements' => 'array',
     ];
 
     public function instructor(): BelongsTo
     {
         return $this->belongsTo(User::class, 'instructor_id');
+    }
+
+    public function category(): BelongsTo
+    {
+        return $this->belongsTo(Category::class);
     }
 
     public function lessons(): HasMany
@@ -87,10 +92,12 @@ class Course extends Model
     public function getWhatYouWillLearnAttribute($value)
     {
         $decoded = json_decode($value, true) ?: [];
-        // Convert to Filament repeater format if accessing from form
-        if (request()->is('admin/*') && !empty($decoded) && !isset($decoded[0]['item'])) {
+        
+        // Convert to Filament repeater format ONLY if accessing from admin panel
+        if (request() && request()->is('admin/*') && !empty($decoded) && !isset($decoded[0]['item'])) {
             return array_map(fn($item) => ['item' => $item], $decoded);
         }
+        
         return $decoded;
     }
 
@@ -107,10 +114,32 @@ class Course extends Model
     public function getRequirementsAttribute($value)
     {
         $decoded = json_decode($value, true) ?: [];
-        // Convert to Filament repeater format if accessing from form
-        if (request()->is('admin/*') && !empty($decoded) && !isset($decoded[0]['item'])) {
+        
+        // Convert to Filament repeater format ONLY if accessing from admin panel
+        if (request() && request()->is('admin/*') && !empty($decoded) && !isset($decoded[0]['item'])) {
             return array_map(fn($item) => ['item' => $item], $decoded);
         }
+        
         return $decoded;
+    }
+
+    public function getThumbnailAttribute($value)
+    {
+        if (!$value) {
+            return null;
+        }
+
+        // Check if it's already a complete URL
+        if (filter_var($value, FILTER_VALIDATE_URL) || str_starts_with($value, 'http')) {
+            return $value;
+        }
+
+        // Fix for broken Unsplash URLs (missing domain) caused by some data import/truncation
+        if (str_starts_with($value, 'photo-')) {
+            return 'https://images.unsplash.com/' . $value;
+        }
+
+        // Otherwise assume it's a local storage path and return full URL
+        return asset('storage/' . $value);
     }
 }

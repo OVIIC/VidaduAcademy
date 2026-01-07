@@ -16,9 +16,9 @@ api.interceptors.request.use((config) => {
   
   if (token) {
     config.headers.Authorization = `Bearer ${token}`
-    console.log('Request with auth token to:', config.url)
+    if (import.meta.env.DEV) console.log('Request with auth token to:', config.url)
   } else {
-    console.log('Request without auth token to:', config.url)
+    if (import.meta.env.DEV) console.log('Request without auth token to:', config.url)
   }
   
   return config
@@ -29,14 +29,14 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-      console.log('401 error received from:', error.config?.url)
+      if (import.meta.env.DEV) console.log('401 error received from:', error.config?.url)
       
       // Don't logout if this is already a login/register request
       const isAuthRequest = error.config?.url?.includes('/login') || 
                            error.config?.url?.includes('/register')
       
       if (!isAuthRequest) {
-        console.log('Logging out user due to 401 error')
+        if (import.meta.env.DEV) console.log('Logging out user due to 401 error')
         const authStore = useAuthStore()
         if (authStore.isAuthenticated) {
           authStore.logout()

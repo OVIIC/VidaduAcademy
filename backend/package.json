@@ -2,5 +2,8 @@
   "dependencies": {
     "@types/dompurify": "^3.0.5",
     "dompurify": "^3.2.6"
+  },
+  "devDependencies": {
+    "puppeteer": "^24.34.0"
   }
 }

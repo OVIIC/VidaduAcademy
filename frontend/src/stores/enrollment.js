@@ -66,9 +66,9 @@ export const useEnrollmentStore = defineStore('enrollment', {
 
       this.loading = true
       try {
-        console.log('Loading my courses from store...')
+        if (import.meta.env.DEV) console.log('Loading my courses from store...')
         const response = await enrollmentService.getMyCourses()
-        console.log('Store - My courses response:', response)
+        if (import.meta.env.DEV) console.log('Store - My courses response:', response)
         
         // Ensure response.data exists and is an array
         if (response && response.data && Array.isArray(response.data)) {
@@ -80,14 +80,14 @@ export const useEnrollmentStore = defineStore('enrollment', {
         
         this.lastUpdated = Date.now()
         
-        console.log('Store - My courses loaded:', this.myCourses.length)
+        if (import.meta.env.DEV) console.log('Store - My courses loaded:', this.myCourses.length)
         return this.myCourses
       } catch (error) {
         console.error('Store - Error loading my courses:', error)
         // Always use empty array on error to prevent crashes
         this.myCourses = []
         // For development, don't throw error
-        if (process.env.NODE_ENV !== 'development') {
+        if (import.meta.env.MODE !== 'development') {
           throw error
         }
         return this.myCourses
@@ -98,9 +98,9 @@ export const useEnrollmentStore = defineStore('enrollment', {
 
     async enrollInCourse(courseId) {
       try {
-        console.log('Enrolling in course:', courseId)
+        if (import.meta.env.DEV) console.log('Enrolling in course:', courseId)
         const response = await enrollmentService.enrollInCourse(courseId)
-        console.log('Enrollment response:', response)
+        if (import.meta.env.DEV) console.log('Enrollment response:', response)
         
         // Refresh my courses after successful enrollment
         await this.loadMyCourses(true)
@@ -110,7 +110,7 @@ export const useEnrollmentStore = defineStore('enrollment', {
         console.error('Error enrolling in course:', error)
         
         // Only throw error in production - for development, we might want to continue with fallback
-        if (process.env.NODE_ENV === 'production') {
+        if (import.meta.env.MODE === 'production') {
           throw error
         }
         
@@ -155,13 +155,35 @@ export const useEnrollmentStore = defineStore('enrollment', {
             enrolled_at: new Date().toISOString(),
           }
         })
-        console.log('Course added to local state:', course.title)
+        if (import.meta.env.DEV) console.log('Course added to local state:', course.title)
       }
     },
 
-    clearCourses() {
+    async clearCourses() {
       this.myCourses = []
       this.lastUpdated = null
+    },
+
+    updateCourseProgress(courseData) {
+      if (!courseData || !courseData.id) return
+
+      const index = this.myCourses.findIndex(c => c.id === courseData.id)
+      if (index !== -1) {
+        // Update existing course in list
+        this.myCourses[index] = {
+          ...this.myCourses[index],
+          ...courseData,
+          enrollment_data: {
+            ...this.myCourses[index].enrollment_data,
+            progress_percentage: courseData.progress_percentage
+          }
+        }
+        if (import.meta.env.DEV) console.log('Store - Course progress updated locally:', courseData.title)
+      } else {
+        // If course not found in list (shouldn't happen for enrolled course), try to reload
+        if (import.meta.env.DEV) console.warn('Store - Course to update not found, reloading all...')
+        this.loadMyCourses(true)
+      }
     },
   },
 })

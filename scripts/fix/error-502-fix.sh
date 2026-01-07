@@ -1,0 +1,145 @@
+#!/bin/bash
+
+echo "🚨 VidaduAcademy Error 502 Bad Gateway - Emergency Diagnosis"
+echo "=========================================================="
+echo ""
+
+echo "🔍 ERROR 502 ANALYSIS:"
+echo "======================"
+echo "502 Bad Gateway means the Render proxy cannot connect to your app"
+echo "This typically indicates:"
+echo "1. 🔥 Application crashed during startup"
+echo "2. 🚪 App not listening on correct PORT"
+echo "3. ⏰ App taking too long to start (timeout)"
+echo "4. 💥 Build/deployment failed"
+echo "5. 🔧 Wrong start command or missing files"
+echo ""
+
+echo "📊 TESTING CONNECTION:"
+echo "====================="
+
+# Test different endpoints to understand the scope
+BACKEND_URL="https://vidaduacademy.onrender.com"
+
+echo "Testing health endpoint..."
+health_response=$(curl -s -w "HTTPCODE:%{http_code};TIME:%{time_total}" "$BACKEND_URL/api/health" 2>/dev/null)
+echo "Response: $health_response"
+
+echo ""
+echo "Testing root endpoint..."
+root_response=$(curl -s -w "HTTPCODE:%{http_code};TIME:%{time_total}" "$BACKEND_URL/" 2>/dev/null)
+echo "Response: $root_response"
+
+echo ""
+echo "Testing with verbose connection info..."
+curl -v "$BACKEND_URL/api/health" 2>&1 | head -10
+
+echo ""
+echo "🔧 IMMEDIATE FIXES FOR ERROR 502:"
+echo "================================="
+echo ""
+
+echo "1️⃣ CHECK RENDER LOGS (CRITICAL):"
+echo "- Go to: https://dashboard.render.com/"
+echo "- Find your service"
+echo "- Click 'Logs' tab"
+echo "- Look for:"
+echo "  * PHP errors"
+echo "  * Port binding errors"
+echo "  * Start command failures"
+echo "  * Database connection timeouts"
+echo ""
+
+echo "2️⃣ COMMON 502 CAUSES & FIXES:"
+echo ""
+echo "🚪 PORT BINDING ISSUE:"
+echo "   Problem: App not listening on \$PORT"
+echo "   Look for: 'Failed to bind to port'"
+echo "   Fix: Ensure start-render.sh uses PORT environment variable"
+echo ""
+
+echo "💥 APPLICATION CRASH:"
+echo "   Problem: PHP fatal error during startup"
+echo "   Look for: 'PHP Fatal error', 'Class not found'"
+echo "   Fix: Check autoloader, missing dependencies"
+echo ""
+
+echo "⏰ STARTUP TIMEOUT:"
+echo "   Problem: App takes >60 seconds to start"
+echo "   Look for: 'Health check timeout'"
+echo "   Fix: Optimize startup, reduce database operations"
+echo ""
+
+echo "🔧 WRONG START COMMAND:"
+echo "   Problem: nixpacks.toml pointing to wrong script"
+echo "   Look for: 'Command not found', 'Permission denied'"
+echo "   Fix: Verify start-render.sh exists and is executable"
+echo ""
+
+echo "3️⃣ EMERGENCY FIXES TO TRY:"
+echo "=========================="
+echo ""
+
+echo "🔄 FIX A: Revert to Simple Start Command"
+echo "----------------------------------------"
+echo "In nixpacks.toml, change start command to:"
+echo "cmd = \"php artisan serve --host=0.0.0.0 --port=\$PORT\""
+echo "This bypasses start-render.sh complications"
+echo ""
+
+echo "🔄 FIX B: Database Connection Fix"
+echo "---------------------------------"
+echo "Set: DB_CONNECTION=sqlite"
+echo "Remove complex database operations from startup"
+echo ""
+
+echo "🔄 FIX C: Fix Port Binding"
+echo "-------------------------"
+echo "Ensure start-render.sh properly configures PORT"
+echo "Check Apache configuration uses dynamic PORT"
+echo ""
+
+echo "4️⃣ STEP-BY-STEP RECOVERY:"
+echo "========================="
+echo ""
+echo "1. Check Render logs for specific error"
+echo "2. Apply simplest fix first (revert to php artisan serve)"
+echo "3. Commit and push changes"
+echo "4. Wait 2-3 minutes for deployment"
+echo "5. Test with: curl https://vidaduacademy.onrender.com/api/health"
+echo "6. If working, gradually add complexity back"
+echo ""
+
+echo "5️⃣ QUICK FIX - REVERT TO SIMPLE STARTUP:"
+echo "========================================"
+echo ""
+echo "Create this commit to fix immediately:"
+echo ""
+echo "# In backend/nixpacks.toml, change:"
+echo "[phases.start]"
+echo "cmd = \"php artisan serve --host=0.0.0.0 --port=\\\$PORT\""
+echo ""
+echo "[start]"  
+echo "cmd = \"php artisan serve --host=0.0.0.0 --port=\\\$PORT\""
+echo ""
+
+echo "🆘 NUCLEAR OPTION - Emergency Working Config:"
+echo "============================================="
+echo ""
+echo "If all else fails:"
+echo "1. Set DB_CONNECTION=sqlite in Render environment"
+echo "2. Revert nixpacks.toml to simple php artisan serve"
+echo "3. Remove all complex startup logic temporarily"
+echo "4. Get basic Laravel working first"
+echo "5. Add features back one by one"
+echo ""
+
+echo "📱 IMMEDIATE TEST:"
+echo "=================="
+echo ""
+curl -I "$BACKEND_URL/" 2>/dev/null | head -5
+
+echo ""
+echo "🏁 Error 502 diagnosis complete"
+echo "⚡ URGENT: Check Render logs and apply simple startup fix!"
+echo "$(date)"

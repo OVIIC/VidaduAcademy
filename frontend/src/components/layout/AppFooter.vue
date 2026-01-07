@@ -1,30 +1,32 @@
 <template>
-  <footer class="bg-gray-900 text-white">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+  <footer class="relative bg-black text-white overflow-hidden">
+    <!-- Frosted glass gradient background -->
+    <div class="absolute inset-0 bg-gradient-to-br from-secondary/20 via-black/80 to-black backdrop-blur-xl"></div>
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
         <!-- Company Info -->
         <div class="col-span-1 md:col-span-2">
           <div class="flex items-center space-x-2 mb-4">
-            <div class="w-8 h-8 bg-gradient-to-r from-primary-600 to-secondary-600 rounded-lg flex items-center justify-center">
+            <div class="w-8 h-8 bg-gradient-to-r from-primary to-secondary rounded-lg flex items-center justify-center shadow-lg">
               <span class="text-white font-bold text-sm">V</span>
             </div>
-            <span class="text-xl font-bold">VidaduAcademy</span>
+            <span class="text-xl font-bold text-white">VidaduAcademy</span>
           </div>
-          <p class="text-gray-400 mb-6 max-w-md">
+          <p class="text-gray-300 mb-6 max-w-md leading-relaxed">
             Posilňujeme tvorcov pri budovaní úspešných YouTube kanálov prostredníctvom kurzov vedených expertmi 
             a praktických stratégií. Pridajte sa k tisíckam študentov, ktorí rozširujú svoje publikum.
           </p>
           <div class="flex space-x-4">
-            <a href="#" class="text-gray-400 hover:text-white transition-colors">
+            <a href="#" class="text-gray-400 hover:text-primary transition-all duration-300 hover:scale-110">
               <YoutubeIcon class="h-6 w-6" />
             </a>
-            <a href="#" class="text-gray-400 hover:text-white transition-colors">
+            <a href="#" class="text-gray-400 hover:text-primary transition-all duration-300 hover:scale-110">
               <TwitterIcon class="h-6 w-6" />
             </a>
-            <a href="#" class="text-gray-400 hover:text-white transition-colors">
+            <a href="#" class="text-gray-400 hover:text-primary transition-all duration-300 hover:scale-110">
               <InstagramIcon class="h-6 w-6" />
             </a>
-            <a href="#" class="text-gray-400 hover:text-white transition-colors">
+            <a href="#" class="text-gray-400 hover:text-primary transition-all duration-300 hover:scale-110">
               <DiscordIcon class="h-6 w-6" />
             </a>
           </div>
@@ -32,30 +34,30 @@
 
         <!-- Quick Links -->
         <div>
-          <h3 class="text-lg font-semibold mb-4">Rýchle odkazy</h3>
+          <h3 class="text-lg font-semibold mb-4 text-white">Rýchle odkazy</h3>
           <ul class="space-y-2">
             <li>
-              <router-link to="/courses" class="text-gray-400 hover:text-white transition-colors">
+              <router-link to="/courses" class="text-gray-300 hover:text-primary transition-all duration-300 hover:translate-x-1">
                 Všetky kurzy
               </router-link>
             </li>
             <li>
-              <router-link to="/courses?category=youtube-growth" class="text-gray-400 hover:text-white transition-colors">
+              <router-link to="/courses?category=youtube-growth" class="text-gray-300 hover:text-primary transition-all duration-300 hover:translate-x-1">
                 Rast YouTube
               </router-link>
             </li>
             <li>
-              <router-link to="/courses?category=content-creation" class="text-gray-400 hover:text-white transition-colors">
+              <router-link to="/courses?category=content-creation" class="text-gray-300 hover:text-primary transition-all duration-300 hover:translate-x-1">
                 Tvorba obsahu
               </router-link>
             </li>
             <li>
-              <router-link to="/courses?category=monetization" class="text-gray-400 hover:text-white transition-colors">
+              <router-link to="/courses?category=monetization" class="text-gray-300 hover:text-primary transition-all duration-300 hover:translate-x-1">
                 Monetizácia
               </router-link>
             </li>
             <li>
-              <a href="#" class="text-gray-400 hover:text-white transition-colors">
+              <a href="#" class="text-gray-300 hover:text-primary transition-all duration-300 hover:translate-x-1">
                 Príbehy úspechov
               </a>
             </li>
@@ -64,30 +66,30 @@
 
         <!-- Support -->
         <div>
-          <h3 class="text-lg font-semibold mb-4">Podpora</h3>
+          <h3 class="text-lg font-semibold mb-4 text-white">Podpora</h3>
           <ul class="space-y-2">
             <li>
-              <a href="#" class="text-gray-400 hover:text-white transition-colors">
+              <a href="#" class="text-gray-300 hover:text-primary transition-all duration-300 hover:translate-x-1">
                 Centrum pomoci
               </a>
             </li>
             <li>
-              <a href="#" class="text-gray-400 hover:text-white transition-colors">
+              <a href="#" class="text-gray-300 hover:text-primary transition-all duration-300 hover:translate-x-1">
                 Kontaktujte nás
               </a>
             </li>
             <li>
-              <a href="#" class="text-gray-400 hover:text-white transition-colors">
+              <a href="#" class="text-gray-300 hover:text-primary transition-all duration-300 hover:translate-x-1">
                 Komunita
               </a>
             </li>
             <li>
-              <a href="#" class="text-gray-400 hover:text-white transition-colors">
+              <a href="#" class="text-gray-300 hover:text-primary transition-all duration-300 hover:translate-x-1">
                 Zásady ochrany súkromia
               </a>
             </li>
             <li>
-              <a href="#" class="text-gray-400 hover:text-white transition-colors">
+              <a href="#" class="text-gray-300 hover:text-primary transition-all duration-300 hover:translate-x-1">
                 Podmienky služby
               </a>
             </li>
@@ -96,19 +98,19 @@
       </div>
 
       <!-- Newsletter Signup -->
-      <div class="border-t border-gray-800 mt-8 pt-8">
+      <div class="border-t border-gray-700/50 mt-8 pt-8">
         <div class="max-w-md mx-auto text-center">
-          <h3 class="text-lg font-semibold mb-2">Zostaňte informovaní</h3>
-          <p class="text-gray-400 mb-4">Získajte najnovšie tipy na rast YouTube a aktualizácie kurzov</p>
-          <form class="flex">
+          <h3 class="text-lg font-semibold mb-2 text-white">Zostaňte informovaní</h3>
+          <p class="text-gray-300 mb-4">Získajte najnovšie tipy na rast YouTube a aktualizácie kurzov</p>
+          <form class="flex rounded-xl overflow-hidden backdrop-blur-sm bg-white/5 border border-white/10">
             <input
               type="email"
               placeholder="Zadajte váš email"
-              class="flex-1 bg-gray-800 border border-gray-700 rounded-l-lg px-4 py-2 text-white placeholder-gray-400 focus:outline-none focus:border-primary-500"
+              class="flex-1 bg-transparent border-none px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50"
             >
             <button
               type="submit"
-              class="bg-primary-600 hover:bg-primary-700 px-6 py-2 rounded-r-lg font-medium transition-colors"
+              class="bg-primary hover:bg-primary/90 px-6 py-3 font-medium transition-all duration-300 hover:shadow-lg hover:shadow-primary/25"
             >
               Odoberať
             </button>
@@ -117,18 +119,18 @@
       </div>
 
       <!-- Bottom Bar -->
-      <div class="border-t border-gray-800 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
-        <p class="text-gray-400 text-sm">
+      <div class="border-t border-gray-700/50 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
+        <p class="text-gray-300 text-sm">
           © {{ currentYear }} VidaduAcademy. Všetky práva vyhradené.
         </p>
         <div class="flex space-x-6 mt-4 md:mt-0">
-          <a href="#" class="text-gray-400 hover:text-white text-sm transition-colors">
+          <a href="#" class="text-gray-300 hover:text-primary text-sm transition-all duration-300">
             Zásady ochrany súkromia
           </a>
-          <a href="#" class="text-gray-400 hover:text-white text-sm transition-colors">
+          <a href="#" class="text-gray-300 hover:text-primary text-sm transition-all duration-300">
             Podmienky služby
           </a>
-          <a href="#" class="text-gray-400 hover:text-white text-sm transition-colors">
+          <a href="#" class="text-gray-300 hover:text-primary text-sm transition-all duration-300">
             Zásady cookies
           </a>
         </div>

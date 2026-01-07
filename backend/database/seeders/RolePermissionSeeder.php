@@ -86,6 +86,8 @@ class RolePermissionSeeder extends Seeder
             'create content',
             'edit content',
             'view enrollments',
+            'create enrollments',
+            'view users',
             'access admin panel',
         ];
         $instructorRole->givePermissionTo($instructorPermissions);

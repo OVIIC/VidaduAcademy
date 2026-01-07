@@ -8,7 +8,21 @@ import router from './router'
 import './assets/css/main.css'
 import './assets/css/responsive.css'
 
+import * as Sentry from "@sentry/vue";
+
 const app = createApp(App)
+
+Sentry.init({
+  app,
+  dsn: import.meta.env.VITE_SENTRY_DSN,
+  integrations: [
+    Sentry.browserTracingIntegration({ router }),
+    Sentry.replayIntegration(),
+  ],
+  tracesSampleRate: 1.0,
+  replaysSessionSampleRate: 0.1,
+  replaysOnErrorSampleRate: 1.0,
+});
 
 app.use(createPinia())
 app.use(router)

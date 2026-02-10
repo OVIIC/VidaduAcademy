@@ -14,8 +14,9 @@ use Illuminate\Support\Facades\Log;
 
 class StripeService
 {
-    public function __construct()
-    {
+    public function __construct(
+        private EnrollmentService $enrollmentService
+    ) {
         Stripe::setApiKey(config('services.stripe.secret'));
     }
 
@@ -122,31 +123,29 @@ class StripeService
             return;
         }
 
-        $purchase->update([
-            'stripe_payment_intent_id' => $paymentIntentId,
-            'status' => 'completed',
-            'purchased_at' => now(),
-        ]);
-
-        // Automatically enroll the user in the course
-        $this->enrollUserInCourse($purchase->user, $purchase->course);
-
-        Log::info("Course purchase completed: User {$userId} purchased Course {$courseId}");
+        // Use EnrollmentService to atomically update purchase and enroll
+        $purchase->stripe_payment_intent_id = $paymentIntentId;
+        
+        try {
+            $this->enrollmentService->enrollUser($purchase->user, $purchase->course, $purchase);
+            Log::info("Course purchase completed via Checkout Session: User {$userId} purchased Course {$courseId}");
+        } catch (\Exception $e) {
+            Log::error("Failed to enroll user after checkout session: " . $e->getMessage());
+        }
     }
 
     private function handlePaymentIntentSucceeded($paymentIntent): void
     {
         $paymentIntentId = $paymentIntent->id;
-
         $purchase = Purchase::where('stripe_payment_intent_id', $paymentIntentId)->first();
 
         if ($purchase && $purchase->status !== 'completed') {
-            $purchase->update([
-                'status' => 'completed',
-                'purchased_at' => now(),
-            ]);
-
-            $this->enrollUserInCourse($purchase->user, $purchase->course);
+            try {
+                $this->enrollmentService->enrollUser($purchase->user, $purchase->course, $purchase);
+                Log::info("Course purchase completed via Payment Intent: User {$purchase->user_id} purchased Course {$purchase->course_id}");
+            } catch (\Exception $e) {
+                Log::error("Failed to enroll user after payment intent success: " . $e->getMessage());
+            }
         }
     }
 
@@ -159,21 +158,5 @@ class StripeService
         if ($purchase) {
             $purchase->update(['status' => 'failed']);
         }
-    }
-
-    private function enrollUserInCourse(User $user, Course $course): void
-    {
-        // Check if user is already enrolled
-        if ($user->isEnrolledIn($course)) {
-            return;
-        }
-
-        $user->enrollments()->create([
-            'course_id' => $course->id,
-            'enrolled_at' => now(),
-            'progress_percentage' => 0,
-        ]);
-
-        Log::info("User {$user->id} enrolled in Course {$course->id}");
     }
 }

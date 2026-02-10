@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Services\EnrollmentService;
 use App\Models\Enrollment;
 use App\Models\User;
 use App\Models\Course;
@@ -11,6 +12,10 @@ use Illuminate\Http\JsonResponse;
 
 class EnrollmentController extends Controller
 {
+    public function __construct(
+        private EnrollmentService $enrollmentService
+    ) {}
+
     /**
      * Get user's enrolled courses
      */
@@ -35,16 +40,24 @@ class EnrollmentController extends Controller
             'enrolled_at' => 'nullable|date',
         ]);
 
-        $enrollment = Enrollment::create([
-            'user_id' => $validated['user_id'],
-            'course_id' => $validated['course_id'],
-            'enrolled_at' => $validated['enrolled_at'] ?? now(),
-            'progress_percentage' => 0,
-        ]);
+        $user = User::findOrFail($validated['user_id']);
+        $course = Course::findOrFail($validated['course_id']);
 
-        $enrollment->load(['user', 'course']);
+        try {
+            $enrollment = $this->enrollmentService->enrollUser($user, $course);
+            
+            // If date is overridden (unlikely in service usage but kept for compatibility if needed), 
+            // update it manually after creation, or expand service to support it. 
+            // For now, service uses now().
+            if (isset($validated['enrolled_at'])) {
+                $enrollment->update(['enrolled_at' => $validated['enrolled_at']]);
+            }
 
-        return response()->json($enrollment, 201);
+            $enrollment->load(['user', 'course']);
+            return response()->json($enrollment, 201);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Enrollment failed: ' . $e->getMessage()], 500);
+        }
     }
 
     /**
@@ -57,18 +70,20 @@ class EnrollmentController extends Controller
             'course_id' => 'required|exists:courses,id',
         ]);
 
-        $enrollment = Enrollment::where([
-            'user_id' => $validated['user_id'],
-            'course_id' => $validated['course_id'],
-        ])->first();
+        $user = User::findOrFail($validated['user_id']);
+        $course = Course::findOrFail($validated['course_id']);
 
-        if (!$enrollment) {
-            return response()->json(['message' => 'Enrollment not found'], 404);
+        try {
+            $success = $this->enrollmentService->unenrollUser($user, $course);
+            
+            if (!$success) {
+                return response()->json(['message' => 'Enrollment not found'], 404);
+            }
+
+            return response()->json(['message' => 'User unenrolled successfully']);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Unenrollment failed: ' . $e->getMessage()], 500);
         }
-
-        $enrollment->delete();
-
-        return response()->json(['message' => 'User unenrolled successfully']);
     }
 
     /**
@@ -139,29 +154,15 @@ class EnrollmentController extends Controller
 
         $user = $request->user();
         $courseId = $validated['course_id'];
+        $course = Course::findOrFail($courseId);
 
-        // Check if user is already enrolled
-        $existingEnrollment = Enrollment::where([
-            'user_id' => $user->id,
-            'course_id' => $courseId,
-        ])->first();
+        try {
+            $enrollment = $this->enrollmentService->enrollUser($user, $course);
+            $enrollment->load(['user', 'course']);
 
-        if ($existingEnrollment) {
-            return response()->json([
-                'message' => 'User is already enrolled in this course',
-                'enrollment' => $existingEnrollment->load(['course'])
-            ], 200);
+            return response()->json($enrollment, 201);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Enrollment failed: ' . $e->getMessage()], 500);
         }
-
-        $enrollment = Enrollment::create([
-            'user_id' => $user->id,
-            'course_id' => $courseId,
-            'enrolled_at' => now(),
-            'progress_percentage' => 0,
-        ]);
-
-        $enrollment->load(['user', 'course']);
-
-        return response()->json($enrollment, 201);
     }
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Services\StripeService;
+use App\Services\EnrollmentService;
 use App\Models\Course;
 use App\Models\Purchase;
 use Illuminate\Http\Request;
@@ -14,7 +15,8 @@ use Illuminate\Support\Facades\Log;
 class PaymentController extends Controller
 {
     public function __construct(
-        private StripeService $stripeService
+        private StripeService $stripeService,
+        private EnrollmentService $enrollmentService
     ) {}
 
     public function createCheckoutSession(Request $request): JsonResponse
@@ -45,7 +47,7 @@ class PaymentController extends Controller
 
             return response()->json(['checkout_url' => $sessionUrl]);
         } catch (\Exception $e) {
-            \Log::error('Stripe checkout session creation failed: ' . $e->getMessage(), [
+            Log::error('Stripe checkout session creation failed: ' . $e->getMessage(), [
                 'user_id' => $user->id,
                 'course_id' => $course->id,
                 'error' => $e->getMessage(),
@@ -107,31 +109,31 @@ class PaymentController extends Controller
         $user = Auth::user();
         $course = Course::findOrFail($request->course_id);
 
-        // Create a completed purchase record
-        $purchase = \App\Models\Purchase::create([
-            'user_id' => $user->id,
-            'course_id' => $course->id,
-            'stripe_session_id' => 'sim_' . uniqid(),
-            'stripe_payment_intent_id' => 'pi_sim_' . uniqid(),
-            'amount' => $course->price,
-            'currency' => 'EUR',
-            'status' => 'completed',
-            'purchased_at' => now(),
-        ]);
-
-        // Enroll the user
-        if (!$user->isEnrolledIn($course)) {
-            $user->enrollments()->create([
+        try {
+            // Create a purchase record
+            $purchase = \App\Models\Purchase::create([
+                'user_id' => $user->id,
                 'course_id' => $course->id,
-                'enrolled_at' => now(),
-                'progress_percentage' => 0,
+                'stripe_session_id' => 'sim_' . uniqid(),
+                'stripe_payment_intent_id' => 'pi_sim_' . uniqid(),
+                'amount' => $course->price,
+                'currency' => 'EUR',
+                'status' => 'pending', // Pending initially, enrollment service will complete it
+                'purchased_at' => now(),
             ]);
-        }
 
-        return response()->json([
-            'message' => 'Purchase simulated successfully',
-            'purchase' => $purchase
-        ]);
+            // Enroll the user securely
+            $this->enrollmentService->enrollUser($user, $course, $purchase);
+
+            return response()->json([
+                'message' => 'Purchase simulated successfully',
+                'purchase' => $purchase->fresh()
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Simulation failed: ' . $e->getMessage()
+            ], 500);
+        }
     }
 
     public function verifyPayment(Request $request): JsonResponse
@@ -186,41 +188,20 @@ class PaymentController extends Controller
                         'stripe_payment_intent_id' => $session->payment_intent,
                         'amount' => ($session->amount_total ?? 0) / 100,
                         'currency' => $session->currency ?? 'eur',
-                        'status' => 'completed',
+                        'status' => 'pending', // Service will mark as completed
                         'purchased_at' => now(),
                     ]);
                 } else {
-                    // Update existing purchase
-                    $purchase->update([
-                        'stripe_payment_intent_id' => $session->payment_intent,
-                        'status' => 'completed',
-                        'purchased_at' => now(),
-                        'refunded_at' => null,
-                    ]);
-                }
-                
-                // Ensure user is enrolled
-                $user = $purchase->user;
-                $course = $purchase->course;
-                
-                if (!$user->isEnrolledIn($course)) {
-                    $enrollment = $user->enrollments()->create([
-                        'course_id' => $course->id,
-                        'enrolled_at' => now(),
-                        'progress_percentage' => 0,
-                    ]);
+                    $purchase->stripe_payment_intent_id = $session->payment_intent;
+                    $purchase->save();
                     
-                    Log::info('Enrollment created', [
-                        'user_id' => $user->id,
-                        'course_id' => $course->id,
-                        'enrollment_id' => $enrollment->id
-                    ]);
-                } else {
-                    Log::info('User already enrolled', [
-                        'user_id' => $user->id,
-                        'course_id' => $course->id
-                    ]);
+                    // User and Course already available via relations
+                    $user = $purchase->user;
+                    $course = $purchase->course;
                 }
+                
+                // Ensure user is enrolled securely
+                $this->enrollmentService->enrollUser($user, $course, $purchase);
                 
                 Log::info('Payment verification completed successfully', [
                     'session_id' => $sessionId,

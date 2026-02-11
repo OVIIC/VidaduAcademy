@@ -66,7 +66,7 @@ This guide will help you deploy **VidaduAcademy** to a **DigitalOcean** Droplet 
     ```bash
     mkdir -p /var/www
     cd /var/www
-    git clone https://github.com/YOUR_GITHUB_USER/VidaduAcademy.git app
+    git clone https://github.com/OVIIC/VidaduAcademy.git app
     cd app
     ```
 

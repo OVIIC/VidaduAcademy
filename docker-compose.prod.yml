@@ -97,8 +97,6 @@ services:
     image: vidaduacademy-web
     container_name: vidadu-web
     restart: always
-    volumes:
-      - ./frontend/dist:/usr/share/nginx/html
     networks:
       - vidadu-network
     depends_on:

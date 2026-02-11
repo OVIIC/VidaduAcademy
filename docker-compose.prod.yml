@@ -48,6 +48,7 @@ services:
     command: php artisan queue:work --tries=3 --timeout=90
     volumes:
       - ./backend:/var/www
+      - /var/www/vendor
     environment:
       APP_ENV: production
       DB_CONNECTION: pgsql

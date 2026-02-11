@@ -12,6 +12,7 @@ services:
     volumes:
       - ./backend:/var/www
       - /var/www/vendor
+      - /var/www/bootstrap/cache
     environment:
       APP_ENV: production
       APP_DEBUG: "false"
@@ -50,6 +51,7 @@ services:
     volumes:
       - ./backend:/var/www
       - /var/www/vendor
+      - /var/www/bootstrap/cache
     environment:
       APP_ENV: production
       DB_CONNECTION: pgsql
@@ -79,6 +81,7 @@ services:
     volumes:
       - ./backend:/var/www
       - /var/www/vendor
+      - /var/www/bootstrap/cache
     environment:
       APP_ENV: production
       DB_CONNECTION: pgsql

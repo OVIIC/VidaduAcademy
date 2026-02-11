@@ -34,9 +34,9 @@ return new class extends Migration
         });
 
         Schema::table('lessons', function (Blueprint $table) {
-            // Composite index for course lessons ordering
+            // Composite index for course lessons ordering or status
             $table->index(['course_id', 'order'], 'lessons_course_order_idx');
-            $table->index(['course_id', 'published', 'order'], 'lessons_course_published_order_idx');
+            $table->index(['course_id', 'status', 'order'], 'lessons_course_status_order_idx');
         });
 
         Schema::table('lesson_progress', function (Blueprint $table) {
@@ -78,7 +78,7 @@ return new class extends Migration
 
         Schema::table('lessons', function (Blueprint $table) {
             $table->dropIndex('lessons_course_order_idx');
-            $table->dropIndex('lessons_course_published_order_idx');
+            $table->dropIndex('lessons_course_status_order_idx');
         });
 
         if (Schema::hasTable('lesson_progress')) {

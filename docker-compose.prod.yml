@@ -11,6 +11,7 @@ services:
     working_dir: /var/www
     volumes:
       - ./backend:/var/www
+      - /var/www/vendor
     environment:
       APP_ENV: production
       APP_DEBUG: "false"
@@ -77,6 +78,7 @@ services:
     command: php artisan schedule:work
     volumes:
       - ./backend:/var/www
+      - /var/www/vendor
     environment:
       APP_ENV: production
       DB_CONNECTION: pgsql

@@ -16,11 +16,15 @@ services:
       APP_DEBUG: "false"
       APP_URL: "https://${DOMAIN_NAME:-vidadu.sk}"
 
-      # SQLite Configuration
-      DB_CONNECTION: sqlite
-      DB_DATABASE: /var/www/database/database.sqlite
+      # Database Configuration
+      DB_CONNECTION: pgsql
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_DATABASE: ${DB_DATABASE:-vidadu_academy}
+      DB_USERNAME: ${DB_USERNAME:-vidadu_user}
+      DB_PASSWORD: ${DB_PASSWORD:-secure_password}
 
-      # Driver adjustments for low RAM
+      # Driver adjustments
       BROADCAST_DRIVER: log
       CACHE_DRIVER: file
       FILESYSTEM_DISK: local
@@ -30,6 +34,8 @@ services:
 
     networks:
       - vidadu-network
+    depends_on:
+      - postgres
 
   worker:
     build:
@@ -44,8 +50,12 @@ services:
       - ./backend:/var/www
     environment:
       APP_ENV: production
-      DB_CONNECTION: sqlite
-      DB_DATABASE: /var/www/database/database.sqlite
+      DB_CONNECTION: pgsql
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_DATABASE: ${DB_DATABASE:-vidadu_academy}
+      DB_USERNAME: ${DB_USERNAME:-vidadu_user}
+      DB_PASSWORD: ${DB_PASSWORD:-secure_password}
       CACHE_DRIVER: file
       QUEUE_CONNECTION: database
       SESSION_DRIVER: file
@@ -53,6 +63,7 @@ services:
       - vidadu-network
     depends_on:
       - app
+      - postgres
 
   scheduler:
     build:
@@ -67,12 +78,17 @@ services:
       - ./backend:/var/www
     environment:
       APP_ENV: production
-      DB_CONNECTION: sqlite
-      DB_DATABASE: /var/www/database/database.sqlite
+      DB_CONNECTION: pgsql
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_DATABASE: ${DB_DATABASE:-vidadu_academy}
+      DB_USERNAME: ${DB_USERNAME:-vidadu_user}
+      DB_PASSWORD: ${DB_PASSWORD:-secure_password}
     networks:
       - vidadu-network
     depends_on:
       - app
+      - postgres
 
   web:
     build:
@@ -107,6 +123,19 @@ services:
       - web
       - app
 
+  postgres:
+    image: postgres:15
+    container_name: vidadu-postgres
+    restart: always
+    environment:
+      POSTGRES_DB: ${DB_DATABASE:-vidadu_academy}
+      POSTGRES_USER: ${DB_USERNAME:-vidadu_user}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-secure_password}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - vidadu-network
+
 networks:
   vidadu-network:
     driver: bridge
@@ -114,3 +143,4 @@ networks:
 volumes:
   caddy_data:
   caddy_config:
+  postgres_data:

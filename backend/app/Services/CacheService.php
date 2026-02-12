@@ -121,15 +121,10 @@ class CacheService
             if (config('cache.default') === 'redis' || config('cache.default') === 'memcached') {
                 Cache::tags(['courses'])->flush();
             } else {
-                // For file/database cache, manually clear related keys
-                $keys = [
-                    'courses:recent',
-                    'courses:popular',
-                    self::FEATURED_PREFIX . 'courses'
-                ];
-                foreach ($keys as $key) {
-                    Cache::forget($key);
-                }
+                // For file/database cache, we MUST flush everything because we cannot
+                // partially clear "courses:list:*" keys (hashed) without tags.
+                // Since SESSION_DRIVER is 'file', this does not log users out.
+                Cache::flush();
             }
         } catch (\Exception $e) {
             Log::warning('Cache forget course failed', [

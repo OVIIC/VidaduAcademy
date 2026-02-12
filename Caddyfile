@@ -11,9 +11,19 @@ encode zstd gzip
         file_server
     }
 
+    # Serve Filament/Backend static assets
+    handle /css/* {
+        root * /var/www/public
+        file_server
+    }
+    handle /js/* {
+        root * /var/www/public
+        file_server
+    }
+
     # Handle API routes and other Laravel specific paths
     @laravel {
-        path /api/* /sanctum/* /up
+        path /api/* /sanctum/* /up /admin/* /livewire/* /filament/*
     }
     handle @laravel {
         root * /var/www/public

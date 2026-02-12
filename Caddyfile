@@ -20,10 +20,14 @@ encode zstd gzip
         root * /var/www/public
         file_server
     }
+    handle /vendor/* {
+        root * /var/www/public
+        file_server
+    }
 
     # Handle API routes and other Laravel specific paths
     @laravel {
-        path /api/* /sanctum/* /up /admin/* /livewire/* /filament/*
+        path /api/* /sanctum/* /up /admin* /livewire* /filament*
     }
     handle @laravel {
         root * /var/www/public

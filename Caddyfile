@@ -1,17 +1,11 @@
 {
-email your-email@example.com
+	email your-email@example.com
 }
 
-your-domain.com {
-encode zstd gzip
+vidaduacademy.com {
+	encode zstd gzip
 
-    # Serve Laravel public storage files
-    handle /storage/* {
-        root * /var/www/public
-        file_server
-    }
-
-    # Serve Filament/Backend static assets
+    # 1. Assets (Css, Js, Vendor) -> Backend
     handle /css/* {
         root * /var/www/public
         file_server
@@ -25,18 +19,40 @@ encode zstd gzip
         file_server
     }
 
-    # Handle API routes and other Laravel specific paths
-    @laravel {
-        path /api/* /sanctum/* /up /admin* /livewire* /filament*
+    # 2. Storage -> Backend
+    handle /storage/* {
+        root * /var/www/public
+        file_server
     }
-    handle @laravel {
+
+    # 3. Backend Routes (API, Admin, Livewire) -> Backend PHP
+    handle /api/* {
+        root * /var/www/public
+        php_fastcgi app:9000
+    }
+    handle /sanctum/* {
+        root * /var/www/public
+        php_fastcgi app:9000
+    }
+    handle /up {
+        root * /var/www/public
+        php_fastcgi app:9000
+    }
+    handle /admin* {
+        root * /var/www/public
+        php_fastcgi app:9000
+    }
+    handle /livewire* {
+        root * /var/www/public
+        php_fastcgi app:9000
+    }
+    handle /filament* {
         root * /var/www/public
         php_fastcgi app:9000
     }
 
-    # Everything else routes to the Vue frontend (served by Nginx)
+    # 4. Frontend Fallback -> Vue Nginx
     handle {
         reverse_proxy web:80
     }
-
 }

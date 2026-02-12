@@ -22,6 +22,12 @@ class FilamentAdminAccess
 
         // Check if user has admin panel access permission or admin role
         if (!auth()->user()->can('access admin panel') && !auth()->user()->hasRole('admin')) {
+            error_log('DEBUG: User ID: ' . auth()->id());
+            error_log('DEBUG: Roles: ' . auth()->user()->getRoleNames());
+            error_log('DEBUG: Has Admin Role: ' . (auth()->user()->hasRole('admin') ? 'YES' : 'NO'));
+            // Force re-reading from database to be sure
+            error_log('DEBUG: Fresh User Roles: ' . auth()->user()->fresh()->getRoleNames());
+            
             abort(403, 'You do not have permission to access the admin panel.');
         }
 

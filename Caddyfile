@@ -5,54 +5,56 @@
 vidaduacademy.com {
 	encode zstd gzip
 
-    # 1. Assets (Css, Js, Vendor) -> Backend
-    handle /css/* {
-        root * /var/www/public
-        file_server
-    }
-    handle /js/* {
-        root * /var/www/public
-        file_server
-    }
-    handle /vendor/* {
-        root * /var/www/public
-        file_server
-    }
+    # We use 'route' to force order of operations
+    route {
+        # 1. Backend Assets
+        handle /storage/* {
+            root * /var/www/public
+            file_server
+        }
+        handle /css/* {
+            root * /var/www/public
+            file_server
+        }
+        handle /js/* {
+            root * /var/www/public
+            file_server
+        }
+        handle /vendor/* {
+            root * /var/www/public
+            file_server
+        }
 
-    # 2. Storage -> Backend
-    handle /storage/* {
-        root * /var/www/public
-        file_server
-    }
+        # 2. Backend Logic (API, Admin, Filament)
+        handle /api/* {
+            root * /var/www/public
+            php_fastcgi app:9000
+        }
+        handle /sanctum/* {
+            root * /var/www/public
+            php_fastcgi app:9000
+        }
+        handle /up {
+            root * /var/www/public
+            php_fastcgi app:9000
+        }
+        handle /admin* {
+            root * /var/www/public
+            php_fastcgi app:9000
+        }
+        handle /livewire* {
+             root * /var/www/public
+             php_fastcgi app:9000
+        }
+        handle /filament* {
+             root * /var/www/public
+             php_fastcgi app:9000
+        }
 
-    # 3. Backend Routes (API, Admin, Livewire) -> Backend PHP
-    handle /api/* {
-        root * /var/www/public
-        php_fastcgi app:9000
-    }
-    handle /sanctum/* {
-        root * /var/www/public
-        php_fastcgi app:9000
-    }
-    handle /up {
-        root * /var/www/public
-        php_fastcgi app:9000
-    }
-    handle /admin* {
-        root * /var/www/public
-        php_fastcgi app:9000
-    }
-    handle /livewire* {
-        root * /var/www/public
-        php_fastcgi app:9000
-    }
-    handle /filament* {
-        root * /var/www/public
-        php_fastcgi app:9000
-    }
-
-    # 4. Frontend Fallback -> Vue Nginx
-    handle {
-        reverse_proxy web:80
+        # 3. Everything else -> Frontend (Vue SPA)
+        # This catch-all handle must be last in the route block
+        handle {
+            reverse_proxy web:80
+        }
     }
 }

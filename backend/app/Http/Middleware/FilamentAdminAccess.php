@@ -22,11 +22,12 @@ class FilamentAdminAccess
 
         // Check if user has admin panel access permission or admin role
         if (!auth()->user()->can('access admin panel') && !auth()->user()->hasRole('admin')) {
-            error_log('DEBUG: User ID: ' . auth()->id());
-            error_log('DEBUG: Roles: ' . auth()->user()->getRoleNames());
-            error_log('DEBUG: Has Admin Role: ' . (auth()->user()->hasRole('admin') ? 'YES' : 'NO'));
-            // Force re-reading from database to be sure
-            error_log('DEBUG: Fresh User Roles: ' . auth()->user()->fresh()->getRoleNames());
+            \Illuminate\Support\Facades\Log::channel('stderr')->debug('DEBUG: User ID: ' . auth()->id());
+            \Illuminate\Support\Facades\Log::channel('stderr')->debug('DEBUG: Email: ' . auth()->user()->email);
+            \Illuminate\Support\Facades\Log::channel('stderr')->debug('DEBUG: Guard: ' . (auth()->check() ? 'web' : 'unknown'));
+            \Illuminate\Support\Facades\Log::channel('stderr')->debug('DEBUG: Roles: ' . json_encode(auth()->user()->getRoleNames()));
+            \Illuminate\Support\Facades\Log::channel('stderr')->debug('DEBUG: Has Admin Role: ' . (auth()->user()->hasRole('admin') ? 'YES' : 'NO'));
+            \Illuminate\Support\Facades\Log::channel('stderr')->debug('DEBUG: Can Access: ' . (auth()->user()->can('access admin panel') ? 'YES' : 'NO'));
             
             abort(403, 'You do not have permission to access the admin panel.');
         }

@@ -65,12 +65,12 @@ class Course extends Model
 
     public function getFormattedPriceAttribute(): string
     {
-        return number_format($this->price, 2);
+        return number_format((float) $this->price, 2);
     }
 
     public function getIsPublishedAttribute(): bool
     {
-        return $this->status === 'published' && $this->published_at?->isPast();
+        return $this->status === 'published' && $this->published_at && $this->published_at->isPast();
     }
 
     public function getTotalLessonsAttribute(): int

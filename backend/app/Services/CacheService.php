@@ -29,14 +29,22 @@ class CacheService
         
         try {
             return Cache::remember($key, $ttl, $callback);
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             Log::warning('Cache remember failed', [
                 'key' => $key,
                 'error' => $e->getMessage()
             ]);
             
             // Fallback to direct execution
-            return $callback();
+            try {
+                return $callback();
+            } catch (\Throwable $e2) {
+                Log::error('Cache fallback execution failed', [
+                    'key' => $key,
+                    'error' => $e2->getMessage()
+                ]);
+                throw $e2;
+            }
         }
     }
 

@@ -85,8 +85,7 @@ class CourseController extends Controller
             $orderDirection = strtolower($orderDirection) === 'asc' ? 'asc' : 'desc';
 
             if ($orderBy === 'price') {
-                // "Different way": Use implicit casting by adding 0. This works reliably in SQLite and MySQL to treat text as numbers.
-                return $query->orderByRaw('price + 0 ' . $orderDirection)->paginate(12);
+                return $query->orderBy('price', $orderDirection)->paginate(12);
             }
 
             return $query->orderBy($orderBy, $orderDirection)->paginate(12);

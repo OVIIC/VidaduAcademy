@@ -1,12 +1,12 @@
 # DigitalOcean Deployment Guide (Docker + PostgreSQL)
 
-This guide will help you deploy **VidaduAcademy** to a **DigitalOcean** Droplet (2GB RAM recommended) using Docker Compose and PostgreSQL.
+This guide will help you deploy and maintain **VidaduAcademy** on a **DigitalOcean** Droplet using Docker Compose.
 
 ## Prerequisites
 
 1.  **DigitalOcean Account**: Create a new Droplet.
 2.  **Domain Name**: Point your domain's A record to your Droplet's IP address.
-3.  **SSH Client**: Terminal on macOS.
+3.  **SSH Client**: Terminal on macOS/Linux or PowerShell/PuTTY on Windows.
 
 ---
 
@@ -15,13 +15,12 @@ This guide will help you deploy **VidaduAcademy** to a **DigitalOcean** Droplet 
 1.  **Login to DigitalOcean**.
 2.  Click **Create -> Droplets**.
 3.  **Region**: Choose the one closest to your users (e.g., Frankfurt, London).
-4.  **Image**: **Ubuntu 22.04 (LTS)** or **24.04 (LTS)**.
+4.  **Image**: **Ubuntu 24.04 (LTS)** (Recommended).
 5.  **Size**:
     - **Basic** -> **Regular** Disk Type.
-    - **2GB RAM / 1 CPU** ($12/mo) - **Recommended**.
-    - (1GB RAM is possible but risky with PostgreSQL + Composer updates).
-6.  **Authentication**: Select **SSH Key** (Recommended) or Password.
-7.  **Hostname**: `vidadu-server` (or whatever you like.
+    - **2GB RAM / 1 CPU** ($12/mo) - **Recommended minimum**.
+6.  **Authentication**: Select **SSH Key** (Recommended).
+7.  **Hostname**: `vidadu-server` (or similar).
 8.  **Click Create Droplet**.
 
 ---
@@ -44,12 +43,7 @@ This guide will help you deploy **VidaduAcademy** to a **DigitalOcean** Droplet 
     curl -fsSL https://get.docker.com -o get-docker.sh
     sh get-docker.sh
 
-    # Verify installation
-    docker compose version
-    ```
-
-3.  **Setup Swap Memory** (Essential for reliability):
-    ```bash
+    # Setup Swap Memory (Essential for 2GB RAM)
     fallocate -l 2G /swapfile
     chmod 600 /swapfile
     mkswap /swapfile
@@ -72,56 +66,39 @@ This guide will help you deploy **VidaduAcademy** to a **DigitalOcean** Droplet 
 
 2.  **Environment Configuration**:
 
-    Create and edit your `.env` file for the **Backend** using the production template:
+    **Backend .env**:
 
     ```bash
     cp backend/.env.production.example backend/.env
     nano backend/.env
     ```
 
-    **Update these lines in `backend/.env`:**
-    - `APP_URL`: Set to your domain (e.g., `https://vidadu.sk`).
-    - `DB_PASSWORD`: Set a secure password.
-    - `FRONTEND_URL`: Set to your domain.
-    - `SANCTUM_STATEFUL_DOMAINS`: Set to your domain (without `https://`).
+    _Update `APP_URL`, `DB_PASSWORD`, `FRONTEND_URL`, `SANCTUM_STATEFUL_DOMAINS`._
 
-3.  **Configure Caddy (Web Server)**:
-
-    ```bash
-    nano Caddyfile
-    ```
-
-    Replace the top line `http://localhost:80` with your actual domain:
-
-    ```
-    your-domain.com {
-        ...
-    }
-    ```
-
-4.  **Update Docker Environment Variables**:
-    You also need to set the database password for the Docker container itself.
-    Create a `.env` file in the **root** folder (where `docker-compose.prod.yml` is):
+    **Docker .env**:
 
     ```bash
     nano .env
     ```
 
-    Add this:
+    _Add deployment variables:_
 
     ```ini
-    # Domain for App
-    DOMAIN_NAME=your-domain.com
-
-    # Database Defaults for Postgres Container
+    DOMAIN_NAME=vidaduacademy.com
     DB_DATABASE=vidadu_academy
     DB_USERNAME=vidadu_user
-    DB_PASSWORD=YOUR_SECURE_PASSWORD # MUST MATCH backend/.env
+    DB_PASSWORD=YOUR_SECURE_PASSWORD
     ```
+
+3.  **Configure Caddy (Web Server)**:
+    ```bash
+    nano Caddyfile
+    ```
+    _Replace the top domain with your actual domain name._
 
 ---
 
-## Step 4: Launch
+## Step 4: First Launch
 
 1.  **Start the containers**:
 
@@ -129,33 +106,74 @@ This guide will help you deploy **VidaduAcademy** to a **DigitalOcean** Droplet 
     docker compose -f docker-compose.prod.yml up -d --build
     ```
 
-2.  **Run Migrations & Optimizations**:
+2.  **Run Initial Setup**:
 
     ```bash
-    # Install dependencies (if not fully baked in image)
+    # Optimize
     docker compose -f docker-compose.prod.yml exec app composer install --optimize-autoloader --no-dev
-
-    # Generate Key
     docker compose -f docker-compose.prod.yml exec app php artisan key:generate
+    docker compose -f docker-compose.prod.yml exec app php artisan storage:link
 
-    # Run Migrations
+    # Database
     docker compose -f docker-compose.prod.yml exec app php artisan migrate --force
 
-    # Optimize
-    docker compose -f docker-compose.prod.yml exec app php artisan config:cache
-    docker compose -f docker-compose.prod.yml exec app php artisan route:cache
-    docker compose -f docker-compose.prod.yml exec app php artisan view:cache
-
-    # Link Storage
-    docker compose -f docker-compose.prod.yml exec app php artisan storage:link
+    # Permissions
+    docker compose -f docker-compose.prod.yml exec app php artisan db:seed --class=RolePermissionSeeder
     ```
 
 ---
 
-## Step 5: Verification
+## Maintenance & Operations
 
-1.  Visit `https://your-domain.com`.
-2.  Check logs if something is wrong:
-    ```bash
-    docker compose -f docker-compose.prod.yml logs -f app
-    ```
+### 🔄 How to Deploy Updates
+
+When you push new code to GitHub, run this on the server:
+
+```bash
+cd /var/www/app
+
+# 1. Get new code
+git pull
+
+# 2. Rebuild containers (if needed) and restart
+docker compose -f docker-compose.prod.yml up -d --build --force-recreate
+
+# 3. Clear Caches (CRITICAL for this app)
+docker compose -f docker-compose.prod.yml exec app php artisan optimize:clear
+```
+
+### 👥 Managing Admin Users
+
+**Create a new Admin via Command Line:**
+
+```bash
+# 1. Create user
+docker compose -f docker-compose.prod.yml exec app php artisan make:filament-user
+
+# 2. Assign role
+docker compose -f docker-compose.prod.yml exec app php artisan tinker --execute="App\Models\User::where('email', 'EMAIL_HERE')->first()->assignRole('admin');"
+```
+
+### 🛠 Troubleshooting
+
+**View Logs:**
+
+```bash
+docker compose -f docker-compose.prod.yml logs --tail=50 -f app
+```
+
+**Fix "500 Server Error" or "403 Forbidden":**
+Usually a cache or permission issue. Run:
+
+```bash
+docker compose -f docker-compose.prod.yml exec app php artisan optimize:clear
+docker compose -f docker-compose.prod.yml exec app php artisan permission:cache-reset
+docker compose -f docker-compose.prod.yml restart app
+```
+
+**Database Access:**
+To enter the database manually:
+
+```bash
+docker compose -f docker-compose.prod.yml exec postgres psql -U vidadu_user -d vidadu_academy
+```

@@ -91,7 +91,11 @@ class Course extends Model
 
     public function getWhatYouWillLearnAttribute($value)
     {
-        $decoded = json_decode($value, true) ?: [];
+        if (is_array($value)) {
+            $decoded = $value;
+        } else {
+            $decoded = json_decode($value, true) ?: [];
+        }
         
         // Convert to Filament repeater format ONLY if accessing from admin panel
         if (request() && request()->is('admin/*') && !empty($decoded) && !isset($decoded[0]['item'])) {
@@ -113,7 +117,11 @@ class Course extends Model
 
     public function getRequirementsAttribute($value)
     {
-        $decoded = json_decode($value, true) ?: [];
+        if (is_array($value)) {
+            $decoded = $value;
+        } else {
+            $decoded = json_decode($value, true) ?: [];
+        }
         
         // Convert to Filament repeater format ONLY if accessing from admin panel
         if (request() && request()->is('admin/*') && !empty($decoded) && !isset($decoded[0]['item'])) {

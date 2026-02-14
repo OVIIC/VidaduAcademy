@@ -53,6 +53,33 @@ This guide will help you deploy and maintain **VidaduAcademy** on a **DigitalOce
 
 ---
 
+## Step 2.5: Security Hardening (Firewall)
+
+Protect your server by only allowing necessary traffic.
+
+1.  **Check UFW Status**:
+
+    ```bash
+    ufw status
+    ```
+
+2.  **Allow SSH & Web Traffic**:
+    _CRITICAL: Do not enable UFW without allowing SSH first, or you will be locked out._
+
+    ```bash
+    ufw allow OpenSSH
+    ufw allow 80/tcp
+    ufw allow 443/tcp
+    ```
+
+3.  **Enable Firewall**:
+    ```bash
+    ufw enable
+    # Type 'y' to confirm
+    ```
+
+---
+
 ## Step 3: Application Deployment
 
 1.  **Clone the Repository**:
@@ -141,6 +168,18 @@ docker compose -f docker-compose.prod.yml up -d --build --force-recreate
 # 3. Clear Caches (CRITICAL for this app)
 docker compose -f docker-compose.prod.yml exec app php artisan optimize:clear
 ```
+
+### 🔒 Security Verification
+
+**Check APP_DEBUG:**
+Ensure your production app is not exposing sensitive debug info.
+
+```bash
+docker compose -f docker-compose.prod.yml exec app grep APP_DEBUG .env
+# Output should be: APP_DEBUG=false
+```
+
+If it is `true`, edit `backend/.env` and change it to `false`, then restart the app container.
 
 ### 👥 Managing Admin Users
 

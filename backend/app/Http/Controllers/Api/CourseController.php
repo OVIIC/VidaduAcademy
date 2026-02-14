@@ -127,7 +127,7 @@ class CourseController extends Controller
                 'instructor:id,name,email,avatar,bio,subscribers_count',
                 'category:id,name,slug',
                 'lessons' => function ($query) {
-                    $query->select(['id', 'course_id', 'title', 'slug', 'duration_minutes', 'order', 'is_preview'])
+                    $query->select(['id', 'course_id', 'title', 'slug', 'video_duration', 'order', 'is_preview'])
                           ->where('status', 'published')
                           ->orderBy('order');
                 }
@@ -139,7 +139,8 @@ class CourseController extends Controller
 
         // Add computed fields
         $course->lessons_count = $course->lessons->count();
-        $course->total_duration = $course->lessons->sum('duration_minutes');
+        // Calculate total duration from seconds to minutes
+        $course->total_duration = ceil($course->lessons->sum('video_duration') / 60);
 
         return response()->json($course);
     }

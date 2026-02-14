@@ -63,18 +63,15 @@ services:
       - app
 
   db:
-    image: mysql:8.0
+    image: postgres:15-alpine
     container_name: vidadu-db
     restart: unless-stopped
     environment:
-      MYSQL_DATABASE: ${DB_DATABASE}
-      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
-      MYSQL_PASSWORD: ${DB_PASSWORD}
-      MYSQL_USER: ${DB_USERNAME}
-      SERVICE_TAGS: dev
-      SERVICE_NAME: mysql
+      POSTGRES_DB: ${DB_DATABASE}
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
     volumes:
-      - dbdata:/var/lib/mysql/
+      - dbdata:/var/lib/postgresql/data
     networks:
       - vidadu-network
 

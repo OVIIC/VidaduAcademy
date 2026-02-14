@@ -169,6 +169,21 @@ class EnrollmentController extends Controller
         $courseId = $validated['course_id'];
         $course = Course::findOrFail($courseId);
 
+        // Security Check: Prevent free enrollment in paid courses
+        if ($course->price > 0) {
+            // Check if user has a completed purchase for this course
+            $hasPurchased = $user->purchases()
+                ->where('course_id', $course->id)
+                ->where('status', 'completed')
+                ->exists();
+
+            if (!$hasPurchased) {
+                return response()->json([
+                    'message' => 'This is a paid course. You must purchase it first.'
+                ], 403);
+            }
+        }
+
         try {
             $enrollment = $this->enrollmentService->enrollUser($user, $course);
             $enrollment->load(['user', 'course']);

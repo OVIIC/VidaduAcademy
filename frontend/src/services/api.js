@@ -7,20 +7,12 @@ const api = axios.create({
     'Content-Type': 'application/json',
     'Accept': 'application/json',
   },
+  withCredentials: true,
 })
 
-// Request interceptor to add auth token
+// Request interceptor (Token is now handled via HttpOnly Cookies)
 api.interceptors.request.use((config) => {
-  const authStore = useAuthStore()
-  const token = authStore.token
-  
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`
-    if (import.meta.env.DEV) console.log('Request with auth token to:', config.url)
-  } else {
-    if (import.meta.env.DEV) console.log('Request without auth token to:', config.url)
-  }
-  
+  if (import.meta.env.DEV) console.log('Request to:', config.url)
   return config
 })
 

@@ -103,7 +103,16 @@ class AuthController extends Controller
                 'is_active' => true,
             ]);
 
-            $token = $user->createToken('auth_token')->plainTextToken;
+            $user = User::create([
+                'name' => $validatedData['name'],
+                'email' => $validatedData['email'],
+                'password' => Hash::make($request->password),
+                'is_active' => true,
+            ]);
+
+            // Login user via session
+            Auth::login($user);
+            $request->session()->regenerate();
 
             // Log successful registration
             $this->auditService->logAuthEvent('registration_success', $user->id, [
@@ -115,7 +124,6 @@ class AuthController extends Controller
                 'message' => 'Registration successful',
                 'user' => $user->only(['id', 'name', 'email']),
                 'roles' => $user->getRoleNames(),
-                'token' => $token
             ], 201);
 
         } catch (ValidationException $e) {
@@ -174,49 +182,51 @@ class AuthController extends Controller
 
         $user = User::where('email', $email)->first();
 
-        if (!$user || !Hash::check($request->password, $user->password)) {
-            // Log failed login attempt
-            $isLocked = $this->auditService->logFailedLogin($email, $request);
-            
-            $message = 'Invalid credentials';
-            if ($isLocked) {
-                $message = 'Account has been temporarily locked due to multiple failed attempts.';
+        if (Auth::attempt($request->only('email', 'password'))) {
+            $request->session()->regenerate();
+
+            // Check if user account is active
+            if (!$user->is_active) {
+                Auth::guard('web')->logout();
+                $request->session()->invalidate();
+                $request->session()->regenerateToken();
+
+                $this->auditService->logAuthEvent('login_inactive_account', $user->id, [
+                    'email' => $email,
+                    'ip' => $ip
+                ]);
+                
+                return response()->json([
+                    'message' => 'Account is deactivated. Please contact support.'
+                ], 403);
             }
-            
-            return response()->json(['message' => $message], 401);
-        }
 
-        // Check if user account is active
-        if (!$user->is_active) {
-            $this->auditService->logAuthEvent('login_inactive_account', $user->id, [
+            // Clear failed login attempts on successful login
+            $this->auditService->clearFailedLogins($email, $ip);
+
+            // Log successful login
+            $this->auditService->logAuthEvent('login_success', $user->id, [
                 'email' => $email,
-                'ip' => $ip
+                'ip' => $ip,
+                'user_agent' => $request->userAgent()
             ]);
-            
+
             return response()->json([
-                'message' => 'Account is deactivated. Please contact support.'
-            ], 403);
+                'message' => 'Login successful',
+                'user' => $user->only(['id', 'name', 'email', 'is_instructor']),
+                'roles' => $user->getRoleNames(),
+            ]);
         }
 
-        // Clear failed login attempts on successful login
-        $this->auditService->clearFailedLogins($email, $ip);
-
-        // Create token
-        $token = $user->createToken('auth_token')->plainTextToken;
-
-        // Log successful login
-        $this->auditService->logAuthEvent('login_success', $user->id, [
-            'email' => $email,
-            'ip' => $ip,
-            'user_agent' => $request->userAgent()
-        ]);
-
-        return response()->json([
-            'message' => 'Login successful',
-            'user' => $user->only(['id', 'name', 'email', 'is_instructor']),
-            'roles' => $user->getRoleNames(),
-            'token' => $token
-        ]);
+        // Log failed login attempt
+        $isLocked = $this->auditService->logFailedLogin($email, $request);
+        
+        $message = 'Invalid credentials';
+        if ($isLocked) {
+            $message = 'Account has been temporarily locked due to multiple failed attempts.';
+        }
+        
+        return response()->json(['message' => $message], 401);
     }
 
     /**
@@ -227,14 +237,15 @@ class AuthController extends Controller
         $user = $request->user();
         
         if ($user) {
-            // Revoke current token
-            $request->user()->currentAccessToken()->delete();
-            
             // Log logout
             $this->auditService->logAuthEvent('logout', $user->id, [
                 'ip' => $request->ip()
             ]);
         }
+
+        Auth::guard('web')->logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
 
         return response()->json(['message' => 'Logout successful']);
     }

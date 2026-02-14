@@ -7,7 +7,6 @@ const toast = useToast()
 export const useAuthStore = defineStore('auth', {
   state: () => ({
     user: null,
-    token: null,
     roles: [],
     isAuthenticated: false,
     loading: false,
@@ -28,41 +27,45 @@ export const useAuthStore = defineStore('auth', {
   },
 
   actions: {
-    initializeAuth() {
-      const token = localStorage.getItem('token')
+    async initializeAuth() {
+      // Check if we have a user in local storage to optimistically set state
       const user = localStorage.getItem('user')
       const roles = localStorage.getItem('roles')
       
-      if (import.meta.env.DEV) console.log('Initializing auth:', { hasToken: !!token, hasUser: !!user })
-      
-      if (token && user) {
-        this.token = token
+      if (user) {
         this.user = JSON.parse(user)
         this.roles = roles ? JSON.parse(roles) : []
         this.isAuthenticated = true
-        if (import.meta.env.DEV) console.log('Auth initialized successfully for user:', this.user?.email)
-      } else {
-        if (import.meta.env.DEV) console.log('No valid auth data found in localStorage')
+      }
+
+      // Verify session with backend
+      try {
+        await this.fetchUser()
+      } catch (error) {
+        // If fetchUser fails (401), we are not authenticated
+        this.user = null
+        this.roles = []
+        this.isAuthenticated = false
+        localStorage.removeItem('user')
+        localStorage.removeItem('roles')
       }
     },
 
     async login(credentials) {
       this.loading = true
       try {
-        if (import.meta.env.DEV) console.log('Attempting login for:', credentials.email)
+        // Get CSRF cookie first
+        await authService.getCsrfCookie()
+        
         const data = await authService.login(credentials)
-        if (import.meta.env.DEV) console.log('Login successful, received data:', { user: data.user?.email, hasToken: !!data.token })
         
         this.user = data.user
-        this.token = data.token
         this.roles = data.roles || []
         this.isAuthenticated = true
         
-        localStorage.setItem('token', data.token)
         localStorage.setItem('user', JSON.stringify(data.user))
         localStorage.setItem('roles', JSON.stringify(this.roles))
         
-        if (import.meta.env.DEV) console.log('Auth state updated, localStorage saved')
         toast.success('Vitajte späť!')
         return data
       } catch (error) {
@@ -81,11 +84,9 @@ export const useAuthStore = defineStore('auth', {
         const data = await authService.register(userData)
         
         this.user = data.user
-        this.token = data.token
         this.roles = data.roles || []
         this.isAuthenticated = true
         
-        localStorage.setItem('token', data.token)
         localStorage.setItem('user', JSON.stringify(data.user))
         localStorage.setItem('roles', JSON.stringify(this.roles))
         
@@ -103,17 +104,13 @@ export const useAuthStore = defineStore('auth', {
     async logout() {
       try {
         await authService.logout()
-        if (import.meta.env.DEV) console.log('Backend logout successful')
       } catch (error) {
         console.error('Logout error:', error)
       } finally {
-        if (import.meta.env.DEV) console.log('Clearing auth state and localStorage')
         this.user = null
-        this.token = null
         this.roles = []
         this.isAuthenticated = false
         
-        localStorage.removeItem('token')
         localStorage.removeItem('user')
         localStorage.removeItem('roles')
         

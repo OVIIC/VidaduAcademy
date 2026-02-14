@@ -62,6 +62,7 @@ storage/framework/views/*
 storage/logs/*
 storage/app/public/*
 !storage/app/public/.gitignore
+backend/bootstrap/cache/*.php
 
 # Docker
 docker-compose.override.yml

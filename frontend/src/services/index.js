@@ -13,6 +13,19 @@ const cachedApiCall = async (cacheKey, apiCall, ttl = 5 * 60 * 1000) => {
   apiCache.set(cacheKey, response, ttl)
   return response
 }
+// Helper to invalidate cache
+export const invalidateCache = (pattern) => {
+  if (typeof pattern === 'string') {
+    // Exact match or prefix match could be implemented
+    // For now, let's just use the existing clear method if it exists or implement basic pattern matching
+    // Since apiCache.cache is a Map, we can iterate
+    for (const key of apiCache.cache.keys()) {
+      if (key.includes(pattern)) {
+        apiCache.cache.delete(key)
+      }
+    }
+  }
+}
 
 export const authService = {
   async login(credentials) {
@@ -67,7 +80,7 @@ export const courseService = {
     return cachedApiCall(cacheKey, async () => {
       const response = await api.get(`/courses/${slug}`)
       return response.data
-    }, 15 * 60 * 1000) // Cache for 15 minutes
+    }, 5 * 60 * 1000) // Cache for 5 minutes
   },
 
   async getFeaturedCourses() {
@@ -75,7 +88,7 @@ export const courseService = {
     return cachedApiCall(cacheKey, async () => {
       const response = await api.get('/courses/featured')
       return response.data
-    }, 10 * 60 * 1000) // Cache for 10 minutes
+    }, 5 * 60 * 1000) // Cache for 5 minutes
   },
 
   async getCategories() {
@@ -83,7 +96,7 @@ export const courseService = {
     return cachedApiCall(cacheKey, async () => {
       const response = await api.get('/categories')
       return response.data
-    }, 60 * 60 * 1000) // Cache for 1 hour
+    }, 5 * 60 * 1000) // Cache for 5 minutes
   },
 
 

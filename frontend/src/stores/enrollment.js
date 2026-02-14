@@ -105,6 +105,12 @@ export const useEnrollmentStore = defineStore('enrollment', {
         // Refresh my courses after successful enrollment
         await this.loadMyCourses(true)
         
+        // Invalidate course purchase status cache
+        const cacheKey = `purchase-status:${courseId}`
+        if (apiCache.has(cacheKey)) {
+          apiCache.cache.delete(cacheKey)
+        }
+        
         return response
       } catch (error) {
         console.error('Error enrolling in course:', error)
@@ -119,11 +125,11 @@ export const useEnrollmentStore = defineStore('enrollment', {
       }
     },
 
-    async checkCoursePurchaseStatus(courseId) {
+    async checkCoursePurchaseStatus(courseId, force = false) {
       const cacheKey = `purchase-status:${courseId}`
       
-      // Check cache first
-      if (apiCache.has(cacheKey)) {
+      // Check cache first if not forcing
+      if (!force && apiCache.has(cacheKey)) {
         const cachedData = apiCache.get(cacheKey)
         this.coursePurchaseStatus[courseId] = cachedData
         return cachedData
@@ -132,13 +138,15 @@ export const useEnrollmentStore = defineStore('enrollment', {
       try {
         const response = await paymentService.checkCoursePurchaseStatus(courseId)
         
-        // Cache the result for 2 minutes (purchase status changes infrequently)
-        apiCache.set(cacheKey, response, 2 * 60 * 1000)
+        // Cache the result for 1 minute (reduced from 2)
+        apiCache.set(cacheKey, response, 1 * 60 * 1000)
         this.coursePurchaseStatus[courseId] = response
         return response
       } catch (error) {
         console.error('Error checking course purchase status:', error)
         const fallbackData = { has_purchased: false, is_enrolled: false }
+        
+        // Don't cache errors or cache for very short time
         this.coursePurchaseStatus[courseId] = fallbackData
         return fallbackData
       }

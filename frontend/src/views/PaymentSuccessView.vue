@@ -207,6 +207,11 @@ export default {
         // But better is to import it at top. Let's fix imports first if needed.
         const enrollmentStore = useEnrollmentStore()
         await enrollmentStore.loadMyCourses(true)
+        
+        // Also force refresh purchase status for this specific course if we have it
+        if (course.value && course.value.id) {
+          await enrollmentStore.checkCoursePurchaseStatus(course.value.id, true)
+        }
       }
       
       // Auto-redirect after 4 seconds

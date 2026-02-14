@@ -141,6 +141,9 @@ export const useCourseStore = defineStore('course', {
     async refreshCourses() {
       // Clear cache for courses
       apiCache.clear()
+      // Invalidate specific course caches if needed, though clear() does it all
+      // If we wanted to be substantial, we could use invalidateCache('/courses') if we didn't want to clear EVERYTHING
+      
       
       // Fetch fresh data
       await this.fetchCourses({ page: 1 })

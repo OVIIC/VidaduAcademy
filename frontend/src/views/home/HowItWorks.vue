@@ -51,7 +51,7 @@
                style="top: max(140px, 50vh - 280px)"
           >
              <!-- Background Elements -->
-             <div class="absolute inset-0 bg-[url('/images/grid-pattern.svg')] bg-repeat opacity-[0.05]"></div>
+             <div class="absolute inset-0 bg-[url('/images/grid-pattern.svg')] bg-repeat opacity-[0.05] blur-[3px]"></div>
              <div class="absolute top-0 right-0 w-[500px] h-[500px] bg-primary-600/10 rounded-full blur-[100px] transition-colors duration-700"
                   :class="stepColors[activeStep]"
              ></div>

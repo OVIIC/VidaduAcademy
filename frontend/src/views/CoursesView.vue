@@ -103,8 +103,8 @@
   </div>
 </template>
 <script setup>
-import { ref, onMounted, computed } from "vue";
-import { useRoute } from "vue-router";
+import { ref, onMounted, computed, watch } from "vue";
+import { useRoute, useRouter } from "vue-router";
 import { useAuthStore } from "@/stores/auth";
 import { useEnrollmentStore } from "@/stores/enrollment";
 import { useCourseStore } from "@/stores/course";
@@ -114,6 +114,7 @@ import CourseCatalog from "@/components/course/CourseCatalog.vue";
 import CourseDetail from "@/components/course/CourseDetail.vue";
 
 const route = useRoute();
+const router = useRouter();
 const authStore = useAuthStore();
 const enrollmentStore = useEnrollmentStore();
 const courseStore = useCourseStore();
@@ -156,6 +157,12 @@ const navigateCourse = (direction) => {
 
 const selectCourse = async (course) => {
   if (import.meta.env.DEV) console.log("Selecting course:", course.title);
+  
+  // Update URL to reflect selection without reloading
+  if (route.query.slug !== course.slug) {
+    router.push({ query: { ...route.query, slug: course.slug } });
+  }
+
   selectedCourse.value = course;
 
   window.scrollTo({
@@ -165,11 +172,27 @@ const selectCourse = async (course) => {
 
   try {
     const fullCourse = await courseStore.fetchCourse(course.slug);
-    selectedCourse.value = { ...selectedCourse.value, ...fullCourse };
+    // Ensure we don't overwrite if user switched quickly
+    if (selectedCourse.value.slug === course.slug) {
+        selectedCourse.value = { ...selectedCourse.value, ...fullCourse };
+    }
   } catch (e) {
     console.error(e);
   }
 };
+
+// Watch for URL changes (back/forward navigation)
+watch(
+  () => route.query.slug,
+  (newSlug) => {
+    if (newSlug && courses.value.length > 0) {
+      const found = courses.value.find((c) => c.slug === newSlug);
+      if (found && selectedCourse.value?.id !== found.id) {
+        selectCourse(found);
+      }
+    }
+  }
+);
 
 const loadCourses = async () => {
   try {

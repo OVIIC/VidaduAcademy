@@ -4,7 +4,7 @@
     <div class="absolute inset-0 overflow-hidden pointer-events-none">
       <div class="absolute -top-1/2 -left-1/4 w-[1000px] h-[1000px] bg-primary-600/20 rounded-full blur-[120px] opacity-30 animate-pulse-slow"></div>
       <div class="absolute -bottom-1/2 -right-1/4 w-[800px] h-[800px] bg-secondary-600/20 rounded-full blur-[100px] opacity-30 animate-pulse-slow delay-1000"></div>
-      <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-[url('/images/grid-pattern.svg')] bg-repeat opacity-[0.03]"></div>
+      <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-[url('/images/grid-pattern.svg')] bg-repeat opacity-[0.03] blur-[3px]"></div>
     </div>
     <div class="sm:mx-auto sm:w-full sm:max-w-md relative z-10">
       <div class="flex justify-center">

@@ -9,14 +9,14 @@
   >
     <div class="relative overflow-hidden">
       <LazyImage
-        :src="course.thumbnail || 'https://placehold.co/600x400'"
+        :src="course.thumbnail || '/images/video-academy-logo.png'"
         :alt="course.title"
         container-class="w-full h-48"
         :image-class="[
-          'w-full h-48 object-cover transition-transform duration-300',
+          course.thumbnail ? 'object-cover' : 'object-contain p-8 bg-dark-800',
           enableHoverEffects ? 'group-hover:scale-105' : '',
         ]"
-        :fallback-src="'https://placehold.co/600x400'"
+        :fallback-src="'/images/video-academy-logo.png'"
       />
       <div v-if="course.featured" class="absolute top-3 right-3">
         <StarIcon class="h-5 w-5 text-yellow-400 fill-current" />

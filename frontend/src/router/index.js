@@ -17,7 +17,7 @@ const router = createRouter({
     },
     {
       path: '/course/:slug',
-      redirect: '/courses',
+      redirect: to => ({ name: 'Courses', query: { slug: to.params.slug } }),
     },
     {
       path: '/login',

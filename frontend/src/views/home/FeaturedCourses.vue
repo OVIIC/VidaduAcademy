@@ -39,7 +39,7 @@
         <!-- First Set -->
         <div class="flex gap-8 px-4 flex-shrink-0">
           <div v-if="courseStore.loading" class="flex gap-8">
-            <div v-for="i in 4" :key="`skeleton-${i}`" class="w-[350px] bg-dark-800 rounded-2xl h-[420px] animate-pulse"></div>
+            <div v-for="i in 4" :key="`skeleton-${i}`" class="w-[350px] bg-dark-800 rounded-2xl h-[380px] animate-pulse"></div>
           </div>
           <div v-else-if="filteredFeaturedCourses.length === 0" class="w-full text-center text-dark-400 py-10">
             Pre túto kategóriu sa nenašli žiadne kurzy.
@@ -58,7 +58,7 @@
         <!-- Second Set (Duplicate for seamless loop - only if we have enough items) -->
         <div v-if="filteredFeaturedCourses.length > 2" class="flex gap-8 px-4 flex-shrink-0" aria-hidden="true">
           <div v-if="courseStore.loading" class="flex gap-8">
-            <div v-for="i in 4" :key="`skeleton-dup-${i}`" class="w-[350px] bg-dark-800 rounded-2xl h-[420px] animate-pulse"></div>
+            <div v-for="i in 4" :key="`skeleton-dup-${i}`" class="w-[350px] bg-dark-800 rounded-2xl h-[380px] animate-pulse"></div>
           </div>
           <CourseCard
             v-else
@@ -128,6 +128,10 @@ onMounted(() => {
 /* Marquee Animation */
 .marquee-container {
   animation: marquee 40s linear infinite;
+}
+
+.marquee-container:hover {
+  animation-play-state: paused;
 }
 
 @keyframes marquee {

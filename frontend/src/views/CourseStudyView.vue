@@ -436,7 +436,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { ref, computed, onMounted, nextTick, onUnmounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { useToast } from 'vue-toastification'
 import { learningService, authService } from '@/services'
@@ -560,16 +560,24 @@ const selectLesson = (lesson) => {
   selectedLesson.value = lesson
   if (import.meta.env.DEV) console.log('Selected lesson:', lesson.title)
   
-  // Scroll to top of the page immediately
-  window.scrollTo({
-    top: 0,
-    behavior: 'smooth'
-  })
+  // Scroll to lesson content after a small delay to ensure DOM update
+  nextTick(() => {
+    if (lessonContentRef.value) {
+      lessonContentRef.value.scrollIntoView({ 
+        behavior: 'smooth',
+        block: 'start'
+      })
       
-  // Reset switching flag after scroll animation completes
-  setTimeout(() => {
-    lessonSwitching.value = false
-  }, 1000)
+      // Reset switching flag after scroll animation
+      setTimeout(() => {
+        lessonSwitching.value = false
+      }, 1000)
+    } else {
+      // Fallback if ref not found (e.g. unexpected structure)
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+      lessonSwitching.value = false
+    }
+  })
 }
 
 const startLesson = (lesson) => {

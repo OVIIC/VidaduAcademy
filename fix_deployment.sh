@@ -19,8 +19,9 @@ chmod -R 777 backend/bootstrap/cache
 touch backend/storage/logs/.gitkeep
 touch backend/bootstrap/cache/.gitkeep
 
-# 4. Clear cache inside the container
-echo "Clearing application cache inside Docker container..."
+# 4. Clear cache and run migrations inside the container
+echo "Clearing application cache and running migrations..."
 docker compose -f docker-compose.prod.yml exec -T app php artisan optimize:clear
+docker compose -f docker-compose.prod.yml exec -T app php artisan migrate --force
 
 echo "Deployment fix complete! Please refresh your browser."

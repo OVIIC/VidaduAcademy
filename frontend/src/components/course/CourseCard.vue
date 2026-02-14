@@ -10,7 +10,7 @@
     <!-- Course Thumbnail -->
     <div class="aspect-video overflow-hidden relative">
       <img 
-        :src="course.thumbnail || '/api/placeholder/500/280'"
+        :src="course.thumbnail || '/images/placeholder.svg'"
         :alt="course.title"
         class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
       />

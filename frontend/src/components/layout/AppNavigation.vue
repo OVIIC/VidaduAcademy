@@ -32,10 +32,7 @@
           class="flex items-center space-x-2 text-xl font-bold text-white hover:text-primary-400 transition-colors z-10 focus:outline-none"
           aria-label="VidaduAcademy domov"
         >
-          <div class="w-8 h-8 bg-gradient-to-br from-primary-500 to-secondary-500 rounded-full flex items-center justify-center shadow-lg shadow-primary-500/20">
-            <span class="text-white font-bold text-sm">V</span>
-          </div>
-          <span class="hidden xs:inline tracking-tight font-display">Vidadu</span>
+          <img src="/images/video-academy-logo.png" alt="Vidadu Academy" class="h-8 w-auto object-contain" />
         </router-link>
 
         <!-- Desktop Navigation -->

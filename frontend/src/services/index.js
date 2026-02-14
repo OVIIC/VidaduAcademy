@@ -33,10 +33,6 @@ export const authService = {
     return response.data
   },
 
-  async getCsrfCookie() {
-    await api.get('/sanctum/csrf-cookie')
-  },
-
   async register(userData) {
     const response = await api.post('/auth/register', userData)
     return response.data

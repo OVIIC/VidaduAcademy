@@ -98,11 +98,11 @@ class Course extends Model
         }
         
         // Convert to Filament repeater format ONLY if accessing from admin panel
-        if (request() && request()->is('admin/*') && !empty($decoded) && !isset($decoded[0]['item'])) {
+        if (request() && request()->is('admin/*') && !empty($decoded) && is_array($decoded) && !isset($decoded[0]['item'])) {
             return array_map(fn($item) => ['item' => $item], $decoded);
         }
         
-        return $decoded;
+        return is_array($decoded) ? $decoded : [];
     }
 
     public function setRequirementsAttribute($value)
@@ -124,11 +124,11 @@ class Course extends Model
         }
         
         // Convert to Filament repeater format ONLY if accessing from admin panel
-        if (request() && request()->is('admin/*') && !empty($decoded) && !isset($decoded[0]['item'])) {
+        if (request() && request()->is('admin/*') && !empty($decoded) && is_array($decoded) && !isset($decoded[0]['item'])) {
             return array_map(fn($item) => ['item' => $item], $decoded);
         }
         
-        return $decoded;
+        return is_array($decoded) ? $decoded : [];
     }
 
     public function getThumbnailAttribute($value)
@@ -137,17 +137,21 @@ class Course extends Model
             return null;
         }
 
+        if (!is_string($value)) {
+            return null;
+        }
+
         // Check if it's already a complete URL
         if (filter_var($value, FILTER_VALIDATE_URL) || str_starts_with($value, 'http')) {
             return $value;
         }
 
-        // Fix for broken Unsplash URLs (missing domain) caused by some data import/truncation
+        // Fix for broken Unsplash URLs (missing domain)
         if (str_starts_with($value, 'photo-')) {
             return 'https://images.unsplash.com/' . $value;
         }
 
-        // Otherwise assume it's a local storage path and return full URL
+        // Otherwise assume it's a local storage path
         return asset('storage/' . $value);
     }
 }

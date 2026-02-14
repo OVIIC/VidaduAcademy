@@ -39,7 +39,15 @@ class CourseController extends Controller
                 
                 // Use full-text search if MySQL
                 if (config('database.default') === 'mysql') {
-                    $query->whereRaw("MATCH(title, description) AGAINST(? IN NATURAL LANGUAGE MODE)", [$search]);
+                    try {
+                        $query->whereRaw("MATCH(title, description) AGAINST(? IN NATURAL LANGUAGE MODE)", [$search]);
+                    } catch (\Exception $e) {
+                         // Fallback if FULLTEXT index is missing or query fails
+                        $query->where(function ($q) use ($search) {
+                            $q->where('title', 'LIKE', "%{$search}%")
+                              ->orWhere('description', 'LIKE', "%{$search}%");
+                        });
+                    }
                 } else {
                     // Fallback to LIKE search
                     $query->where(function ($q) use ($search) {

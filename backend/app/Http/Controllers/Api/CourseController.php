@@ -127,7 +127,7 @@ class CourseController extends Controller
                 'instructor:id,name,email,avatar,bio,subscribers_count',
                 'category:id,name,slug',
                 'lessons' => function ($query) {
-                    $query->select(['id', 'course_id', 'title', 'slug', 'video_duration', 'order', 'is_preview'])
+                    $query->select(['id', 'course_id', 'title', 'slug', 'video_duration', 'order', 'is_free'])
                           ->where('status', 'published')
                           ->orderBy('order');
                 }

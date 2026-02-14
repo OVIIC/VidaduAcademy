@@ -34,6 +34,10 @@ class EnrollmentController extends Controller
      */
     public function enrollUser(Request $request): JsonResponse
     {
+        if (!$request->user()->hasRole('admin')) {
+            return response()->json(['message' => 'Unauthorized. Admin access required.'], 403);
+        }
+
         $validated = $request->validate([
             'user_id' => 'required|exists:users,id',
             'course_id' => 'required|exists:courses,id',
@@ -65,6 +69,10 @@ class EnrollmentController extends Controller
      */
     public function unenrollUser(Request $request): JsonResponse
     {
+        if (!$request->user()->hasRole('admin')) {
+            return response()->json(['message' => 'Unauthorized. Admin access required.'], 403);
+        }
+
         $validated = $request->validate([
             'user_id' => 'required|exists:users,id',
             'course_id' => 'required|exists:courses,id',
@@ -91,6 +99,11 @@ class EnrollmentController extends Controller
      */
     public function updateProgress(Request $request, Enrollment $enrollment): JsonResponse
     {
+        // Allow admins to update any progress, or the user who owns the enrollment
+        if (!$request->user()->hasRole('admin') && $request->user()->id !== $enrollment->user_id) {
+             return response()->json(['message' => 'Unauthorized.'], 403);
+        }
+
         $validated = $request->validate([
             'progress_percentage' => 'required|integer|min:0|max:100',
             'last_accessed_lesson_id' => 'nullable|exists:lessons,id',

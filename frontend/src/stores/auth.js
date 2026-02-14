@@ -152,6 +152,11 @@ export const useAuthStore = defineStore('auth', {
 
     // Debug method for development testing
     debugLogin() {
+      if (!import.meta.env.DEV) {
+        console.warn('Debug login is not available in production')
+        return
+      }
+
       const mockUser = {
         id: 1,
         name: 'Test User',
@@ -170,7 +175,7 @@ export const useAuthStore = defineStore('auth', {
       localStorage.setItem('user', JSON.stringify(mockUser))
       localStorage.setItem('roles', JSON.stringify(mockRoles))
       
-      if (import.meta.env.DEV) console.log('Debug login activated with user:', mockUser)
+      console.log('Debug login activated with user:', mockUser)
     }
   },
 })

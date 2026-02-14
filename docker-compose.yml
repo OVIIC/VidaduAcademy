@@ -11,6 +11,9 @@ services:
       - ./backend:/var/www
     environment:
       APP_ENV: production
+      DB_CONNECTION: pgsql
+      DB_HOST: vidadu-db
+      DB_PORT: 5432
     networks:
       - vidadu-network
 
@@ -22,6 +25,11 @@ services:
     container_name: vidadu-worker
     restart: unless-stopped
     working_dir: /var/www
+    environment:
+      APP_ENV: production
+      DB_CONNECTION: pgsql
+      DB_HOST: vidadu-db
+      DB_PORT: 5432
     command: php artisan queue:work --tries=3 --timeout=90
     volumes:
       - ./backend:/var/www
@@ -40,6 +48,11 @@ services:
     container_name: vidadu-scheduler
     restart: unless-stopped
     working_dir: /var/www
+    environment:
+      APP_ENV: production
+      DB_CONNECTION: pgsql
+      DB_HOST: vidadu-db
+      DB_PORT: 5432
     command: php artisan schedule:work
     volumes:
       - ./backend:/var/www

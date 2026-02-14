@@ -7,14 +7,11 @@
         <!-- Company Info -->
         <div class="col-span-1 md:col-span-2">
           <div class="flex items-center space-x-2 mb-4">
-            <div class="w-8 h-8 bg-gradient-to-r from-primary to-secondary rounded-lg flex items-center justify-center shadow-lg">
-              <span class="text-white font-bold text-sm">V</span>
-            </div>
-            <span class="text-xl font-bold text-white">VidaduAcademy</span>
+            <img src="/images/video-academy-logo.png" alt="Vidadu Academy" class="h-8 w-auto object-contain" />
           </div>
           <p class="text-gray-300 mb-6 max-w-md leading-relaxed">
-            Posilňujeme tvorcov pri budovaní úspešných YouTube kanálov prostredníctvom kurzov vedených expertmi 
-            a praktických stratégií. Pridajte sa k tisíckam študentov, ktorí rozširujú svoje publikum.
+            Pomáhame tvorcom pri budovaní úspešných YouTube kanálov prostredníctvom kurzov vedených expertmi 
+            a praktických stratégií.
           </p>
           <div class="flex space-x-4">
             <a href="#" class="text-gray-400 hover:text-primary transition-all duration-300 hover:scale-110">
@@ -41,26 +38,7 @@
                 Všetky kurzy
               </router-link>
             </li>
-            <li>
-              <router-link to="/courses?category=youtube-growth" class="text-gray-300 hover:text-primary transition-all duration-300 hover:translate-x-1">
-                Rast YouTube
-              </router-link>
-            </li>
-            <li>
-              <router-link to="/courses?category=content-creation" class="text-gray-300 hover:text-primary transition-all duration-300 hover:translate-x-1">
-                Tvorba obsahu
-              </router-link>
-            </li>
-            <li>
-              <router-link to="/courses?category=monetization" class="text-gray-300 hover:text-primary transition-all duration-300 hover:translate-x-1">
-                Monetizácia
-              </router-link>
-            </li>
-            <li>
-              <a href="#" class="text-gray-300 hover:text-primary transition-all duration-300 hover:translate-x-1">
-                Príbehy úspechov
-              </a>
-            </li>
+
           </ul>
         </div>
 
@@ -68,21 +46,13 @@
         <div>
           <h3 class="text-lg font-semibold mb-4 text-white">Podpora</h3>
           <ul class="space-y-2">
-            <li>
-              <a href="#" class="text-gray-300 hover:text-primary transition-all duration-300 hover:translate-x-1">
-                Centrum pomoci
-              </a>
-            </li>
+
             <li>
               <a href="#" class="text-gray-300 hover:text-primary transition-all duration-300 hover:translate-x-1">
                 Kontaktujte nás
               </a>
             </li>
-            <li>
-              <a href="#" class="text-gray-300 hover:text-primary transition-all duration-300 hover:translate-x-1">
-                Komunita
-              </a>
-            </li>
+
             <li>
               <a href="#" class="text-gray-300 hover:text-primary transition-all duration-300 hover:translate-x-1">
                 Zásady ochrany súkromia

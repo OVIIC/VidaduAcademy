@@ -1,7 +1,7 @@
 <template>
   <section class="py-24 relative overflow-hidden z-10">
-    <div class="relative z-10 mb-12 px-4 max-w-7xl mx-auto">
-      <div class="text-center max-w-3xl mx-auto mb-10">
+    <div class="relative z-10 mb-4 px-4 max-w-7xl mx-auto">
+      <div class="text-center max-w-3xl mx-auto mb-6">
         <h2 class="text-3xl sm:text-4xl font-black text-white mb-6">
           Najdetailnejšie kurzy ktoré nájdeš online
         </h2>
@@ -11,7 +11,7 @@
       </div>
 
       <!-- Category Selector -->
-      <div class="flex flex-wrap justify-center gap-3 mb-8">
+      <div class="flex flex-wrap justify-center gap-3 mb-4">
         <button
           v-for="category in categories"
           :key="category.id"
@@ -28,52 +28,43 @@
       </div>
     </div>
 
-    <!-- Marquee Container -->
-    <div class="relative w-full">
-      <!-- Fade Masks -->
-      <div class="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-dark-950 to-transparent z-20 pointer-events-none"></div>
-      <div class="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-dark-950 to-transparent z-20 pointer-events-none"></div>
+    <!-- 3D Carousel Container -->
+    <div class="relative w-full overflow-hidden pb-4 pt-0" style="min-height: 500px;">
+      
+      <!-- Loading State -->
+      <div v-if="courseStore.loading" class="flex justify-center items-center h-[400px]">
+         <div class="w-12 h-12 border-4 border-primary-500 border-t-transparent rounded-full animate-spin"></div>
+      </div>
 
-      <!-- Marquee Track -->
-      <div class="flex marquee-container">
-        <!-- First Set -->
-        <div class="flex gap-8 px-4 flex-shrink-0">
-          <div v-if="courseStore.loading" class="flex gap-8">
-            <div v-for="i in 4" :key="`skeleton-${i}`" class="w-[350px] bg-dark-800 rounded-2xl h-[380px] animate-pulse"></div>
-          </div>
-          <div v-else-if="filteredFeaturedCourses.length === 0" class="w-full text-center text-dark-400 py-10">
-            Pre túto kategóriu sa nenašli žiadne kurzy.
-          </div>
-          <CourseCard
-            v-else
-            v-for="course in filteredFeaturedCourses"
-            :key="`first-${course.id}`"
-            :course="course"
-            :show-duration="false"
-            :enable-hover-effects="false"
-            class="w-[350px] flex-shrink-0 transform transition-transform duration-300"
-          />
-        </div>
+      <!-- Empty State -->
+      <div v-else-if="filteredFeaturedCourses.length === 0" class="w-full text-center text-dark-400 py-10">
+        Pre túto kategóriu sa nenašli žiadne kurzy.
+      </div>
 
-        <!-- Second Set (Duplicate for seamless loop - only if we have enough items) -->
-        <div v-if="filteredFeaturedCourses.length > 2" class="flex gap-8 px-4 flex-shrink-0" aria-hidden="true">
-          <div v-if="courseStore.loading" class="flex gap-8">
-            <div v-for="i in 4" :key="`skeleton-dup-${i}`" class="w-[350px] bg-dark-800 rounded-2xl h-[380px] animate-pulse"></div>
+      <!-- 3D Scene - Exact implementation from snippet -->
+      <div v-else class="scene">
+        <div class="a3d" :style="{ '--n': filteredFeaturedCourses.length }">
+          <div 
+            v-for="(course, index) in filteredFeaturedCourses" 
+            :key="course.id"
+            class="card-container"
+            :style="{ '--i': index }"
+          >
+             <!-- Using CourseCard inside the 3D transformed container -->
+             <!-- We need to ensure the card takes full width/height of the container -->
+            <CourseCard
+              :course="course"
+              :show-duration="false"
+              :enable-hover-effects="true"
+              class="w-full h-full shadow-2xl"
+            />
           </div>
-          <CourseCard
-            v-else
-            v-for="course in filteredFeaturedCourses"
-            :key="`second-${course.id}`"
-            :course="course"
-            :show-duration="false"
-            :enable-hover-effects="false"
-            class="w-[350px] flex-shrink-0 transform transition-transform duration-300"
-          />
         </div>
       </div>
+
     </div>
 
-    <div class="mt-12 text-center relative z-10">
+    <div class="mt-4 text-center relative z-10">
       <router-link to="/courses" class="px-8 py-4 bg-[rgb(237,111,85)] hover:bg-[rgb(220,100,75)] text-white font-bold rounded-2xl transition-all shadow-lg hover:shadow-[rgb(237,111,85)]/25 hover:-translate-y-1 inline-flex items-center gap-2 group">
         <span>Všetky kurzy</span>
         <ArrowRightIcon class="w-5 h-5 group-hover:translate-x-1 transition-transform" />
@@ -125,17 +116,65 @@ onMounted(() => {
 </script>
 
 <style scoped>
-/* Marquee Animation */
-.marquee-container {
-  animation: marquee 40s linear infinite;
+/* Relevant CSS from snippet */
+.scene, .a3d { 
+  display: grid;
 }
 
-.marquee-container:hover {
+.scene {
+  /* prevent scrollbars */
+  overflow: hidden;
+  /* for 3D look; smaller = more extreme effect */
+  perspective: 35em;
+  /* Mask commented out as it might interfere with dark mode or needs specific adjustment */
+  /* mask: linear-gradient(90deg, #0000, red 20% 80%, #0000); */
+  width: 100%;
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+}
+
+.a3d {
+  place-self: center; /* middle align */
+  /* don't flatten 3D transformed children of this parent having its own 3D transform */
+  transform-style: preserve-3d;
+  animation: ry 32s linear infinite;
+}
+
+/* simplest y axis rotation */
+@keyframes ry { 
+  to { rotate: y 1turn; } 
+}
+
+.card-container {
+  /* base card width */
+  --w: 17.5em;
+  /* compute base angle corresponding to a card */
+  --ba: 1turn/var(--n);
+  
+  grid-area: 1/1; /* stack in same one grid cell */
+  width: var(--w);
+  aspect-ratio: 7/10;
+  
+  /* don't want to see back of cards in front of screen plane */
+  backface-visibility: hidden;
+  
+  /* transform chain */
+  transform: 
+    rotateY(calc(var(--i) * var(--ba)))
+    translateZ(calc(-1 * (0.5 * var(--w) + 0.5em) / tan(0.5 * var(--ba))));
+}
+
+.card-container:hover {
+    /* Optional: pause or effect on hover could go here, 
+       but note that pausing the parent .a3d on hover is usually better UX */
+}
+
+/* Pause animation on hover */
+.a3d:hover {
   animation-play-state: paused;
 }
 
-@keyframes marquee {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
+@media (prefers-reduced-motion: reduce) {
+  .a3d { animation-duration: 128s; }
 }
 </style>

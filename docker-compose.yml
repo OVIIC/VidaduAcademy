@@ -57,8 +57,6 @@ services:
     restart: unless-stopped
     ports:
       - "80:80"
-    volumes:
-      - ./frontend/dist:/usr/share/nginx/html
     networks:
       - vidadu-network
     depends_on:

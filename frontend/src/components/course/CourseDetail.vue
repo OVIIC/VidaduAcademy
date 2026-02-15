@@ -2,7 +2,7 @@
   <div>
     <!-- Hero Course Section (Disney+ style) -->
     <div
-      class="relative h-[50vh] md:h-[75vh] overflow-hidden z-10"
+      class="relative h-[70vh] md:h-[75vh] overflow-hidden z-10"
       :class="{ 'rounded-3xl mx-4 mt-4': isDashboard }"
     >
       <!-- Background Image with Smooth Transition -->
@@ -59,7 +59,7 @@
             <div :key="course?.id || 'default'" class="max-w-3xl mt-16">
               <!-- Course Title (Large Disney+ style) -->
               <h1
-                class="text-2xl md:text-5xl lg:text-6xl font-black mb-6 leading-none tracking-tight text-white drop-shadow-2xl"
+                class="text-2xl md:text-5xl lg:text-6xl font-black mb-3 md:mb-6 leading-none tracking-tight text-white drop-shadow-2xl"
               >
                 {{ course?.title || "Načítavajú sa kurzy..." }}
               </h1>
@@ -67,7 +67,7 @@
               <!-- Course Info Bar (Disney+ style) -->
               <div
                 v-if="course"
-                class="flex items-center space-x-6 mb-6 text-lg font-medium"
+                class="flex items-center space-x-6 mb-3 md:mb-6 text-lg font-medium"
               >
                 <div class="flex items-center space-x-2">
                   <svg
@@ -98,7 +98,7 @@
 
               <!-- Course Description -->
               <p
-                class="text-base md:text-xl leading-relaxed mb-8 text-dark-200 max-w-2xl font-extralight shadow-black drop-shadow-md line-clamp-3 md:line-clamp-4"
+                class="text-base md:text-xl leading-relaxed mb-6 md:mb-8 text-dark-200 max-w-2xl font-extralight shadow-black drop-shadow-md line-clamp-3 md:line-clamp-4"
               >
                 {{
                   course?.short_description ||
@@ -112,7 +112,7 @@
                   v-if="course"
                   @click="handlePurchase"
                   :disabled="loading"
-                  class="bg-primary-600 hover:bg-primary-500 text-white disabled:opacity-50 px-10 py-4 rounded-2xl font-bold text-xl transition-all duration-200 flex items-center space-x-3 shadow-lg hover:shadow-primary-500/25"
+                  class="bg-primary-600 hover:bg-primary-500 text-white disabled:opacity-50 px-6 py-3 md:px-10 md:py-4 rounded-2xl font-bold text-xl transition-all duration-200 flex items-center space-x-3 shadow-lg hover:shadow-primary-500/25"
                 >
                   <svg
                     v-if="loading"

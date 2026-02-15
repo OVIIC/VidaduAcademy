@@ -59,7 +59,7 @@
             <div :key="course?.id || 'default'" class="max-w-3xl mt-16">
               <!-- Course Title (Large Disney+ style) -->
               <h1
-                class="text-3xl md:text-5xl lg:text-6xl font-black mb-6 leading-none tracking-tight text-white drop-shadow-2xl"
+                class="text-2xl md:text-5xl lg:text-6xl font-black mb-6 leading-none tracking-tight text-white drop-shadow-2xl"
               >
                 {{ course?.title || "Načítavajú sa kurzy..." }}
               </h1>
@@ -98,7 +98,7 @@
 
               <!-- Course Description -->
               <p
-                class="text-lg md:text-xl leading-relaxed mb-8 text-dark-200 max-w-2xl font-extralight shadow-black drop-shadow-md line-clamp-3 md:line-clamp-4"
+                class="text-base md:text-xl leading-relaxed mb-8 text-dark-200 max-w-2xl font-extralight shadow-black drop-shadow-md line-clamp-3 md:line-clamp-4"
               >
                 {{
                   course?.short_description ||

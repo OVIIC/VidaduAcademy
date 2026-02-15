@@ -30,57 +30,60 @@
                Let's update CourseDetail to handle next/prev internally or via slots? 
                Actually, simpler: put these buttons OVER the CourseDetail component using absolute positioning if z-index allows. 
           -->
-        <div
-          v-if="courses.length > 1"
-          class="absolute inset-x-0 top-[37.5vh] -translate-y-1/2 z-20 px-4 pointer-events-none flex justify-between"
-        >
-          <button
-            @click="navigateCourse('prev')"
-            class="w-12 h-12 rounded-xl bg-dark-900/40 hover:bg-dark-900/60 backdrop-blur-sm border border-white/30 hover:border-white text-white flex items-center justify-center transition-all duration-200 hover:scale-110 shadow-lg pointer-events-auto"
-            :disabled="currentCourseIndex === 0"
-            :class="{
-              'opacity-30 cursor-not-allowed': currentCourseIndex === 0,
-            }"
+        <!-- Navigation Arrows overlaid on the hero image in CourseView only -->
+        <template #hero-overlay>
+          <div
+            v-if="courses.length > 1"
+            class="absolute inset-x-0 top-1/2 -translate-y-1/2 z-30 px-4 pointer-events-none flex justify-between w-full"
           >
-            <svg
-              class="w-6 h-6 drop-shadow-lg"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
+            <button
+              @click="navigateCourse('prev')"
+              class="w-12 h-12 rounded-xl bg-dark-900/40 hover:bg-dark-900/60 backdrop-blur-sm border border-white/30 hover:border-white text-white flex items-center justify-center transition-all duration-200 hover:scale-110 shadow-lg pointer-events-auto"
+              :disabled="currentCourseIndex === 0"
+              :class="{
+                'opacity-30 cursor-not-allowed': currentCourseIndex === 0,
+              }"
             >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M15 19l-7-7 7-7"
-              />
-            </svg>
-          </button>
+              <svg
+                class="w-6 h-6 drop-shadow-lg"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M15 19l-7-7 7-7"
+                />
+              </svg>
+            </button>
 
-          <button
-            @click="navigateCourse('next')"
-            class="w-12 h-12 rounded-xl bg-dark-900/40 hover:bg-dark-900/60 backdrop-blur-sm border border-white/30 hover:border-white text-white flex items-center justify-center transition-all duration-200 hover:scale-110 shadow-lg pointer-events-auto"
-            :disabled="currentCourseIndex === courses.length - 1"
-            :class="{
-              'opacity-30 cursor-not-allowed':
-                currentCourseIndex === courses.length - 1,
-            }"
-          >
-            <svg
-              class="w-6 h-6 drop-shadow-lg"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
+            <button
+              @click="navigateCourse('next')"
+              class="w-12 h-12 rounded-xl bg-dark-900/40 hover:bg-dark-900/60 backdrop-blur-sm border border-white/30 hover:border-white text-white flex items-center justify-center transition-all duration-200 hover:scale-110 shadow-lg pointer-events-auto"
+              :disabled="currentCourseIndex === courses.length - 1"
+              :class="{
+                'opacity-30 cursor-not-allowed':
+                  currentCourseIndex === courses.length - 1,
+              }"
             >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M9 5l7 7-7 7"
-              />
-            </svg>
-          </button>
-        </div>
+              <svg
+                class="w-6 h-6 drop-shadow-lg"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9 5l7 7-7 7"
+                />
+              </svg>
+            </button>
+          </div>
+        </template>
 
         <!-- Course Gallery Section using CourseCatalog -->
         <div class="py-12 mt-8">

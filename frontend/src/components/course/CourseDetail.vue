@@ -2,7 +2,7 @@
   <div>
     <!-- Hero Course Section (Disney+ style) -->
     <div
-      class="relative h-[75vh] overflow-hidden z-10"
+      class="relative h-[50vh] md:h-[75vh] overflow-hidden z-10"
       :class="{ 'rounded-3xl mx-4 mt-4': isDashboard }"
     >
       <!-- Background Image with Smooth Transition -->
@@ -47,9 +47,8 @@
           </button>
 
           <!-- Navigation Arrows (only if handled by parent via slots/events, or we pass list. For now, we keep it simple: single course view) -->
-          <!-- If we needed next/prev, we'd accept props or emit events. Assuming for Detail view it's single focused. 
-                In CoursesView, the Hero IS the detail view but rotatable. 
-                For Dashboard, it's just 'View this course'. -->
+          <!-- Slot for overlays like navigation arrows -->
+          <slot name="hero-overlay"></slot>
         </div>
       </div>
 

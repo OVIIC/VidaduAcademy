@@ -98,7 +98,7 @@
 
               <!-- Course Description -->
               <p
-                class="text-lg md:text-xl leading-relaxed mb-8 text-dark-200 max-w-2xl font-extralight shadow-black drop-shadow-md"
+                class="text-lg md:text-xl leading-relaxed mb-8 text-dark-200 max-w-2xl font-extralight shadow-black drop-shadow-md line-clamp-3 md:line-clamp-4"
               >
                 {{
                   course?.short_description ||

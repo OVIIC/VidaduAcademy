@@ -1,4 +1,5 @@
-#!/bin/bash
+# Stop execution on any error
+set -e
 
 # Define colors for output
 GREEN='\033[0;32m'
@@ -11,10 +12,11 @@ echo -e "${YELLOW}Starting update process...${NC}"
 echo -e "${GREEN}Pulling latest changes from Git...${NC}"
 git pull origin main
 
-# 2. Rebuild the Docker containers in background to minimize downtime check
-# We use docker compose build to ensure we have latest images locally before restarting
-echo -e "${GREEN}Building updated Docker images...${NC}"
-docker compose -f docker-compose.prod.yml build
+# 2. Rebuild the Docker containers
+# Force rebuild of web container to ensure frontend assets are updated
+echo -e "${GREEN}Building updated Docker images (forcing web rebuild)...${NC}"
+docker compose -f docker-compose.prod.yml build --no-cache web
+docker compose -f docker-compose.prod.yml build app worker scheduler
 
 # 3. Restart services
 # 'up -d' will recreate containers only if configuration or image changed

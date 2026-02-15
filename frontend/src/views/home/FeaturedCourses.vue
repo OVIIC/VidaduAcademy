@@ -1,6 +1,6 @@
 <template>
   <section class="py-24 relative overflow-hidden z-10">
-    <div class="relative z-10 mb-4 px-4 max-w-7xl mx-auto">
+    <div class="relative z-10 mb-16 px-4 max-w-7xl mx-auto">
       <div class="text-center max-w-3xl mx-auto mb-6">
         <h2 class="text-3xl sm:text-4xl font-black text-white mb-6">
           Najdetailnejšie kurzy ktoré nájdeš online

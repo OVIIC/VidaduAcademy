@@ -1,6 +1,6 @@
 <template>
   <section class="relative w-full min-h-[90vh] flex items-center z-10 pt-20">
-    <canvas ref="canvasRef" class="absolute inset-0 w-full h-full pointer-events-none z-0 blur-sm opacity-70"></canvas>
+    <canvas ref="canvasRef" class="absolute inset-0 w-full h-full pointer-events-none z-0 blur-[3px] opacity-70"></canvas>
     
     <!-- Content -->
     <div class="relative container-responsive w-full px-4 sm:px-6 lg:px-8 z-10 pointer-events-none">
@@ -234,7 +234,8 @@ const fragmentShaderSource = `
           float fog = 1.0 - exp(-t * 0.05);
           color = mix(color, vec3(0.0), fog);
           
-          finalColor = vec4(color, 1.0);
+          float alpha = 0.3 + 0.6 * fresnel; // Liquid glass alpha
+          finalColor = vec4(color, alpha);
       }
      
       gl_FragColor = finalColor;
@@ -275,6 +276,9 @@ onMounted(() => {
       console.error('WebGL not supported');
       return;
   }
+
+  gl.enable(gl.BLEND);
+  gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 
   resizeCanvas = () => {
     if (!canvas) return;

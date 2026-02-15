@@ -31,8 +31,8 @@
     <!-- Marquee Container -->
     <div class="relative w-full">
       <!-- Fade Masks -->
-      <div class="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-dark-950 to-transparent z-20 pointer-events-none"></div>
-      <div class="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-dark-950 to-transparent z-20 pointer-events-none"></div>
+      <div class="absolute left-0 -top-10 -bottom-10 w-32 bg-gradient-to-r from-dark-950 to-transparent z-40 pointer-events-none"></div>
+      <div class="absolute right-0 -top-10 -bottom-10 w-32 bg-gradient-to-l from-dark-950 to-transparent z-40 pointer-events-none"></div>
 
       <!-- Marquee Track -->
       <div class="flex marquee-container">
@@ -50,8 +50,8 @@
             :key="`first-${course.id}`"
             :course="course"
             :show-duration="false"
-            :enable-hover-effects="false"
-            class="w-[350px] flex-shrink-0 transform transition-transform duration-300"
+            :enable-hover-effects="true"
+            class="w-[350px] flex-shrink-0 transform transition-transform duration-300 hover:scale-105 hover:z-30"
           />
         </div>
 
@@ -66,8 +66,8 @@
             :key="`second-${course.id}`"
             :course="course"
             :show-duration="false"
-            :enable-hover-effects="false"
-            class="w-[350px] flex-shrink-0 transform transition-transform duration-300"
+            :enable-hover-effects="true"
+            class="w-[350px] flex-shrink-0 transform transition-transform duration-300 hover:scale-105 hover:z-30"
           />
         </div>
       </div>
@@ -127,7 +127,7 @@ onMounted(() => {
 <style scoped>
 /* Marquee Animation */
 .marquee-container {
-  animation: marquee 40s linear infinite;
+  animation: marquee 30s linear infinite;
 }
 
 .marquee-container:hover {

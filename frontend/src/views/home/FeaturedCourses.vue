@@ -161,7 +161,7 @@ onMounted(() => {
   /* transform chain */
   transform: 
     rotateY(calc(var(--i) * var(--ba)))
-    translateZ(calc(-1 * (0.5 * var(--w) + 0.5em) / tan(0.5 * var(--ba))));
+    translateZ(calc(-1 * (0.5 * var(--w) + 5em) / tan(0.5 * var(--ba))));
 }
 
 .card-container:hover {

@@ -137,7 +137,7 @@ onMounted(() => {
   place-self: center; /* middle align */
   /* don't flatten 3D transformed children of this parent having its own 3D transform */
   transform-style: preserve-3d;
-  animation: ry 32s linear infinite;
+  animation: ry 60s linear infinite;
 }
 
 /* simplest y axis rotation */
@@ -161,7 +161,7 @@ onMounted(() => {
   /* transform chain */
   transform: 
     rotateY(calc(var(--i) * var(--ba)))
-    translateZ(calc(-1 * (0.5 * var(--w) + 5em) / tan(0.5 * var(--ba))));
+    translateZ(calc(-1 * (0.5 * var(--w) + 15em) / tan(0.5 * var(--ba))));
 }
 
 .card-container:hover {

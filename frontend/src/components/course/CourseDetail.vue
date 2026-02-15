@@ -333,7 +333,7 @@
 </template>
 
 <script setup>
-import { ref, watch } from "vue";
+import { ref } from "vue";
 import { useCourseStore } from "@/stores/course";
 
 const props = defineProps({
@@ -376,7 +376,7 @@ const toggleCourseDetails = async () => {
   if (!showDetails.value && !fullCourseLoaded.value) {
     // Fetch full course details if needed
     try {
-      const fullCourse = await courseStore.fetchCourse(props.course.slug);
+      await courseStore.fetchCourse(props.course.slug);
 
       // We want to mutate the object in place if possible or let parent handle it.
       // But props are readonly. Best is if parent already passes full object.

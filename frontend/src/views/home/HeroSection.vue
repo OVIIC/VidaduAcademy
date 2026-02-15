@@ -131,12 +131,13 @@ const fragmentShaderSource = `
       p.xy += m * 0.4;
      
       p.xz *= rot(uTime * 0.12);
-      p.xy *= rot(uTime * 0.08);
-     
+      // p.xy *= rot(uTime * 0.08);
+      
       float d = 100.0;
-     
+      
       vec3 p1 = p;
-      p1.yz *= rot(uTime * 0.15);
+      p1.y += sin(uTime * 1.5) * 0.2; // Added vertical pulse
+      // p1.yz *= rot(uTime * 0.15);
      
       float core_distort = sin(p1.x * 3.0 + uTime) * sin(p1.y * 3.0 + uTime) * sin(p1.z * 3.0 + uTime) * 0.1;
       float core = sdOctahedron(p1, 1.6) + core_distort;
@@ -152,13 +153,13 @@ const fragmentShaderSource = `
      
       for(int i = 0; i < 4; i++) {
           float fi = float(i);
-          float angle = fi * TAU / 4.0 + uTime * 0.3;
+          float angle = fi * TAU / 4.0 + sin(uTime * 0.3) * 2.0;
          
           float radius = 3.0 + 0.3 * sin(uTime * 0.4 + fi);
          
           vec3 pos = vec3(
               cos(angle) * radius,
-              sin(angle * 0.7) * 1.0,
+              abs(sin(angle * 0.7)) * 0.6 + 0.8,
               sin(angle) * radius
           );
          

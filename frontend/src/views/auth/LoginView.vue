@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen text-white flex flex-col justify-center py-12 sm:px-6 lg:px-8 bg-dark-950 relative overflow-hidden">
+  <div class="min-h-screen text-white flex flex-col justify-center py-12 pt-24 sm:px-6 lg:px-8 bg-dark-950 relative overflow-hidden">
     <!-- Background Effects -->
     <div class="absolute inset-0 overflow-hidden pointer-events-none">
       <div class="absolute -top-1/2 -left-1/4 w-[1000px] h-[1000px] bg-primary-600/20 rounded-full blur-[120px] opacity-30 animate-pulse-slow"></div>
@@ -8,8 +8,8 @@
     </div>
     <div class="sm:mx-auto sm:w-full sm:max-w-md relative z-10">
       <div class="flex justify-center">
-        <router-link to="/" class="w-14 h-14 bg-gradient-to-br from-primary-500 to-secondary-500 rounded-xl flex items-center justify-center shadow-lg shadow-primary-500/20 transform hover:scale-105 transition-transform duration-300">
-          <span class="text-white font-bold text-2xl">V</span>
+        <router-link to="/" class="w-20 h-20 bg-dark-900/50 backdrop-blur-xl border border-dark-700/50 rounded-2xl flex items-center justify-center shadow-lg shadow-primary-500/10 transform hover:scale-105 transition-transform duration-300">
+          <img src="/images/video-academy-icon.png" alt="Vidadu Academy" class="w-12 h-12 object-contain" />
         </router-link>
       </div>
       <h2 class="mt-6 text-center text-3xl font-bold tracking-tight text-white">

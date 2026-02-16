@@ -214,6 +214,17 @@ import { reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import { useToast } from 'vue-toastification'
+import { useHead } from '@unhead/vue'
+
+useHead({
+  title: 'Registrácia | VidaduAcademy',
+  meta: [
+    {
+      name: 'description',
+      content: 'Vytvorte si účet na VidaduAcademy a začnite svoju cestu k úspešnému YouTube kanálu.'
+    }
+  ]
+})
 
 const apiUrl = import.meta.env.VITE_API_URL
 

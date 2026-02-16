@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Disallow: /dashboard
+Disallow: /my-courses
+Disallow: /profile
+Disallow: /payment
+
+Sitemap: https://vidaduacademy.com/sitemap.xml

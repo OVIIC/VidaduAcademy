@@ -179,6 +179,17 @@
 <script setup>
 import { useAuthStore } from '@/stores/auth'
 import { useAuthLogic } from '@/composables/useAuthLogic'
+import { useHead } from '@unhead/vue'
+
+useHead({
+  title: 'Prihlásenie | VidaduAcademy',
+  meta: [
+    {
+      name: 'description',
+      content: 'Prihláste sa do svojho účtu na VidaduAcademy a pokračujte v štúdiu.'
+    }
+  ]
+})
 
 const apiUrl = import.meta.env.VITE_API_URL
 

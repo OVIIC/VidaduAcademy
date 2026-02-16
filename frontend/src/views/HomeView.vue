@@ -33,6 +33,25 @@ import FeaturedCourses from './home/FeaturedCourses.vue'
 import WhyChooseUs from './home/WhyChooseUs.vue'
 import HowItWorks from './home/HowItWorks.vue'
 import FaqSection from './home/FaqSection.vue'
+import { useHead } from '@unhead/vue'
+
+useHead({
+  title: 'VidaduAcademy - YouTube Growth & Channel Management',
+  meta: [
+    {
+      name: 'description',
+      content: 'Naučte sa rásť váš YouTube kanál s našimi kurzami od úspešných tvorcov. Stratégie, optimalizácia, monetizácia a viac!'
+    },
+    {
+      property: 'og:title',
+      content: 'VidaduAcademy - YouTube Growth & Channel Management'
+    },
+    {
+      property: 'og:description',
+      content: 'Naučte sa rásť váš YouTube kanál s našimi kurzami od úspešných tvorcov'
+    }
+  ]
+})
 </script>
 
 <style scoped>

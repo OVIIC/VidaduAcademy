@@ -1,5 +1,6 @@
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
+import { createHead } from '@unhead/vue/client'
 import Toast from 'vue-toastification'
 import 'vue-toastification/dist/index.css'
 
@@ -24,6 +25,8 @@ Sentry.init({
   replaysOnErrorSampleRate: 1.0,
 });
 
+const head = createHead()
+app.use(head)
 app.use(createPinia())
 app.use(router)
 app.use(Toast, {

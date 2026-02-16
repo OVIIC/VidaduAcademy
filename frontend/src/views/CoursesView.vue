@@ -115,6 +115,7 @@ import { usePurchase } from "@/composables/usePurchase";
 import CheckoutLoadingModal from "@/components/ui/CheckoutLoadingModal.vue";
 import CourseCatalog from "@/components/course/CourseCatalog.vue";
 import CourseDetail from "@/components/course/CourseDetail.vue";
+import { useHead } from '@unhead/vue';
 
 const route = useRoute();
 const router = useRouter();
@@ -136,6 +137,31 @@ const {
 const showCheckoutLoading = computed(() => purchaseLoading.value);
 
 const selectedCourse = ref(null);
+
+const pageTitle = computed(() => {
+  if (selectedCourse.value) {
+    return `${selectedCourse.value.title} | VidaduAcademy`
+  }
+  return 'Kurzy | VidaduAcademy'
+})
+
+useHead({
+  title: pageTitle,
+  meta: [
+    {
+      name: 'description',
+      content: computed(() => selectedCourse.value?.short_description || 'Prezrite si naše kurzy a naučte sa všetko o YouTube raste.')
+    },
+    {
+      property: 'og:title',
+      content: pageTitle
+    },
+     {
+      property: 'og:description',
+      content: computed(() => selectedCourse.value?.short_description || 'Prezrite si naše kurzy a naučte sa všetko o YouTube raste.')
+    }
+  ]
+})
 
 const currentCourseIndex = computed(() => {
   if (!selectedCourse.value || !courses.value.length) return -1;

@@ -28,7 +28,8 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->login()
-            ->brandName('VidaduAcademy')
+            ->brandLogo(asset('images/video-academy-icon.png'))
+            ->brandLogoHeight('3rem')
             ->font('Inter')
             ->colors([
                 'primary' => '#ED6F55',

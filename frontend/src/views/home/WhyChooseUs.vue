@@ -17,7 +17,7 @@
           <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary-500/20 to-purple-500/20 flex items-center justify-center mb-8 group-hover:scale-110 transition-transform duration-300">
             <TrophyIcon class="w-8 h-8 text-primary-400" />
           </div>
-          <h3 class="text-2xl font-bold text-white mb-4">15 rokov v prvej línii</h3>
+          <h3 class="text-2xl font-bold text-white mb-4">Viac ako 10 rokov v prvej línii</h3>
           <p class="text-dark-300 leading-relaxed font-extralight">
             Naše know-how nie je vyčítané z kníh, ale overené prácou s top SK/CZ tvorcami.
           </p>

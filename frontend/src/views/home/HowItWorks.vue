@@ -15,9 +15,9 @@
             <div class="inline-block px-4 py-2 bg-primary-500/10 border border-primary-500/20 text-primary-400 rounded-full text-sm font-bold mb-6 w-fit backdrop-blur-sm">
               KROK 01
             </div>
-            <h3 class="text-4xl font-black text-white mb-6 leading-tight">Zaregistruješ sa <span class="text-primary-400">zadarmo</span></h3>
+            <h3 class="text-4xl font-black text-white mb-6 leading-tight">Registruješ sa <span class="text-primary-400">zadarmo</span></h3>
             <p class="text-xl text-dark-300 leading-relaxed max-w-lg font-extralight">
-              Účet si vytvoríš behom pár sekúnd. Nie je potrebná žiadna kreditná karta ani žiadna platba. Získaj okamžitý prístup k úvodným lekciám a potom sa rozhodneš, či chceš pokračovať ďalej.
+              Účet si vytvoríš behom pár sekúnd. Nie je potrebná žiadna platobná karta ani žiadna platba. Získaj okamžitý prístup k úvodným lekciám a potom sa rozhodneš, či chceš pokračovať ďalej.
             </p>
           </div>
 
@@ -28,7 +28,7 @@
             </div>
             <h3 class="text-4xl font-black text-white mb-6 leading-tight">Nájdi svoj kurz a <span class="text-secondary-400">študuj</span></h3>
             <p class="text-xl text-dark-300 leading-relaxed max-w-lg font-extralight">
-              Náš katalóg ti ponúka všetko pre tvoj rast, od prvého videa až po biznis stratégie. Či už riešiš YouTube, strih alebo monetizáciu, u nás nájdeš odpovede. Uč sa vlastným tempom, alebo si vyžiadaj osobnú konzultáciu s Vidadu expertom.
+              Náš katalóg ti ponúka všetko pre tvoj rast, od prvého videa až po biznis stratégie. Uč sa vlastným tempom, alebo si vyžiadaj osobnú konzultáciu s Vidadu expertom.
             </p>
           </div>
 
@@ -37,7 +37,7 @@
             <div class="inline-block px-4 py-2 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 rounded-full text-sm font-bold mb-6 w-fit backdrop-blur-sm">
               KROK 03
             </div>
-            <h3 class="text-4xl font-black text-white mb-6 leading-tight">Aplikuj a <span class="text-emerald-400">zarábaj</span></h3>
+            <h3 class="text-4xl font-black text-white mb-6 leading-tight">Aplikuj vedomostia <span class="text-emerald-400">zarábaj</span></h3>
             <p class="text-xl text-dark-300 leading-relaxed max-w-lg font-extralight">
               Použi získané vedomosti v praxi. Sleduj ako ti rastú zhliadnutia, odberatelia a príjmy. Získaj certifikát a staň sa profesionálnym tvorcom.
             </p>
@@ -184,7 +184,7 @@
         </router-link>
       </div>
       <p class="mt-8 text-sm text-dark-400">
-        Žiadna kreditná karta nie je potrebná pre registráciu.
+        Žiadna platobná karta nie je potrebná pre registráciu.
       </p>
     </div>
     </div>

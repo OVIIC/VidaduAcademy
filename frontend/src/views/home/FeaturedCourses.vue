@@ -6,7 +6,7 @@
           Najdetailnejšie online kurzy
         </h2>
         <p class="text-sm text-dark-50 font-extralight">
-          Odhalili sme stratégie, ktoré fungujú tým najlepším, a zabalili ich do zrozumiteľnej formy. Žiadna zbytočná teória, iba funkčné postupy.
+          Odhalili sme stratégie, ktoré fungujú tým najlepším a zabalili ich do zrozumiteľnej formy. Žiadna zbytočná teória, iba funkčné postupy.
         </p>
       </div>
 

@@ -2,7 +2,7 @@
   <div>
     <!-- Hero Course Section (Disney+ style) -->
     <div
-      class="relative h-[70vh] md:h-[75vh] overflow-hidden z-10"
+      class="relative min-h-[70vh] md:min-h-[75vh] overflow-hidden z-10 flex flex-col"
       :class="{ 'rounded-3xl mx-4 mt-4': isDashboard }"
     >
       <!-- Background Image with Smooth Transition -->
@@ -53,7 +53,7 @@
       </div>
 
       <!-- Hero Content -->
-      <div class="relative z-10 h-full flex items-center">
+      <div class="relative z-10 flex-grow flex items-center py-20 md:py-24">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
           <transition name="hero-content-fade" mode="out-in">
             <div :key="course?.id || 'default'" class="max-w-3xl mt-16">

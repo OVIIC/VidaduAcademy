@@ -28,7 +28,7 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->login()
-            ->brandLogo(asset('images/video-academy-icon.png'))
+            ->brandLogo(asset('images/video-academy-logo.png'))
             ->brandLogoHeight('3rem')
             ->font('Inter')
             ->colors([

@@ -9,7 +9,7 @@
           <h1 class="text-5xl sm:text-6xl lg:text-7xl font-black leading-tight tracking-tight drop-shadow-2xl mb-4">
             <span class="block text-white mb-2">Dominuj na YouTube</span>
             <span class="block text-transparent bg-clip-text bg-gradient-to-r from-primary-400 via-primary-500 to-secondary-500 animate-gradient-x">
-              so svojim kanálom
+              so svojím kanálom
             </span>
           </h1>
         </div>

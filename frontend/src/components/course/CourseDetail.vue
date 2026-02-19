@@ -107,7 +107,8 @@
               </p>
 
               <!-- Action Buttons (Disney+ style) -->
-              <div class="flex items-center space-x-4">
+              <!-- Action Buttons (Disney+ style) -->
+              <div class="flex items-center space-x-4 flex-wrap gap-y-4">
                 <button
                   v-if="course"
                   @click="handlePurchase"
@@ -165,6 +166,8 @@
                   </svg>
                   <span>{{ showDetails ? "Skryť info" : "Viac info" }}</span>
                 </button>
+                
+                <slot name="controls"></slot>
               </div>
             </div>
           </transition>

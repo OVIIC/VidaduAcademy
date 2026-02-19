@@ -30,22 +30,20 @@
                Let's update CourseDetail to handle next/prev internally or via slots? 
                Actually, simpler: put these buttons OVER the CourseDetail component using absolute positioning if z-index allows. 
           -->
-        <!-- Navigation Arrows overlaid on the hero image in CourseView only -->
-        <template #hero-overlay>
-          <div
-            v-if="courses.length > 1"
-            class="absolute inset-x-0 top-1/2 -translate-y-1/2 z-30 px-4 pointer-events-none flex justify-between w-full"
-          >
+        <template #controls>
+          <div v-if="courses.length > 1" class="flex items-center gap-3">
             <button
               @click="navigateCourse('prev')"
-              class="w-12 h-12 rounded-xl bg-dark-900/40 hover:bg-dark-900/60 backdrop-blur-sm border border-white/30 hover:border-white text-white flex items-center justify-center transition-all duration-200 hover:scale-110 shadow-lg pointer-events-auto"
+              class="w-14 h-[60px] rounded-2xl bg-dark-800/80 hover:bg-dark-800 border border-dark-700 hover:border-dark-600 text-white flex items-center justify-center transition-all duration-200 backdrop-blur-sm shadow-lg"
               :disabled="currentCourseIndex === 0"
               :class="{
-                'opacity-30 cursor-not-allowed': currentCourseIndex === 0,
+                'opacity-50 cursor-not-allowed': currentCourseIndex === 0,
+                'hover:translate-y-[-2px]': currentCourseIndex !== 0
               }"
+              aria-label="Predchádzajúci kurz"
             >
               <svg
-                class="w-6 h-6 drop-shadow-lg"
+                class="w-6 h-6"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -61,15 +59,17 @@
 
             <button
               @click="navigateCourse('next')"
-              class="w-12 h-12 rounded-xl bg-dark-900/40 hover:bg-dark-900/60 backdrop-blur-sm border border-white/30 hover:border-white text-white flex items-center justify-center transition-all duration-200 hover:scale-110 shadow-lg pointer-events-auto"
+              class="w-14 h-[60px] rounded-2xl bg-dark-800/80 hover:bg-dark-800 border border-dark-700 hover:border-dark-600 text-white flex items-center justify-center transition-all duration-200 backdrop-blur-sm shadow-lg"
               :disabled="currentCourseIndex === courses.length - 1"
               :class="{
-                'opacity-30 cursor-not-allowed':
+                'opacity-50 cursor-not-allowed':
                   currentCourseIndex === courses.length - 1,
+                'hover:translate-y-[-2px]': currentCourseIndex !== courses.length - 1
               }"
+              aria-label="Ďalší kurz"
             >
               <svg
-                class="w-6 h-6 drop-shadow-lg"
+                class="w-6 h-6"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"

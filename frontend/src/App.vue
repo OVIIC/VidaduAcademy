@@ -32,6 +32,9 @@
         <p class="text-gray-600">Načítava...</p>
       </div>
     </div>
+
+    <!-- GDPR Cookie Banner -->
+    <CookieBanner />
   </div>
 </template>
 
@@ -41,10 +44,12 @@ import { useRoute } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import DefaultLayout from '@/layouts/DefaultLayout.vue'
 import DashboardLayout from '@/layouts/DashboardLayout.vue'
-
+import CookieBanner from '@/components/common/CookieBanner.vue'
+import { useCookieConsent } from '@/composables/useCookieConsent'
 
 const route = useRoute()
 const authStore = useAuthStore()
+const { initConsent } = useCookieConsent()
 
 // Layout resolution
 const layout = computed(() => {
@@ -85,6 +90,9 @@ watch(route, (to) => {
 onMounted(() => {
   // Initialize auth state from localStorage
   authStore.initializeAuth()
+  
+  // Initialize cookie consent
+  initConsent()
   
   // Add viewport meta tag for mobile optimization
   if (!document.querySelector('meta[name="viewport"]')) {

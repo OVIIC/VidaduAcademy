@@ -24,12 +24,6 @@
         @purchase="handlePurchase"
       >
         <!-- Navigation Arrows overlaid on the hero image in CourseView only -->
-        <!-- We can't easily slot into the exact image container from here without slot support in CourseDetail. 
-               Alternatively, we can place them absolutely here if we know the layout matches. 
-               Or update CourseDetail to support navigation slots/props. 
-               Let's update CourseDetail to handle next/prev internally or via slots? 
-               Actually, simpler: put these buttons OVER the CourseDetail component using absolute positioning if z-index allows. 
-          -->
         <template #controls>
           <div v-if="courses.length > 1" class="flex items-center gap-3">
             <button

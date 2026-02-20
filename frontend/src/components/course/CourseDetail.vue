@@ -46,7 +46,6 @@
             <span class="font-bold">Späť na katalóg</span>
           </button>
 
-          <!-- Navigation Arrows (only if handled by parent via slots/events, or we pass list. For now, we keep it simple: single course view) -->
           <!-- Slot for overlays like navigation arrows -->
           <slot name="hero-overlay"></slot>
         </div>
@@ -106,7 +105,6 @@
                 }}
               </p>
 
-              <!-- Action Buttons (Disney+ style) -->
               <!-- Action Buttons (Disney+ style) -->
               <div class="flex items-center space-x-4 flex-wrap gap-y-4">
                 <button
@@ -336,7 +334,7 @@
 </template>
 
 <script setup>
-import { ref, watch } from "vue";
+import { ref } from "vue";
 import { useCourseStore } from "@/stores/course";
 
 const props = defineProps({
@@ -379,20 +377,9 @@ const toggleCourseDetails = async () => {
   if (!showDetails.value && !fullCourseLoaded.value) {
     // Fetch full course details if needed
     try {
-      const fullCourse = await courseStore.fetchCourse(props.course.slug);
+      await courseStore.fetchCourse(props.course.slug);
 
-      // We want to mutate the object in place if possible or let parent handle it.
-      // But props are readonly. Best is if parent already passes full object.
-      // However here we are inside component.
-      // We can rely on reactivity if parent state updates.
-      // But props might be a shallow copy.
-
-      // Simplest: just expand. If data missing, show what we have.
-      // Ideally parent ensures data is detailed when passing to this component
-      // OR this component fetches and emits update?
-
-      // Let's assume parent passes whatever they have.
-      // If we need to fetch more, we should use the store and update.
+      // We fetch data if necessary, though ideally the parent component provides full details.
     } catch (error) {
       console.error(error);
     }

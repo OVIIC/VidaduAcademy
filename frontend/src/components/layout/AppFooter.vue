@@ -48,20 +48,20 @@
           <ul class="space-y-2">
 
             <li>
-              <a href="#" class="text-gray-300 hover:text-primary transition-all duration-300 hover:translate-x-1">
+              <router-link to="/kontakt" class="text-gray-300 hover:text-primary transition-all duration-300 hover:translate-x-1">
                 Kontaktujte nás
-              </a>
+              </router-link>
             </li>
 
             <li>
-              <a href="#" class="text-gray-300 hover:text-primary transition-all duration-300 hover:translate-x-1">
+              <router-link to="/ochrana-osobnych-udajov" class="text-gray-300 hover:text-primary transition-all duration-300 hover:translate-x-1">
                 Zásady ochrany súkromia
-              </a>
+              </router-link>
             </li>
             <li>
-              <a href="#" class="text-gray-300 hover:text-primary transition-all duration-300 hover:translate-x-1">
+              <router-link to="/podmienky-sluzby" class="text-gray-300 hover:text-primary transition-all duration-300 hover:translate-x-1">
                 Podmienky služby
-              </a>
+              </router-link>
             </li>
           </ul>
         </div>
@@ -94,12 +94,12 @@
           © {{ currentYear }} VidaduAcademy. Všetky práva vyhradené.
         </p>
         <div class="flex space-x-6 mt-4 md:mt-0">
-          <a href="#" class="text-gray-300 hover:text-primary text-sm transition-all duration-300">
+          <router-link to="/ochrana-osobnych-udajov" class="text-gray-300 hover:text-primary text-sm transition-all duration-300">
             Zásady ochrany súkromia
-          </a>
-          <a href="#" class="text-gray-300 hover:text-primary text-sm transition-all duration-300">
+          </router-link>
+          <router-link to="/podmienky-sluzby" class="text-gray-300 hover:text-primary text-sm transition-all duration-300">
             Podmienky služby
-          </a>
+          </router-link>
           <a href="#" class="text-gray-300 hover:text-primary text-sm transition-all duration-300">
             Zásady cookies
           </a>

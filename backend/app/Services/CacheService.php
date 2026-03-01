@@ -195,13 +195,13 @@ class CacheService
             // Warm up featured courses
             $this->rememberFeatured(function () {
                 return \App\Models\Course::where('featured', true)
-                    ->select(['id', 'title', 'slug', 'description', 'image', 'price', 'featured'])
+                    ->select(['id', 'title', 'slug', 'description', 'thumbnail', 'price', 'featured'])
                     ->get();
             });
 
             // Warm up recent courses
             $this->rememberCoursesList('courses:recent', function () {
-                return \App\Models\Course::select(['id', 'title', 'slug', 'description', 'image', 'price'])
+                return \App\Models\Course::select(['id', 'title', 'slug', 'description', 'thumbnail', 'price'])
                     ->latest()
                     ->limit(10)
                     ->get();

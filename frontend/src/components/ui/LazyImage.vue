@@ -112,20 +112,12 @@ const observer = ref(null)
 
 // Auto-generate WebP source if not provided
 const webpSrc = computed(() => {
-  if (props.webpSrc) return props.webpSrc
-  if (props.src && (props.src.endsWith('.jpg') || props.src.endsWith('.jpeg') || props.src.endsWith('.png'))) {
-    return props.src.replace(/\.(jpg|jpeg|png)$/i, '.webp')
-  }
-  return null
+  return props.webpSrc || null
 })
 
 // Auto-generate AVIF source if not provided  
 const avifSrc = computed(() => {
-  if (props.avifSrc) return props.avifSrc
-  if (props.src && (props.src.endsWith('.jpg') || props.src.endsWith('.jpeg') || props.src.endsWith('.png'))) {
-    return props.src.replace(/\.(jpg|jpeg|png)$/i, '.avif')
-  }
-  return null
+  return props.avifSrc || null
 })
 
 // Current source with fallback logic

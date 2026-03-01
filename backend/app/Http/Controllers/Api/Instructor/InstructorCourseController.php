@@ -125,7 +125,7 @@ class InstructorCourseController extends Controller
 
         if ($request->hasFile('thumbnail')) {
             $request->validate([
-                'thumbnail' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+                'thumbnail' => 'image|mimes:jpeg,png,jpg,gif|max:5120',
             ]);
             
             // Delete old thumbnail if it exists

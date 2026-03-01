@@ -86,7 +86,7 @@ class CourseResource extends Resource
                     ->disk('public')
                     ->directory('thumbnails')
                     ->image()
-                    ->maxSize(2048),
+                    ->maxSize(5120),
                 Forms\Components\Repeater::make('what_you_will_learn')
                     ->schema([
                         Forms\Components\TextInput::make('item')

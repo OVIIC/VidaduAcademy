@@ -51,7 +51,8 @@
             :course="course"
             :show-duration="false"
             :enable-hover-effects="true"
-            class="w-[350px] flex-shrink-0 transform transition-transform duration-300 hover:scale-105 hover:z-30"
+            @click="goToCourse(course.slug)"
+            class="w-[350px] flex-shrink-0 transform transition-transform duration-300 hover:scale-105 hover:z-30 cursor-pointer"
           />
         </div>
 
@@ -67,7 +68,8 @@
             :course="course"
             :show-duration="false"
             :enable-hover-effects="true"
-            class="w-[350px] flex-shrink-0 transform transition-transform duration-300 hover:scale-105 hover:z-30"
+            @click="goToCourse(course.slug)"
+            class="w-[350px] flex-shrink-0 transform transition-transform duration-300 hover:scale-105 hover:z-30 cursor-pointer"
           />
         </div>
       </div>
@@ -84,11 +86,13 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 import { ArrowRightIcon } from '@heroicons/vue/24/outline'
 import CourseCard from '@/components/courses/CourseCard.vue'
 import { useCourseStore } from '@/stores/course'
 
 const courseStore = useCourseStore()
+const router = useRouter()
 const activeCategory = ref('all')
 
 const categories = [
@@ -122,6 +126,10 @@ const filteredFeaturedCourses = computed(() => {
 onMounted(() => {
   courseStore.fetchFeaturedCourses()
 })
+
+const goToCourse = (slug) => {
+  router.push({ path: '/courses', query: { slug } })
+}
 </script>
 
 <style scoped>

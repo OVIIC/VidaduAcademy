@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Storage;
 
 class InstructorCourseController extends Controller
 {
@@ -106,7 +107,7 @@ class InstructorCourseController extends Controller
             'price' => 'nullable|numeric|min:0',
             'status' => 'nullable|in:draft,published,archived',
             'difficulty_level' => 'nullable|in:beginner,intermediate,advanced',
-            'thumbnail' => 'nullable|string',
+            'thumbnail' => 'nullable',
             'what_you_will_learn' => 'nullable|array',
             'requirements' => 'nullable|array',
         ]);
@@ -120,6 +121,25 @@ class InstructorCourseController extends Controller
         // Handle published_at if status changes to published
         if (isset($data['status']) && $data['status'] === 'published' && $course->status !== 'published') {
             $data['published_at'] = now();
+        }
+
+        if ($request->hasFile('thumbnail')) {
+            $request->validate([
+                'thumbnail' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+            ]);
+            
+            // Delete old thumbnail if it exists
+            if ($course->thumbnail && !str_starts_with($course->thumbnail, 'http')) {
+                Storage::disk('public')->delete($course->thumbnail);
+            }
+            
+            $data['thumbnail'] = $request->file('thumbnail')->store('thumbnails', 'public');
+        } elseif (array_key_exists('thumbnail', $data) && is_string($data['thumbnail']) && str_starts_with($data['thumbnail'], 'http')) {
+            // Keep URL string if explicitly sent
+            $data['thumbnail'] = $data['thumbnail'];
+        } else {
+            // Don't overwrite thumbnail if no file or URL was sent
+            unset($data['thumbnail']);
         }
 
         $course->update($data);

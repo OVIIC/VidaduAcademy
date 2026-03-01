@@ -82,9 +82,11 @@ class CourseResource extends Resource
                 Forms\Components\Toggle::make('featured')
                     ->default(false),
                 Forms\Components\DateTimePicker::make('published_at'),
-                Forms\Components\TextInput::make('thumbnail')
-                    ->url()
-                    ->maxLength(255),
+                Forms\Components\FileUpload::make('thumbnail')
+                    ->disk('public')
+                    ->directory('thumbnails')
+                    ->image()
+                    ->maxSize(2048),
                 Forms\Components\Repeater::make('what_you_will_learn')
                     ->schema([
                         Forms\Components\TextInput::make('item')

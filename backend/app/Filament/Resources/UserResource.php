@@ -54,6 +54,9 @@ class UserResource extends Resource
                     ->multiple()
                     ->preload()
                     ->searchable(),
+                Forms\Components\Textarea::make('admin_notes')
+                    ->label('Admin poznámky')
+                    ->columnSpanFull(),
             ]);
     }
 
@@ -99,6 +102,11 @@ class UserResource extends Resource
                     ->badge()
                     ->color('primary')
                     ->sortable(),
+                Tables\Columns\TextColumn::make('admin_notes')
+                    ->label('Poznámky')
+                    ->limit(50)
+                    ->searchable()
+                    ->toggleable(),
             ])
             ->filters([
                 Tables\Filters\Filter::make('email_verified')

@@ -46,6 +46,7 @@ class User extends Authenticatable implements FilamentUser
         'is_instructor',
         'is_active',
         'subscribers_count',
+        'admin_notes',
     ];
 
     protected $hidden = [

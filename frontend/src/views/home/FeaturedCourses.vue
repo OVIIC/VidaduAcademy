@@ -51,6 +51,7 @@
             :course="course"
             :show-duration="false"
             :enable-hover-effects="true"
+            :lazy-load="false"
             @click="goToCourse(course.slug)"
             class="w-[350px] flex-shrink-0 transform transition-transform duration-300 hover:scale-105 hover:z-30 cursor-pointer"
           />
@@ -68,6 +69,7 @@
             :course="course"
             :show-duration="false"
             :enable-hover-effects="true"
+            :lazy-load="false"
             @click="goToCourse(course.slug)"
             class="w-[350px] flex-shrink-0 transform transition-transform duration-300 hover:scale-105 hover:z-30 cursor-pointer"
           />

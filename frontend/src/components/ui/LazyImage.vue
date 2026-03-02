@@ -15,7 +15,7 @@
     </div>
 
     <!-- Modern image with WebP support -->
-    <picture v-show="!loading && !error">
+    <picture :class="{ 'opacity-0': loading || error, 'transition-opacity duration-300': true }">
       <source 
         v-if="webpSrc" 
         :srcset="webpSrc" 
@@ -33,7 +33,7 @@
         :class="imageClass"
         @load="onLoad"
         @error="onError"
-        loading="lazy"
+        :loading="lazyLoad ? 'lazy' : 'eager'"
         decoding="async"
         :fetchpriority="priority"
       />
@@ -101,6 +101,10 @@ const props = defineProps({
   sizes: {
     type: String,
     default: ''
+  },
+  lazyLoad: {
+    type: Boolean,
+    default: true
   }
 })
 

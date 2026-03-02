@@ -17,6 +17,7 @@
           enableHoverEffects ? 'group-hover:scale-105' : '',
         ]"
         :fallback-src="'/images/video-academy-logo.png'"
+        :lazy-load="lazyLoad"
       />
       <div v-if="course.featured" class="absolute top-3 right-3">
         <StarIcon class="h-5 w-5 text-yellow-400 fill-current" />
@@ -87,6 +88,10 @@ defineProps({
     default: true,
   },
   enableHoverEffects: {
+    type: Boolean,
+    default: true,
+  },
+  lazyLoad: {
     type: Boolean,
     default: true,
   },

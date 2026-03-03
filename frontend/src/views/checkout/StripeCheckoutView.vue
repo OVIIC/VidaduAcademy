@@ -44,22 +44,15 @@
         <!-- Action buttons -->
         <div class="space-y-3">
           <button
-            @click="simulateSuccess"
+            @click="proceedToCheckout"
             :disabled="isProcessing"
-            class="w-full bg-green-600 hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-medium py-3 px-4 rounded-lg transition duration-200"
+            class="w-full bg-blue-600 hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-medium py-3 px-4 rounded-lg transition duration-200"
           >
             <span v-if="isProcessing" class="flex items-center justify-center">
               <div class="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-              Spracováva sa...
+              Pripravujem platbu...
             </span>
-            <span v-else>🎉 Simulovať úspešnú platbu</span>
-          </button>
-          
-          <button
-            @click="simulateCancel"
-            class="w-full bg-red-600 hover:bg-red-700 text-white font-medium py-3 px-4 rounded-lg transition duration-200"
-          >
-            ❌ Simulovať zrušenie platby
+            <span v-else>💳 Prejsť na platbu (Stripe)</span>
           </button>
           
           <button
@@ -68,11 +61,6 @@
           >
             ← Späť na kurzy
           </button>
-        </div>
-
-        <!-- Development info -->
-        <div class="mt-6 pt-4 border-t border-gray-200 text-xs text-gray-500">
-          <p>🚧 Vývojová stránka - Stripe integrácia bude pridaná neskôr</p>
         </div>
       </div>
     </div>
@@ -111,7 +99,7 @@ onMounted(() => {
   }
 })
 
-const simulateSuccess = async () => {
+const proceedToCheckout = async () => {
   if (!courseInfo.value?.id) {
     toast.error('Chyba: ID kurzu nenájdené')
     return
@@ -125,41 +113,35 @@ const simulateSuccess = async () => {
   isProcessing.value = true
   
   try {
-    // Simulate successful payment and enroll user in course
-    console.log('Simulating purchase for course:', courseInfo.value.id)
+    const successUrl = `${window.location.origin}/payment/success`
+    const cancelUrl = `${window.location.origin}/course/${route.query.courseSlug || courseInfo.value.id}`
     
-    // Call the simulate purchase endpoint
-    await paymentService.simulatePurchase(parseInt(courseInfo.value.id))
+    // Call the create checkout session API
+    const response = await paymentService.createCheckoutSession(
+      parseInt(courseInfo.value.id),
+      successUrl,
+      cancelUrl
+    )
     
-    // Show success message
-    toast.success(`Úspešná platba! Kurz "${courseInfo.value.title}" bol pridaný do vašich kurzov.`)
+    // Redirect to Stripe Hosted Checkout Page
+    if (response && response.checkout_url) {
+      window.location.href = response.checkout_url
+    } else {
+      throw new Error('Nepodarilo sa získať Stripe Checkout adresu')
+    }
     
   } catch (error) {
-    console.warn('API simulation failed, using fallback:', error)
+    console.error('Checkout failed:', error)
     
-    // Fallback: Add course to local state for development testing (legacy behavior)
-    enrollmentStore.addCourseToMyCourses({
-      id: parseInt(courseInfo.value.id),
-      title: courseInfo.value.title,
-      price: courseInfo.value.price,
-      slug: route.query.courseSlug || `course-${courseInfo.value.id}`,
-      description: 'Mock course added after simulated purchase',
-      duration_minutes: 120,
-      thumbnail: null,
-    })
-    
-    toast.success(`Simulácia úspešnej platby! Kurz "${courseInfo.value.title}" bol pridaný do vašich kurzov. (Poznámka: Použité lokálne uloženie - API neúspešné)`)
+    if (error.response?.status === 422) {
+      toast.error('Tento kurz už vlastníte')
+      router.push('/my-courses')
+    } else {
+      toast.error('Nepodarilo sa prejsť na platbu. Skúste to prosím neskôr.')
+    }
   } finally {
     isProcessing.value = false
-    // Navigate immediately after success message
-    router.push('/my-courses')
   }
-}
-
-const simulateCancel = () => {
-  // Simulate cancelled payment
-  toast.info('Platba bola zrušená.')
-  goBack()
 }
 
 const goBack = () => {

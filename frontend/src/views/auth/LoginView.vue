@@ -46,7 +46,7 @@
           <!-- Social Login -->
           <div class="mb-4">
             <a
-              :href="`${apiUrl}/auth/google/redirect`"
+              :href="googleAuthUrl"
               class="w-full flex justify-center items-center px-4 py-3 border border-dark-700 rounded-xl shadow-sm text-sm font-medium text-white bg-dark-800/50 hover:bg-dark-700/80 transition-all duration-200 hover:border-dark-600 group"
             >
               <svg class="h-5 w-5 mr-3 transition-transform group-hover:scale-110" viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg">
@@ -191,7 +191,22 @@ useHead({
   ]
 })
 
-const apiUrl = import.meta.env.VITE_API_URL
+const apiUrl = import.meta.env.VITE_API_URL || ''
+
+// Compute the correct Google Auth URL by ensuring we don't duplicate /api and handling trailing slashes
+import { computed } from 'vue'
+const googleAuthUrl = computed(() => {
+  // Remove trailing slash if exists
+  let base = apiUrl.endsWith('/') ? apiUrl.slice(0, -1) : apiUrl
+  
+  // If base already ends with /api (e.g. from VITE_API_URL=https://api.vidaduacademy.sk/api)
+  // we want to append /auth/google/redirect to it.
+  // If it doesn't end with /api (e.g. VITE_API_URL=https://api.vidaduacademy.sk), 
+  // we need to add /api/auth/google/redirect because Laravel's api.php routes are prefixed with /api
+  const suffix = base.endsWith('/api') ? '/auth/google/redirect' : '/api/auth/google/redirect'
+  
+  return `${base}${suffix}`
+})
 
 const authStore = useAuthStore()
 const { 

@@ -14,9 +14,6 @@
       </div>
       <h2 class="mt-6 text-center text-3xl font-bold tracking-tight text-white">
         <span class="block text-white mb-1">Vytvorte si účet</span>
-        <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary-400 via-primary-500 to-secondary-500 animate-gradient-x text-sm uppercase tracking-wider font-extrabold">
-          a začnite rásť
-        </span>
       </h2>
       <p class="mt-2 text-center text-sm text-dark-300">
         Alebo
@@ -177,9 +174,9 @@
             <div class="ml-3 text-sm">
               <label for="agree-terms" class="font-medium text-dark-300">
                 Súhlasím s
-                <a href="#" class="text-primary-400 hover:text-primary-300 transition-colors">Podmienkami služby</a>
+                <a href="https://vidaduacademy.com/podmienky-sluzby" target="_blank" rel="noopener noreferrer" class="text-primary-400 hover:text-primary-300 transition-colors">Podmienkami služby</a>
                 a
-                <a href="#" class="text-primary-400 hover:text-primary-300 transition-colors">Zásadami ochrany súkromia</a>
+                <a href="https://vidaduacademy.com/ochrana-osobnych-udajov" target="_blank" rel="noopener noreferrer" class="text-primary-400 hover:text-primary-300 transition-colors">Zásadami ochrany súkromia</a>
               </label>
             </div>
           </div>

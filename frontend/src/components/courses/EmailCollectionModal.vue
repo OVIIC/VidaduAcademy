@@ -59,11 +59,28 @@
                   />
                 </div>
                 
+                <div class="mb-6 flex items-start">
+                  <div class="flex items-center h-5">
+                    <input 
+                      id="consent" 
+                      type="checkbox" 
+                      v-model="consent"
+                      required
+                      class="focus:ring-primary-500 h-5 w-5 text-primary-600 border-gray-300 rounded cursor-pointer"
+                    >
+                  </div>
+                  <div class="ml-3 text-sm">
+                    <label for="consent" class="font-medium text-gray-700 cursor-pointer">
+                      Súhlasím so spracovaním osobných údajov na účely zasielania marketingových ponúk a noviniek (newsletterov) v súlade so <a href="https://vidaduacademy.com/ochrana-osobnych-udajov" target="_blank" class="text-primary-600 hover:text-primary-500 underline">Zásadami ochrany súkromia</a>. Svoj súhlas môžem kedykoľvek odvolať.
+                    </label>
+                  </div>
+                </div>
+                
                 <div class="mt-6 flex flex-col sm:flex-row gap-3">
                   <button
                     type="submit"
-                    :disabled="loading || !email"
-                    class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-3 bg-primary-600 text-base font-medium text-white hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 sm:text-lg sm:w-auto disabled:opacity-50 transition-colors"
+                    :disabled="loading || !email || !consent"
+                    class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-3 bg-primary-600 text-base font-medium text-white hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 sm:text-lg sm:w-auto disabled:opacity-50 transition-colors cursor-pointer"
                   >
                     <svg v-if="loading" class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                       <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
@@ -108,15 +125,17 @@ const emit = defineEmits(['close'])
 
 const toast = useToast()
 const email = ref('')
+const consent = ref(false)
 const loading = ref(false)
 
 const closeModal = () => {
   emit('close')
   email.value = ''
+  consent.value = false
 }
 
 const submitEmail = async () => {
-  if (!email.value) return
+  if (!email.value || !consent.value) return
   
   loading.value = true
   try {

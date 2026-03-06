@@ -32,6 +32,18 @@ const router = createRouter({
       meta: { requiresGuest: true },
     },
     {
+      path: '/forgot-password',
+      name: 'ForgotPassword',
+      component: () => import('@/views/auth/ForgotPasswordView.vue'),
+      meta: { requiresGuest: true },
+    },
+    {
+      path: '/reset-password',
+      name: 'ResetPassword',
+      component: () => import('@/views/auth/ResetPasswordView.vue'),
+      meta: { requiresGuest: true },
+    },
+    {
       path: '/auth/callback/:provider',
       name: 'SocialCallback',
       component: () => import('@/views/auth/SocialCallbackView.vue'),

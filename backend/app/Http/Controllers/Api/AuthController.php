@@ -13,6 +13,9 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Validation\Rules\Password;
+use Illuminate\Support\Facades\Password as PasswordBroker;
+use Illuminate\Auth\Events\PasswordReset;
+use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
@@ -366,5 +369,112 @@ class AuthController extends Controller
         return response()->json([
             'message' => 'Logged out from all devices successfully'
         ]);
+    }
+
+    /**
+     * Send password reset link email
+     */
+    public function sendResetLinkEmail(Request $request): JsonResponse
+    {
+        // Rate limit password reset emails
+        $key = 'password_reset_email:' . $request->ip();
+        if (RateLimiter::tooManyAttempts($key, 3)) {
+            $this->auditService->logSuspiciousActivity(
+                'password_reset_rate_limit', 
+                $request, 
+                null, 
+                4, 
+                true
+            );
+            
+            return response()->json([
+                'message' => 'Too many requests. Please try again later.',
+                'retry_after' => RateLimiter::availableIn($key)
+            ], 429);
+        }
+
+        $request->validate(['email' => 'required|email']);
+        
+        // We always return success to avoid email enumeration, but only send if user exists
+        $user = User::where('email', $request->email)->first();
+        if ($user) {
+            $status = PasswordBroker::broker()->sendResetLink(
+                $request->only('email')
+            );
+            
+            $this->auditService->logSecurityEvent(
+                'authentication',
+                'password_reset_email_sent',
+                $user->id,
+                'info',
+                ['email' => $request->email, 'ip' => $request->ip()]
+            );
+        }
+
+        RateLimiter::hit($key, 300); // 5 minutes
+
+        return response()->json([
+            'message' => 'Ak účet s touto e-mailovou adresou existuje, bol naň odoslaný odkaz na obnovenie hesla.'
+        ]);
+    }
+
+    /**
+     * Reset user password using token
+     */
+    public function reset(Request $request): JsonResponse
+    {
+        $request->validate([
+            'token' => 'required',
+            'email' => 'required|email',
+            'password' => ['required', 'confirmed', Password::min(8)->mixedCase()->numbers()->symbols()],
+        ]);
+
+        $status = PasswordBroker::broker()->reset(
+            $request->only('email', 'password', 'password_confirmation', 'token'),
+            function ($user, $password) {
+                $user->forceFill([
+                    'password' => Hash::make($password)
+                ])->setRememberToken(Str::random(60));
+
+                $user->save();
+
+                event(new PasswordReset($user));
+            }
+        );
+
+        if ($status == PasswordBroker::PASSWORD_RESET) {
+            $user = User::where('email', $request->email)->first();
+            
+            // Revoke all existing tokens
+            if ($user) {
+                $user->tokens()->delete();
+                
+                $this->auditService->logSecurityEvent(
+                    'authentication',
+                    'password_reset_successful',
+                    $user->id,
+                    'info',
+                    ['ip' => $request->ip()]
+                );
+            }
+
+            return response()->json([
+                'message' => 'Vaše heslo bolo úspešne obnovené.'
+            ]);
+        }
+        
+        // Audit failed reset
+         $this->auditService->logSecurityEvent(
+            'authentication',
+            'password_reset_failed',
+            null,
+            'warning',
+            ['email' => $request->email, 'ip' => $request->ip(), 'reason' => __($status)]
+        );
+
+        return response()->json([
+            'message' => 'Tento odkaz na obnovenie hesla je neplatný alebo vypršal.',
+            'errors' => ['email' => [__($status)]]
+        ], 400);
     }
 }

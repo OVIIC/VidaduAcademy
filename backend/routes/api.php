@@ -97,6 +97,11 @@ Route::prefix('auth')->group(function () {
     Route::post('/login', [AuthController::class, 'login'])
         ->middleware('rate.limit:login,5,1'); // 5 attempts per minute
     
+    Route::post('/forgot-password', [AuthController::class, 'sendResetLinkEmail'])
+        ->middleware('rate.limit:password_reset_email,3,5'); // 3 attempts per 5 minutes
+    Route::post('/reset-password', [AuthController::class, 'reset'])
+        ->middleware('rate.limit:password_reset,5,5');
+
     Route::middleware('auth:sanctum')->group(function () {
         Route::post('/logout', [AuthController::class, 'logout']);
         Route::post('/logout-all', [AuthController::class, 'logoutAll']);

@@ -13,10 +13,7 @@
         </router-link>
       </div>
       <h2 class="mt-6 text-center text-3xl font-bold tracking-tight text-white">
-        <span class="block text-white mb-1">Vitajte späť</span>
-        <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary-400 via-primary-500 to-secondary-500 animate-gradient-x text-sm uppercase tracking-wider font-extrabold">
-          pokračujte v raste
-        </span>
+        Vitajte späť
       </h2>
       <p class="mt-2 text-center text-sm text-dark-300">
         Alebo
@@ -145,9 +142,9 @@
             </div>
 
             <div class="text-sm">
-              <a href="#" class="font-medium text-primary-400 hover:text-primary-300 transition-colors">
+              <router-link to="/forgot-password" class="font-medium text-primary-400 hover:text-primary-300 transition-colors">
                 Zabudli ste heslo?
-              </a>
+              </router-link>
             </div>
           </div>
 

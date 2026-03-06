@@ -28,16 +28,19 @@ services:
 
       # Driver adjustments
       BROADCAST_DRIVER: log
-      CACHE_DRIVER: file
+      CACHE_DRIVER: redis
       FILESYSTEM_DISK: local
-      QUEUE_CONNECTION: database
-      SESSION_DRIVER: file
+      QUEUE_CONNECTION: redis
+      SESSION_DRIVER: redis
       SESSION_LIFETIME: 120
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
 
     networks:
       - vidadu-network
     depends_on:
       - postgres
+      - redis
 
   worker:
     build:
@@ -60,14 +63,17 @@ services:
       DB_DATABASE: ${DB_DATABASE:-vidadu_academy}
       DB_USERNAME: ${DB_USERNAME:-vidadu_user}
       DB_PASSWORD: ${DB_PASSWORD:-secure_password}
-      CACHE_DRIVER: file
-      QUEUE_CONNECTION: database
-      SESSION_DRIVER: file
+      CACHE_DRIVER: redis
+      QUEUE_CONNECTION: redis
+      SESSION_DRIVER: redis
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
     networks:
       - vidadu-network
     depends_on:
       - app
       - postgres
+      - redis
 
   scheduler:
     build:
@@ -90,11 +96,14 @@ services:
       DB_DATABASE: ${DB_DATABASE:-vidadu_academy}
       DB_USERNAME: ${DB_USERNAME:-vidadu_user}
       DB_PASSWORD: ${DB_PASSWORD:-secure_password}
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
     networks:
       - vidadu-network
     depends_on:
       - app
       - postgres
+      - redis
 
   web:
     build:
@@ -137,6 +146,14 @@ services:
       POSTGRES_PASSWORD: ${DB_PASSWORD:-secure_password}
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    networks:
+      - vidadu-network
+
+  redis:
+    image: redis:alpine
+    container_name: vidadu-redis
+    restart: always
+    command: redis-server --maxmemory 128mb --maxmemory-policy allkeys-lru
     networks:
       - vidadu-network
 

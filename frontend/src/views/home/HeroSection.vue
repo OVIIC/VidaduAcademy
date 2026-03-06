@@ -7,10 +7,12 @@
         <div class="max-w-4xl mx-auto text-center pointer-events-auto">
         <div class="melting-text-container mb-8">
           <h1 class="text-5xl sm:text-6xl lg:text-7xl font-black leading-tight tracking-tight drop-shadow-2xl mb-4">
-            <span class="block text-white mb-2">Dominuj na YouTube</span>
-            <span class="block text-transparent bg-clip-text bg-gradient-to-r from-primary-400 via-primary-500 to-secondary-500 animate-gradient-x">
-              so svojím kanálom
-            </span>
+            <RotatingText
+              :texts="heroTexts"
+              :interval="2500"
+              className="w-full h-full"
+              textClassName="w-full"
+            />
           </h1>
         </div>
         
@@ -54,6 +56,13 @@
 
 <script setup>
 import { ArrowRightIcon, PlayCircleIcon } from '@heroicons/vue/24/outline'
+import RotatingText from '@/components/effects/RotatingText.vue'
+
+const heroTexts = [
+  '<span class="block text-white mb-2">Dominuj na YouTube</span><span class="block text-transparent bg-clip-text bg-gradient-to-r from-primary-400 via-primary-500 to-secondary-500 animate-gradient-x pb-4">so svojím kanálom</span>',
+  '<span class="block text-white mb-2">Tvor neodolateľný</span><span class="block text-transparent bg-clip-text bg-gradient-to-r from-brand-blue via-brand-green to-brand-yellow animate-gradient-x pb-4">obsah</span>',
+  '<span class="block text-white mb-2">Získaj si pozornosť</span><span class="block text-transparent bg-clip-text bg-gradient-to-r from-brand-pink via-primary-400 to-brand-yellow animate-gradient-x pb-4">divákov</span>'
+]
 </script>
 
 <style scoped>

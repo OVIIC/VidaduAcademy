@@ -46,6 +46,9 @@ Route::prefix('courses')->group(function () {
 
 Route::get('/categories', [\App\Http\Controllers\Api\CategoryController::class, 'index']);
 
+// Course Emails collection endpoint (public)
+Route::post('/course-emails', [\App\Http\Controllers\CourseEmailController::class, 'store']);
+
 // Stripe webhook (public, no auth required)
 Route::post('/webhook/stripe', [PaymentController::class, 'webhook'])->name('stripe.webhook');
 

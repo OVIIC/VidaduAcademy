@@ -138,11 +138,11 @@
       </button>
     </div>
 
-    <!-- Checkout Loading Modal -->
-    <CheckoutLoadingModal
-      :show="showCheckoutLoading"
-      :courseTitle="checkoutCourse?.title"
-      :coursePrice="checkoutCourse?.price"
+    <!-- Email Collection Modal -->
+    <EmailCollectionModal
+      :show="showEmailModal"
+      :course-id="checkoutCourse?.id"
+      @close="showEmailModal = false"
     />
   </div>
 </template>
@@ -159,7 +159,7 @@ import { paymentService } from '@/services'
 
 import CustomSelect from '@/components/ui/CustomSelect.vue'
 import PriceFilter from '@/components/ui/PriceFilter.vue'
-import CheckoutLoadingModal from '@/components/ui/CheckoutLoadingModal.vue'
+import EmailCollectionModal from '@/components/courses/EmailCollectionModal.vue'
 import CourseCard from '@/components/course/CourseCard.vue'
 
 const props = defineProps({
@@ -184,7 +184,7 @@ const pagination = computed(() => courseStore.pagination)
 const categories = computed(() => courseStore.categories)
 
 // Local state for checkout
-const showCheckoutLoading = ref(false)
+const showEmailModal = ref(false)
 const checkoutCourse = ref(null)
 
 // Filters state
@@ -285,44 +285,8 @@ const changePage = (page) => {
 }
 
 const handlePurchase = async (course) => {
-  if (!authStore.user) {
-    toast.info('Pre nákup kurzu sa musíte prihlásiť.')
-    router.push('/login')
-    return
-  }
-
-  const isPurchased = enrollmentStore.hasPurchasedCourse(course.id)
-  
-  if (isPurchased) {
-    toast.info('Tento kurz už máte zakúpený a nachádza sa v sekcii "Moje kurzy".')
-    return
-  }
-
-  try {
-    checkoutCourse.value = course
-    showCheckoutLoading.value = true
-    
-    const successUrl = `${window.location.origin}/payment/success?session_id={CHECKOUT_SESSION_ID}`
-    const cancelUrl = `${window.location.origin}/courses?cancelled=true`
-    const response = await paymentService.createCheckoutSession(course.id, successUrl, cancelUrl)
-    
-    if (response.checkout_url) {
-      window.location.href = response.checkout_url
-    } else {
-      throw new Error('No checkout URL received')
-    }
-  } catch (error) {
-    console.error('Error creating checkout session:', error)
-    
-    showCheckoutLoading.value = false
-    checkoutCourse.value = null
-    
-    if (import.meta.env.DEV) {
-       console.log('Falling back to simulator checkout')
-       const checkoutUrl = `/checkout?courseTitle=${encodeURIComponent(course.title)}&coursePrice=${course.price}&courseId=${course.id}&courseSlug=${encodeURIComponent(course.slug)}`
-       router.push(checkoutUrl)
-    }
-  }
+  checkoutCourse.value = course
+  showEmailModal.value = true
 }
 
 const loadData = async () => {

@@ -76,7 +76,7 @@
                     :course="selectedCatalogCourse"
                     back-button
                     is-dashboard
-                    :loading="showCheckoutLoading && checkoutCourse?.id === selectedCatalogCourse?.id"
+                    :loading="false"
                     @back="selectedCatalogCourse = null"
                     @purchase="handlePurchase"
                 />
@@ -85,11 +85,11 @@
       </div>
     </div>
 
-    <!-- Checkout Loading Modal -->
-    <CheckoutLoadingModal
-      :show="showCheckoutLoading"
-      :courseTitle="checkoutCourse?.title"
-      :coursePrice="checkoutCourse?.price"
+    <!-- Email Collection Modal -->
+    <EmailCollectionModal
+      :show="showEmailModal"
+      :course-id="checkoutCourse?.id"
+      @close="showEmailModal = false"
     />
   </div>
 </template>
@@ -103,7 +103,7 @@ import { useCourseStore } from '@/stores/course'
 import { usePurchase } from '@/composables/usePurchase'
 import CourseCatalog from '@/components/course/CourseCatalog.vue'
 import CourseDetail from '@/components/course/CourseDetail.vue'
-import CheckoutLoadingModal from '@/components/ui/CheckoutLoadingModal.vue'
+import EmailCollectionModal from '@/components/courses/EmailCollectionModal.vue'
 
 // Dashboard Components
 import StatsOverview from '@/components/dashboard/StatsOverview.vue'
@@ -144,7 +144,7 @@ const handleCatalogSelect = async (course) => {
     }
 }
 
-const { loading: showCheckoutLoading, checkoutCourse, handlePurchase: startPurchase } = usePurchase()
+const { showEmailModal, checkoutCourse, handlePurchase: startPurchase } = usePurchase()
 
 const handlePurchase = (course) => {
     const successUrl = `${window.location.origin}/payment/success?session_id={CHECKOUT_SESSION_ID}`

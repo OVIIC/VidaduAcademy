@@ -158,11 +158,11 @@
       @close="showAuthModalFlag = false"
     />
 
-    <!-- Checkout Loading Modal -->
-    <CheckoutLoadingModal
+    <!-- Email Collection Modal -->
+    <EmailCollectionModal
       :show="props.isCheckoutLoading"
-      :courseTitle="course?.title"
-      :coursePrice="course?.price"
+      :course-id="course?.id"
+      @close="$emit('close')"
     />
   </div>
 </template>
@@ -172,7 +172,7 @@ import { computed, ref } from 'vue'
 import { useAuthStore } from '@/stores/auth'
 import { useToast } from 'vue-toastification'
 import AuthModal from '@/components/auth/AuthModal.vue'
-import CheckoutLoadingModal from '@/components/ui/CheckoutLoadingModal.vue'
+import EmailCollectionModal from '@/components/courses/EmailCollectionModal.vue'
 
 const props = defineProps({
   show: {

@@ -18,9 +18,7 @@
     <div class="relative z-10">
       <CourseDetail
         :course="selectedCourse"
-        :loading="
-          showCheckoutLoading && checkoutCourse?.id === selectedCourse?.id
-        "
+        :loading="false"
         @purchase="handlePurchase"
       >
         <!-- Navigation Arrows overlaid on the hero image in CourseView only -->
@@ -91,11 +89,11 @@
       </CourseDetail>
     </div>
 
-    <!-- Checkout Loading Modal -->
-    <CheckoutLoadingModal
-      :show="showCheckoutLoading"
-      :courseTitle="checkoutCourse?.title"
-      :coursePrice="checkoutCourse?.price"
+    <!-- Email Collection Modal -->
+    <EmailCollectionModal
+      :show="showEmailModal"
+      :course-id="checkoutCourse?.id"
+      @close="showEmailModal = false"
     />
   </div>
 </template>
@@ -106,7 +104,7 @@ import { useAuthStore } from "@/stores/auth";
 import { useEnrollmentStore } from "@/stores/enrollment";
 import { useCourseStore } from "@/stores/course";
 import { usePurchase } from "@/composables/usePurchase";
-import CheckoutLoadingModal from "@/components/ui/CheckoutLoadingModal.vue";
+import EmailCollectionModal from "@/components/courses/EmailCollectionModal.vue";
 import CourseCatalog from "@/components/course/CourseCatalog.vue";
 import CourseDetail from "@/components/course/CourseDetail.vue";
 import { useHead } from '@unhead/vue';
@@ -123,12 +121,10 @@ const courses = computed(() => courseStore.courses);
 // but we might use it here if we wanted to show a global loader,
 // though CourseCatalog handles its own loading.
 const {
-  loading: purchaseLoading,
+  showEmailModal,
   checkoutCourse,
   handlePurchase: startPurchase,
 } = usePurchase();
-
-const showCheckoutLoading = computed(() => purchaseLoading.value);
 
 const selectedCourse = ref(null);
 

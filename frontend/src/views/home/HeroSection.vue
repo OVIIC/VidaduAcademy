@@ -38,13 +38,13 @@
         <!-- Stats Quick View -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-16 pt-8 border-t border-dark-800/50 animate-fade-in-up delay-500">
           <div class="p-4 flex items-center justify-center text-center">
-            <div class="text-xl sm:text-2xl font-bold text-white">Od tvorcov pre tvorcov</div>
+            <div class="text-lg sm:text-xl font-light text-dark-300">Od tvorcov pre tvorcov</div>
           </div>
           <div class="p-4 flex items-center justify-center text-center">
-            <div class="text-xl sm:text-2xl font-bold text-white">100 % z praxe</div>
+            <div class="text-lg sm:text-xl font-light text-dark-300">100 % z praxe</div>
           </div>
           <div class="p-4 flex items-center justify-center text-center">
-            <div class="text-xl sm:text-2xl font-bold text-white">Vlastným tempom</div>
+            <div class="text-lg sm:text-xl font-light text-dark-300">Vlastným tempom</div>
           </div>
         </div>
       </div>

@@ -72,7 +72,7 @@
         left: 0;
         width: 100%;
         height: 100%;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: #151321; /* dark-950 color */
         display: flex;
         align-items: center;
         justify-content: center;
@@ -80,18 +80,35 @@
         color: white;
       }
       
-      .loading-spinner {
-        width: 40px;
-        height: 40px;
-        border: 4px solid rgba(255, 255, 255, 0.3);
-        border-top: 4px solid white;
-        border-radius: 50%;
-        animation: spin 1s linear infinite;
+      /* Luma Spin Loader */
+      .luma-spin-wrapper {
+        position: relative;
+        width: 65px;
+        height: 65px;
+        margin: 0 auto 1.5rem auto;
       }
       
-      @keyframes spin {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
+      .luma-spin-element {
+        position: absolute;
+        border-radius: 50px;
+        box-shadow: inset 0 0 0 3px #ED6F55; /* primary-500 color */
+        animation: loaderAnim 2.5s infinite;
+      }
+      
+      .luma-spin-delay {
+        animation-delay: -1.25s;
+      }
+      
+      @keyframes loaderAnim {
+        0% { inset: 0 35px 35px 0; }
+        12.5% { inset: 0 35px 0 0; }
+        25% { inset: 35px 35px 0 0; }
+        37.5% { inset: 35px 0 0 0; }
+        50% { inset: 35px 0 0 35px; }
+        62.5% { inset: 0 0 0 35px; }
+        75% { inset: 0 0 35px 35px; }
+        87.5% { inset: 0 0 35px 0; }
+        100% { inset: 0 35px 35px 0; }
       }
       
       /* Hide loading screen when app loads */
@@ -106,9 +123,12 @@
     <!-- Loading Screen -->
     <div id="loading-screen" class="loading-screen">
       <div class="text-center">
-        <div class="loading-spinner mx-auto mb-4"></div>
-        <div class="text-lg font-semibold">VidaduAcademy</div>
-        <div class="text-sm opacity-80">Načítava...</div>
+        <div class="luma-spin-wrapper">
+          <span class="luma-spin-element"></span>
+          <span class="luma-spin-element luma-spin-delay"></span>
+        </div>
+        <div class="text-lg font-semibold text-white">VidaduAcademy</div>
+        <div class="text-sm opacity-80 mt-1">Načítava...</div>
       </div>
     </div>
     

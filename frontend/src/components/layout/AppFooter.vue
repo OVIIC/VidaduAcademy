@@ -83,10 +83,11 @@
               >
               <button
                 type="submit"
-                :disabled="!email || !consent"
-                class="bg-primary hover:bg-primary/90 px-6 py-3 font-medium transition-all duration-300 hover:shadow-lg hover:shadow-primary/25 disabled:opacity-50 disabled:cursor-not-allowed"
+                :disabled="!email || !consent || isSubmitting"
+                class="bg-primary hover:bg-primary/90 px-6 py-3 font-medium transition-all duration-300 hover:shadow-lg hover:shadow-primary/25 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center min-w-[120px]"
               >
-                Odoberať
+                <span v-if="isSubmitting" class="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
+                <span v-else>Odoberať</span>
               </button>
             </div>
             
@@ -133,16 +134,35 @@
 
 <script setup>
 import { computed, ref } from 'vue'
+import { useToast } from 'vue-toastification'
+import { api } from '@/services/api'
 
 const email = ref('')
 const consent = ref(false)
+const isSubmitting = ref(false)
+const toast = useToast()
 
-const submitNewsletter = () => {
+const submitNewsletter = async () => {
   if (email.value && consent.value) {
-    // Implement newsletter signup logic here later
-    console.log('Newsletter signup:', email.value)
-    email.value = ''
-    consent.value = false
+    if (isSubmitting.value) return;
+
+    isSubmitting.value = true;
+    try {
+      const response = await api.post('/newsletter/subscribe', {
+        email: email.value
+      })
+      toast.success(response.data.message || 'Úspešne ste sa prihlásili na odber noviniek.')
+      email.value = ''
+      consent.value = false
+    } catch (error) {
+      if (error.response && error.response.status === 409) {
+        toast.error(error.response.data.message || 'Tento e-mail je už zaregistrovaný na odber.')
+      } else {
+        toast.error('Ospravedlňujeme sa, vyskytla sa chyba. Skúste to prosím znova.')
+      }
+    } finally {
+      isSubmitting.value = false;
+    }
   }
 }
 

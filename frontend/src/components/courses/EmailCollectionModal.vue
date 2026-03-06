@@ -36,8 +36,8 @@
 
         <div class="sm:flex sm:items-start pl-2 pt-2">
           <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full pr-4">
-            <h3 class="text-2xl leading-6 font-bold text-gray-900 mb-6" id="modal-title">
-              Získajte kurz
+            <h3 class="text-2xl leading-6 font-bold text-gray-900 mb-6 text-center" id="modal-title">
+              Získaj darček od Vidadu Academy
             </h3>
             
             <div class="mt-2">
@@ -54,7 +54,7 @@
                     v-model="email" 
                     required
                     placeholder="napr. jozko@mrkvicka.sk"
-                    class="shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-lg border-gray-300 rounded-md py-3 px-4"
+                    class="shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-lg border-gray-300 rounded-md py-3 px-4 text-gray-900"
                     :disabled="loading"
                   />
                 </div>

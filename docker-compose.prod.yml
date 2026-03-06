@@ -16,7 +16,8 @@ services:
     environment:
       APP_ENV: production
       APP_DEBUG: "false"
-      APP_URL: "https://${DOMAIN_NAME:-vidadu.sk}"
+      APP_URL: "https://${DOMAIN_NAME:-vidaduacademy.com}"
+      FRONTEND_URL: "https://${DOMAIN_NAME:-vidaduacademy.com}"
 
       # Database Configuration
       DB_CONNECTION: pgsql
@@ -57,6 +58,8 @@ services:
       - /var/www/bootstrap/cache
     environment:
       APP_ENV: production
+      APP_URL: "https://${DOMAIN_NAME:-vidaduacademy.com}"
+      FRONTEND_URL: "https://${DOMAIN_NAME:-vidaduacademy.com}"
       DB_CONNECTION: pgsql
       DB_HOST: postgres
       DB_PORT: 5432
@@ -90,6 +93,8 @@ services:
       - /var/www/bootstrap/cache
     environment:
       APP_ENV: production
+      APP_URL: "https://${DOMAIN_NAME:-vidaduacademy.com}"
+      FRONTEND_URL: "https://${DOMAIN_NAME:-vidaduacademy.com}"
       DB_CONNECTION: pgsql
       DB_HOST: postgres
       DB_PORT: 5432

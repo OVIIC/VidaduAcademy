@@ -72,18 +72,40 @@
         <div class="max-w-md mx-auto text-center">
           <h3 class="text-lg font-semibold mb-2 text-white">Zostaňte informovaní</h3>
           <p class="text-gray-300 mb-4">Získajte najnovšie tipy na rast YouTube a aktualizácie kurzov</p>
-          <form class="flex rounded-xl overflow-hidden backdrop-blur-sm bg-white/5 border border-white/10">
-            <input
-              type="email"
-              placeholder="Zadajte váš email"
-              class="flex-1 bg-transparent border-none px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50"
-            >
-            <button
-              type="submit"
-              class="bg-primary hover:bg-primary/90 px-6 py-3 font-medium transition-all duration-300 hover:shadow-lg hover:shadow-primary/25"
-            >
-              Odoberať
-            </button>
+          <form @submit.prevent="submitNewsletter" class="flex flex-col gap-3">
+            <div class="flex rounded-xl overflow-hidden backdrop-blur-sm bg-white/5 border border-white/10">
+              <input
+                type="email"
+                v-model="email"
+                required
+                placeholder="Zadajte váš email"
+                class="flex-1 bg-transparent border-none px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50"
+              >
+              <button
+                type="submit"
+                :disabled="!email || !consent"
+                class="bg-primary hover:bg-primary/90 px-6 py-3 font-medium transition-all duration-300 hover:shadow-lg hover:shadow-primary/25 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                Odoberať
+              </button>
+            </div>
+            
+            <div class="flex items-start mt-2 text-left">
+              <div class="flex items-center h-5">
+                <input 
+                  id="footer-consent" 
+                  type="checkbox" 
+                  v-model="consent"
+                  required
+                  class="focus:ring-primary-500 h-4 w-4 bg-transparent border-gray-600 rounded cursor-pointer mt-0.5"
+                >
+              </div>
+              <div class="ml-2 text-xs text-gray-400 leading-tight">
+                <label for="footer-consent" class="cursor-pointer">
+                  Súhlasím so spracovaním osobných údajov na účely zasielania marketingových ponúk a noviniek v súlade so <router-link to="/ochrana-osobnych-udajov" class="text-primary hover:underline">Zásadami ochrany súkromia</router-link>. Svoj súhlas môžem kedykoľvek odvolať.
+                </label>
+              </div>
+            </div>
           </form>
         </div>
       </div>
@@ -110,7 +132,19 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
+
+const email = ref('')
+const consent = ref(false)
+
+const submitNewsletter = () => {
+  if (email.value && consent.value) {
+    // Implement newsletter signup logic here later
+    console.log('Newsletter signup:', email.value)
+    email.value = ''
+    consent.value = false
+  }
+}
 
 // Social Media Icons (simplified SVG icons)
 const YoutubeIcon = {

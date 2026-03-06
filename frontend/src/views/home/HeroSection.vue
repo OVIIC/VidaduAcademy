@@ -36,22 +36,15 @@
         </div>
 
         <!-- Stats Quick View -->
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-16 pt-8 border-t border-dark-800/50 animate-fade-in-up delay-500">
-          <div class="p-4">
-            <div class="text-3xl font-bold text-white mb-1">1000+</div>
-            <div class="text-sm text-dark-400 font-medium uppercase tracking-wider">Študentov</div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-16 pt-8 border-t border-dark-800/50 animate-fade-in-up delay-500">
+          <div class="p-4 flex items-center justify-center text-center">
+            <div class="text-xl sm:text-2xl font-bold text-white">Od tvorcov pre tvorcov</div>
           </div>
-          <div class="p-4">
-            <div class="text-3xl font-bold text-white mb-1">50+</div>
-            <div class="text-sm text-dark-400 font-medium uppercase tracking-wider">Hodín obsahu</div>
+          <div class="p-4 flex items-center justify-center text-center">
+            <div class="text-xl sm:text-2xl font-bold text-white">100 % z praxe</div>
           </div>
-          <div class="p-4">
-            <div class="text-3xl font-bold text-white mb-1">15+</div>
-            <div class="text-sm text-dark-400 font-medium uppercase tracking-wider">Expertov</div>
-          </div>
-          <div class="p-4">
-            <div class="text-3xl font-bold text-white mb-1">4.9/5</div>
-            <div class="text-sm text-dark-400 font-medium uppercase tracking-wider">Hodnotenie</div>
+          <div class="p-4 flex items-center justify-center text-center">
+            <div class="text-xl sm:text-2xl font-bold text-white">Vlastným tempom</div>
           </div>
         </div>
       </div>

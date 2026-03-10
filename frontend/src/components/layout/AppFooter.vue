@@ -7,7 +7,7 @@
         <!-- Company Info -->
         <div class="col-span-1 md:col-span-2">
           <div class="flex items-center space-x-2 mb-4">
-            <img src="/images/video-academy-logo.png" alt="Vidadu Academy" class="h-8 w-auto object-contain" />
+            <img src="/images/vidadu_academy_logo.png" alt="Vidadu Academy" class="h-8 w-auto object-contain" />
           </div>
           <p class="text-gray-300 mb-6 max-w-md leading-relaxed">
             Pomáhame tvorcom pri budovaní úspešných YouTube kanálov prostredníctvom kurzov vedených expertmi 

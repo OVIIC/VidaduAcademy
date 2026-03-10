@@ -9,14 +9,14 @@
   >
     <div class="relative overflow-hidden">
       <LazyImage
-        :src="course.thumbnail || '/images/video-academy-logo.png'"
+        :src="course.thumbnail || '/images/vidadu_academy_logo.png'"
         :alt="course.title"
         container-class="w-full h-48"
         :image-class="[
           course.thumbnail ? 'object-cover' : 'object-contain p-8 bg-dark-800',
           enableHoverEffects ? 'group-hover:scale-105' : '',
         ]"
-        :fallback-src="'/images/video-academy-logo.png'"
+        :fallback-src="'/images/vidadu_academy_logo.png'"
         :lazy-load="lazyLoad"
       />
       <div v-if="course.featured" class="absolute top-3 right-3">

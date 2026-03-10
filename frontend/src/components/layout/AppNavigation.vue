@@ -32,7 +32,7 @@
           class="flex items-center space-x-2 text-xl font-bold text-white hover:text-primary-400 transition-colors z-10 focus:outline-none"
           aria-label="VidaduAcademy domov"
         >
-          <img src="/images/video-academy-logo.png" alt="Vidadu Academy" class="h-8 w-auto object-contain" />
+          <img src="/images/vidadu_academy_logo.png" alt="Vidadu Academy" class="h-8 w-auto object-contain" />
         </router-link>
 
         <!-- Desktop Navigation -->

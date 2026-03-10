@@ -17,7 +17,7 @@
       :class="[isCollapsed ? 'justify-center' : 'justify-start']"
     >
       <router-link v-if="!isCollapsed" to="/" class="flex items-center gap-2 overflow-hidden whitespace-nowrap shrink-0">
-        <img src="/images/video-academy-logo.png" alt="Vidadu Academy" class="h-8 w-auto object-contain transition-all duration-300" />
+        <img src="/images/vidadu_academy_logo.png" alt="Vidadu Academy" class="h-8 w-auto object-contain transition-all duration-300" />
       </router-link>
       <div v-else class="flex justify-center shrink-0 w-full">
          <img src="/images/video-academy-icon.png" alt="V" class="h-8 w-8 object-contain" />

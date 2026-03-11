@@ -88,6 +88,23 @@ export function formatNumber(num) {
 }
 
 /**
+ * Format course price 
+ * @param {number|string} price - Price to format
+ * @returns {string} Formatted price or 'Zadarmo' if free
+ */
+export function formatPrice(price) {
+  const numPrice = Number(price)
+  if (isNaN(numPrice) || numPrice <= 0) {
+    return 'Zadarmo'
+  }
+  // Check if it's an integer
+  if (Number.isInteger(numPrice)) {
+    return `€${numPrice}`
+  }
+  return `€${numPrice.toFixed(2)}`
+}
+
+/**
  * Format date to relative time (e.g., "2 days ago")
  * @param {string|Date} date - Date to format
  * @returns {string} Relative time string

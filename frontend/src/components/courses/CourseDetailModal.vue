@@ -71,7 +71,7 @@
             </div>
             <div class="ml-4 flex-shrink-0">
               <span class="text-2xl font-bold text-primary-600">
-                €{{ course?.price }}
+                {{ course ? formatPrice(course.price) : '' }}
               </span>
             </div>
           </div>
@@ -137,7 +137,7 @@
               @click="purchaseCourse"
               class="flex-1 bg-primary-600 hover:bg-primary-700 text-white font-medium py-3 px-6 rounded-lg transition duration-200"
             >
-              Kúpiť kurz za €{{ course?.price }}
+              {{ course?.price > 0 ? `Kúpiť kurz za ${formatPrice(course.price)}` : 'Získať kurz zdarma' }}
             </button>
             <button
               @click="closeModal"
@@ -170,6 +170,7 @@
 <script setup>
 import { computed, ref } from 'vue'
 import { useAuthStore } from '@/stores/auth'
+import { formatPrice } from '@/utils/helpers'
 import { useToast } from 'vue-toastification'
 import AuthModal from '@/components/auth/AuthModal.vue'
 import EmailCollectionModal from '@/components/courses/EmailCollectionModal.vue'

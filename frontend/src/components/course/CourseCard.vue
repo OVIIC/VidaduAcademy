@@ -16,7 +16,7 @@
       />
       <!-- Price Badge -->
       <div class="absolute top-3 right-3 bg-black/70 backdrop-blur-sm text-white px-2 py-1 rounded-md text-xs font-bold border border-white/10">
-        {{ course.price > 0 ? `€${course.price}` : 'Zadarmo' }}
+        {{ formatPrice(course.price) }}
       </div>
     </div>
     
@@ -58,6 +58,8 @@
 </template>
 
 <script setup>
+import { formatPrice } from '@/utils/helpers'
+
 defineProps({
   course: {
     type: Object,

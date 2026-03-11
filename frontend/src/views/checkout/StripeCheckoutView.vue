@@ -23,7 +23,7 @@
           </div>
           <div class="flex justify-between items-center">
             <span class="text-gray-600">Cena:</span>
-            <span class="font-bold text-primary-600">${{ courseInfo.price }}</span>
+            <span class="font-bold text-primary-600">{{ formatPrice(courseInfo.price) }}</span>
           </div>
         </div>
 
@@ -72,6 +72,7 @@ import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import { useEnrollmentStore } from '@/stores/enrollment'
+import { formatPrice } from '@/utils/helpers'
 import { paymentService } from '@/services'
 import { useToast } from 'vue-toastification'
 

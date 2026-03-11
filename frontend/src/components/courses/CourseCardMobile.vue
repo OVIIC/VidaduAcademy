@@ -83,7 +83,7 @@
       <div class="flex items-center justify-between">
         <div class="flex flex-col">
           <span class="text-lg sm:text-xl font-bold text-primary-600">
-            €{{ course.price }}
+            {{ formatPrice(course.price) }}
           </span>
           <span class="text-xs text-gray-500">jednorazovo</span>
         </div>
@@ -132,6 +132,7 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
+import { formatPrice } from '@/utils/helpers'
 import { 
   StarIcon, 
   AcademicCapIcon, 

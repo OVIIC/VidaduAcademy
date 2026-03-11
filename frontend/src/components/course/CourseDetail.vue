@@ -92,7 +92,7 @@
                   }}</span>
                 </div>
                 <div class="text-dark-200">{{ course.duration }}</div>
-                <div class="text-green-400 font-bold">€{{ course.price }}</div>
+                <div class="text-green-400 font-bold">{{ formatPrice(course.price) }}</div>
               </div>
 
               <!-- Course Description -->
@@ -277,7 +277,7 @@
                     <div class="flex items-center justify-between">
                       <span class="text-dark-400">Cena</span>
                       <span class="text-green-400 font-bold text-xl"
-                        >€{{ course.price }}</span
+                        >{{ formatPrice(course.price) }}</span
                       >
                     </div>
                   </div>
@@ -336,6 +336,7 @@
 <script setup>
 import { ref } from "vue";
 import { useCourseStore } from "@/stores/course";
+import { formatPrice } from "@/utils/helpers";
 
 const props = defineProps({
   course: {

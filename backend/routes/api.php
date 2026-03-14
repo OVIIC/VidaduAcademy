@@ -139,6 +139,10 @@ Route::middleware(['auth:sanctum', 'role:admin'])->prefix('admin')->group(functi
 });
 
 // Instructor Routes
+Route::middleware(['auth:sanctum'])->prefix('instructor')->group(function () {
+    Route::get('/dashboard', [\App\Http\Controllers\Api\Instructor\InstructorDashboardController::class, 'index']);
+});
+
 Route::middleware(['auth:sanctum', 'role:instructor'])->prefix('instructor')->group(function () {
     Route::apiResource('courses', \App\Http\Controllers\Api\Instructor\InstructorCourseController::class);
 });

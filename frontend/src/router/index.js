@@ -88,6 +88,18 @@ const router = createRouter({
       component: () => import('@/views/ProfileView.vue'),
       meta: { requiresAuth: true, layout: 'dashboard' },
     },
+    {
+      path: '/instructor/login',
+      name: 'InstructorLogin',
+      component: () => import('@/views/instructor/InstructorLoginView.vue'),
+      meta: { requiresGuest: true },
+    },
+    {
+      path: '/instructor/dashboard',
+      name: 'InstructorDashboard',
+      component: () => import('@/views/instructor/InstructorDashboardView.vue'),
+      meta: { requiresAuth: true, layout: 'dashboard' },
+    },
 
 
     {

@@ -126,6 +126,9 @@
           <a href="#" class="text-gray-300 hover:text-primary text-sm transition-all duration-300">
             Zásady cookies
           </a>
+          <router-link to="/instructor/login" class="text-gray-300 hover:text-primary text-sm transition-all duration-300">
+            Prihlásenie pre lektorov
+          </router-link>
         </div>
       </div>
     </div>
